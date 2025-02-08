@@ -4,9 +4,10 @@
 
 # 脚本列表
 
-移速控制.lua  
+移速控制.lua ()  
 可更改大部分小游戏的移动速度，请不要在有反作弊的服务器使用，后果自负  
 Notification.lua  
 轻量消息框提示，可用于开发参考  
 Deathball.lua  
+loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/Deathball.lua"))()  
 死亡球脚本，目前无法使用自动格挡功能，希望有心人帮忙开发
