@@ -28,15 +28,23 @@ local StarterGui = game:GetService("StarterGui")
 print("✅ Service - StarterGui Get Done.")
 local TweenService = game:GetService("TweenService")
 print("✅ Service - TweenService Get Done.")
+local SoundService = game:GetService("SoundService")
+print("✅ Service - SoundService Get Done.")
 
 local NotifGui = Instance.new("ScreenGui")
 NotifGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 local notifications = {}
 
+-- 加载成就音效
+local achievementSound = Instance.new("Sound")
+achievementSound.SoundId = "rbxassetid://4590662766" -- 替换为你的音频ID
+achievementSound.Volume = 0.5 -- 音量大小
+achievementSound.Parent = SoundService
+
 local function UpdatePositions()
     for index, frame in ipairs(notifications) do
-        local targetPosition = UDim2.new(0.8, 0, 0.1 + (index - 1) * 0.1, 0)
+        local targetPosition = UDim2.new(0.8, 0, 0.1 + (index - 1) * 0.11, 0)
         local tween = TweenService:Create(frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
             Position = targetPosition
         })
@@ -44,10 +52,10 @@ local function UpdatePositions()
     end
 end
 
-local function CreateNotification(title, text, duration)
+local function CreateNotification(title, text, duration, isAchievement)
     local notificationFrame = Instance.new("Frame")
     notificationFrame.Size = UDim2.new(0.2, 0, 0.1, 0)
-    notificationFrame.Position = UDim2.new(1, 0, 0.1 + #notifications * 0.1, 0)
+    notificationFrame.Position = UDim2.new(1, 0, 0.1 + #notifications * 0.11, 0)
     notificationFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- 背景颜色
     notificationFrame.BackgroundTransparency = 0.7 -- 背景透明度降低
     notificationFrame.BorderSizePixel = 0
@@ -89,6 +97,11 @@ local function CreateNotification(title, text, duration)
     textLabel.TextXAlignment = Enum.TextXAlignment.Left
 
     table.insert(notifications, notificationFrame)
+
+    -- 如果是成就通知，播放音效
+    if isAchievement then
+        achievementSound:Play()
+    end
 
     -- 滑入动画
     local tweenIn = TweenService:Create(notificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
@@ -154,13 +167,8 @@ end
 
 -- 更新 UI 的函数
 local function UpdateUI()
-    if AutoValue then
-        Text3.Text = "Auto Parry (ON)"
-        if isLocked and distance < 15 then
-            VirtualInputManager:SendKeyEvent(true, "F", false, game)
-        end
-    else
-        Text3.Text = "Auto Parry (OFF)"
+    if AutoValue and isLocked and distance < 15 then
+        VirtualInputManager:SendKeyEvent(true, "F", false, game)
     end
 
     local playerPos = (LocalPlayer.Character and LocalPlayer.Character.HumanoidRootPart.CFrame) or CFrame.new()
@@ -189,11 +197,11 @@ local function UpdateUI()
     end
 end
 
-CreateNotification("提示", "死亡球辅助已启动", 5)
+CreateNotification("提示", "死亡球辅助已启动", 5, true)
 wait(0.5)
-CreateNotification("提示", "按下 K 启动自动格挡", 5.5)
+CreateNotification("提示", "按下 K 启动自动格挡", 5.5, false)
 wait(0.5)
-CreateNotification("提示", "按下 Delete 卸载脚本", 6)
+CreateNotification("提示", "按下 Delete 卸载脚本", 6, false)
 
 print("⚠️ Service VirtualInputManager Loading problem occurred!")
 print("⏺️ Module NotificationSystem NoTest.")
@@ -206,7 +214,14 @@ while true do
     wait(0.05)
     if UserInputService:IsKeyDown(Enum.KeyCode.K) then
         AutoValue = not AutoValue
-        if AutoValue then CreateNotification("提示", "自动格挡已开启", 5) else CreateNotification("提示", "自动格挡已关闭", 5) end
+        if AutoValue then
+            Text3.Text = "Auto Parry (ON)"
+            CreateNotification("提示", "自动格挡已开启", 5, true)
+        else
+            Text3.Text = "Auto Parry (OFF)"
+            CreateNotification("提示", "自动格挡已关闭", 5, true)
+        end
+        wait(0.5)
     elseif UserInputService:IsKeyDown(Enum.KeyCode.Delete) then
         _G.DeathBallScriptLoaded = false
         print("Dealthball Script Unload!")
