@@ -206,6 +206,7 @@ while true do
     wait(0.05)
     if UserInputService:IsKeyDown(Enum.KeyCode.K) then
         AutoValue = not AutoValue
+        if AutoValue then CreateNotification("提示", "自动格挡已开启", 5) else CreateNotification("提示", "自动格挡已关闭", 5) end
     elseif UserInputService:IsKeyDown(Enum.KeyCode.Delete) then
         _G.DeathBallScriptLoaded = false
         print("Dealthball Script Unload!")
