@@ -1,15 +1,22 @@
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
+local SoundService = game:GetService("SoundService")
 
 local Gui = Instance.new("ScreenGui")
 Gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 local notifications = {}
 
+-- 加载成就音效
+local achievementSound = Instance.new("Sound")
+achievementSound.SoundId = "rbxassetid://4590662766" -- 替换为你的音频ID
+achievementSound.Volume = 0.5 -- 音量大小
+achievementSound.Parent = SoundService
+
 local function UpdatePositions()
     for index, frame in ipairs(notifications) do
-        local targetPosition = UDim2.new(0.8, 0, 0.1 + (index - 1) * 0.1, 0)
+        local targetPosition = UDim2.new(0.8, 0, 0.1 + (index - 1) * 0.11, 0)
         local tween = TweenService:Create(frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
             Position = targetPosition
         })
@@ -17,10 +24,10 @@ local function UpdatePositions()
     end
 end
 
-local function CreateNotification(title, text, duration)
+local function CreateNotification(title, text, duration, isAchievement)
     local notificationFrame = Instance.new("Frame")
     notificationFrame.Size = UDim2.new(0.2, 0, 0.1, 0)
-    notificationFrame.Position = UDim2.new(1, 0, 0.1 + #notifications * 0.1, 0)
+    notificationFrame.Position = UDim2.new(1, 0, 0.1 + #notifications * 0.11, 0)
     notificationFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- 背景颜色
     notificationFrame.BackgroundTransparency = 0.3 -- 背景透明度降低
     notificationFrame.BorderSizePixel = 0
@@ -63,6 +70,11 @@ local function CreateNotification(title, text, duration)
 
     table.insert(notifications, notificationFrame)
 
+    -- 如果是成就通知，播放音效
+    if isAchievement then
+        achievementSound:Play()
+    end
+
     -- 滑入动画
     local tweenIn = TweenService:Create(notificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
         Position = UDim2.new(0.8, 0, notificationFrame.Position.Y.Scale, 0)
@@ -89,3 +101,6 @@ local function CreateNotification(title, text, duration)
         end
     end)()
 end
+
+-- 使用方法
+CreateNotification("系统提示", "辅助已启动", 5, true)
