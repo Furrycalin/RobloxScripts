@@ -13,7 +13,7 @@ DoorsNotification.lua
  模仿Doors成就框，可用于开发参考  
 Deathball.lua  
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/Deathball.lua"))()  
-死亡球脚本，目前无法使用自动格挡功能，希望有心人帮忙开发
+死亡球脚本，目前无法使用自动格挡功能，希望有心人帮忙开发  
 ChronixHub.lua  
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/ChronixHub.lua"))()  
 我的功能性菜单脚本，目前还在制作中。
