@@ -204,7 +204,7 @@ wait(0.5)
 CreateNotification("提示", "按下 Delete 卸载脚本", 6, false)
 
 print("⚠️ Service VirtualInputManager Loading problem occurred!")
-print("⏺️ Module NotificationSystem NoTest.")
+print("✅ Module NotificationSystem Load.")
 print("")
 print("Dealthball Script Load!")
 print("使用提醒: 按下K切换自动格挡, 按下Delete卸载脚本")
