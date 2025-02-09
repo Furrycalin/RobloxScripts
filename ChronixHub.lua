@@ -18,7 +18,9 @@ local CONFIG = {
     BUTTON_COLOR = Color3.fromRGB(60, 60, 60),
     TEXT_COLOR = Color3.fromRGB(255, 255, 255),
     ARROW_TRANSPARENCY = 0.5, -- 半透明箭头
-    TWEEN_INFO = TweenInfo.new(0.5, Enum.EasingStyle.Quad)
+    TWEEN_INFO = TweenInfo.new(0.5, Enum.EasingStyle.Quad),
+    CATEGORY_BUTTON_SIZE = UDim2.new(0.2, 0, 0.1, 0), -- 分类按钮大小
+    CATEGORY_BUTTON_SPACING = 10 -- 按钮之间的间距
 }
 
 -- 创建箭头按钮
@@ -46,61 +48,75 @@ menuFrame.Parent = Gui
 local uiCorner = Instance.new("UICorner", menuFrame)
 uiCorner.CornerRadius = UDim.new(0, 10)
 
+-- 创建分类按钮区域
+local categoryButtonsFrame = Instance.new("Frame")
+categoryButtonsFrame.Size = UDim2.new(1, 0, 0.1, 0) -- 占菜单高度的 10%
+categoryButtonsFrame.Position = UDim2.new(0, 0, 0, 0)
+categoryButtonsFrame.BackgroundTransparency = 1 -- 透明背景
+categoryButtonsFrame.Parent = menuFrame
+
+-- 创建内容区域
+local contentFrame = Instance.new("Frame")
+contentFrame.Size = UDim2.new(1, 0, 0.9, 0) -- 占菜单高度的 90%
+contentFrame.Position = UDim2.new(0, 0, 0.1, 0)
+contentFrame.BackgroundTransparency = 1 -- 透明背景
+contentFrame.Parent = menuFrame
+
 -- 添加菜单内容
 local function AddMenuContent(category)
-    -- 清空菜单内容
-    for _, child in ipairs(menuFrame:GetChildren()) do
+    -- 清空内容区域
+    for _, child in ipairs(contentFrame:GetChildren()) do
         if child:IsA("GuiObject") then
             child:Destroy()
         end
-    end
-
-    -- 添加分类按钮
-    local categories = {"设置", "工具", "帮助"}
-    for i, cat in ipairs(categories) do
-        local button = Instance.new("TextButton")
-        button.Size = UDim2.new(0.8, 0, 0.1, 0)
-        button.Position = UDim2.new(0.1, 0, 0.1 + (i - 1) * 0.15, 0)
-        button.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button.Text = cat
-        button.TextColor3 = CONFIG.TEXT_COLOR
-        button.TextSize = 18
-        button.Parent = menuFrame
-
-        button.MouseButton1Click:Connect(function()
-            AddMenuContent(cat) -- 切换菜单内容
-        end)
     end
 
     -- 根据分类添加内容
     if category == "设置" then
         local label = Instance.new("TextLabel")
         label.Size = UDim2.new(0.8, 0, 0.1, 0)
-        label.Position = UDim2.new(0.1, 0, 0.6, 0)
+        label.Position = UDim2.new(0.1, 0, 0.1, 0)
         label.BackgroundTransparency = 1
         label.Text = "设置内容"
         label.TextColor3 = CONFIG.TEXT_COLOR
         label.TextSize = 18
-        label.Parent = menuFrame
+        label.Parent = contentFrame
     elseif category == "工具" then
         local label = Instance.new("TextLabel")
         label.Size = UDim2.new(0.8, 0, 0.1, 0)
-        label.Position = UDim2.new(0.1, 0, 0.6, 0)
+        label.Position = UDim2.new(0.1, 0, 0.1, 0)
         label.BackgroundTransparency = 1
         label.Text = "工具内容"
         label.TextColor3 = CONFIG.TEXT_COLOR
         label.TextSize = 18
-        label.Parent = menuFrame
+        label.Parent = contentFrame
     elseif category == "帮助" then
         local label = Instance.new("TextLabel")
         label.Size = UDim2.new(0.8, 0, 0.1, 0)
-        label.Position = UDim2.new(0.1, 0, 0.6, 0)
+        label.Position = UDim2.new(0.1, 0, 0.1, 0)
         label.BackgroundTransparency = 1
         label.Text = "帮助内容"
         label.TextColor3 = CONFIG.TEXT_COLOR
         label.TextSize = 18
-        label.Parent = menuFrame
+        label.Parent = contentFrame
     end
+end
+
+-- 添加分类按钮
+local categories = {"设置", "工具", "帮助"}
+for i, cat in ipairs(categories) do
+    local button = Instance.new("TextButton")
+    button.Size = CONFIG.CATEGORY_BUTTON_SIZE
+    button.Position = UDim2.new((i - 1) * (CONFIG.CATEGORY_BUTTON_SIZE.X.Scale + CONFIG.CATEGORY_BUTTON_SPACING / menuFrame.AbsoluteSize.X), 0, 0, 0)
+    button.BackgroundColor3 = CONFIG.BUTTON_COLOR
+    button.Text = cat
+    button.TextColor3 = CONFIG.TEXT_COLOR
+    button.TextSize = 18
+    button.Parent = categoryButtonsFrame
+
+    button.MouseButton1Click:Connect(function()
+        AddMenuContent(cat) -- 切换菜单内容
+    end)
 end
 
 -- 箭头按钮滑入滑出逻辑
