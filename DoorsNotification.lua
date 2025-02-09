@@ -104,7 +104,7 @@ local function CreateNotification(title, text, duration, isAchievement, subtitle
     end
 
     -- 滑入动画
-    local tweenIn = TweenService:Create(notificationFrame, TweenInfo.new(1, Enum.EasingStyle.Quad), {
+    local tweenIn = TweenService:Create(notificationFrame, TweenInfo.new(0.8, Enum.EasingStyle.Quad), {
         Position = UDim2.new(0.76, 0, notificationFrame.Position.Y.Scale, 0) -- 调整滑入位置
     })
     tweenIn:Play()
@@ -114,7 +114,7 @@ local function CreateNotification(title, text, duration, isAchievement, subtitle
         wait(duration)
         
         -- 滑出动画
-        local tweenOut = TweenService:Create(notificationFrame, TweenInfo.new(1, Enum.EasingStyle.Quad), {
+        local tweenOut = TweenService:Create(notificationFrame, TweenInfo.new(0.8, Enum.EasingStyle.Quad), {
             Position = UDim2.new(1, 0, notificationFrame.Position.Y.Scale, 0)
         })
         tweenOut:Play()
