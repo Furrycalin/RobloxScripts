@@ -1,5 +1,5 @@
 -- 死亡球脚本 by Chronix
--- Update in 2025.2.8
+-- Update in 2025.2.9
 
 if game.GameId ~= 5166944221 then
     warn("⛔ Current Game ID " .. game.GameId .. ", Not in Deathball game, script loading terminated.")
@@ -214,13 +214,8 @@ while true do
     wait(0.05)
     if UserInputService:IsKeyDown(Enum.KeyCode.K) then
         AutoValue = not AutoValue
-        if AutoValue then
-            Text3.Text = "Auto Parry (ON)"
-            CreateNotification("提示", "自动格挡已开启", 5, true)
-        else
-            Text3.Text = "Auto Parry (OFF)"
-            CreateNotification("提示", "自动格挡已关闭", 5, true)
-        end
+        Text3.Text = AutoValue and "Auto Parry (ON)" or "Auto Parry (OFF)"
+        CreateNotification("提示", AutoValue and "自动格挡已开启" or "自动格挡已关闭", 5, AutoValue)
         wait(0.5)
     elseif UserInputService:IsKeyDown(Enum.KeyCode.Delete) then
         _G.DeathBallScriptLoaded = false
