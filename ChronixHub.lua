@@ -19,8 +19,9 @@ local CONFIG = {
     TEXT_COLOR = Color3.fromRGB(255, 255, 255),
     ARROW_TRANSPARENCY = 0.5, -- 半透明箭头
     TWEEN_INFO = TweenInfo.new(0.5, Enum.EasingStyle.Quad),
-    CATEGORY_BUTTON_SIZE = UDim2.new(0.2, 0, 0.1, 0), -- 分类按钮大小
-    CATEGORY_BUTTON_SPACING = 10 -- 按钮之间的间距
+    CATEGORY_BUTTON_SIZE = UDim2.new(0.15, 0, 1, 0), -- 更大的分类按钮
+    CATEGORY_BUTTON_SPACING = 10, -- 按钮之间的间距
+    CATEGORY_BUTTON_INSET = 10 -- 按钮向内偏移
 }
 
 -- 创建箭头按钮
@@ -48,17 +49,29 @@ menuFrame.Parent = Gui
 local uiCorner = Instance.new("UICorner", menuFrame)
 uiCorner.CornerRadius = UDim.new(0, 10)
 
+-- 创建菜单标题
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(0.8, 0, 0.1, 0)
+titleLabel.Position = UDim2.new(0.05, 0, 0.02, 0) -- 左上角
+titleLabel.Text = "ChronixHub"
+titleLabel.TextColor3 = CONFIG.TEXT_COLOR
+titleLabel.TextSize = 20
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.BackgroundTransparency = 1
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.Parent = menuFrame
+
 -- 创建分类按钮区域
 local categoryButtonsFrame = Instance.new("Frame")
 categoryButtonsFrame.Size = UDim2.new(1, 0, 0.1, 0) -- 占菜单高度的 10%
-categoryButtonsFrame.Position = UDim2.new(0, 0, 0, 0)
+categoryButtonsFrame.Position = UDim2.new(0, 0, 0.1, 0) -- 在标题下方
 categoryButtonsFrame.BackgroundTransparency = 1 -- 透明背景
 categoryButtonsFrame.Parent = menuFrame
 
 -- 创建内容区域
 local contentFrame = Instance.new("Frame")
-contentFrame.Size = UDim2.new(1, 0, 0.9, 0) -- 占菜单高度的 90%
-contentFrame.Position = UDim2.new(0, 0, 0.1, 0)
+contentFrame.Size = UDim2.new(1, 0, 0.8, 0) -- 占菜单高度的 80%
+contentFrame.Position = UDim2.new(0, 0, 0.2, 0) -- 在分类按钮下方
 contentFrame.BackgroundTransparency = 1 -- 透明背景
 contentFrame.Parent = menuFrame
 
@@ -72,7 +85,7 @@ local function AddMenuContent(category)
     end
 
     -- 根据分类添加内容
-    if category == "设置" then
+    if category == "基础" then
         local label = Instance.new("TextLabel")
         label.Size = UDim2.new(0.8, 0, 0.1, 0)
         label.Position = UDim2.new(0.1, 0, 0.1, 0)
@@ -103,11 +116,16 @@ local function AddMenuContent(category)
 end
 
 -- 添加分类按钮
-local categories = {"设置", "工具", "帮助"}
+local categories = {"基础", "工具", "帮助"}
 for i, cat in ipairs(categories) do
     local button = Instance.new("TextButton")
     button.Size = CONFIG.CATEGORY_BUTTON_SIZE
-    button.Position = UDim2.new((i - 1) * (CONFIG.CATEGORY_BUTTON_SIZE.X.Scale + CONFIG.CATEGORY_BUTTON_SPACING / menuFrame.AbsoluteSize.X), 0, 0, 0)
+    button.Position = UDim2.new(
+        (i - 1) * (CONFIG.CATEGORY_BUTTON_SIZE.X.Scale + CONFIG.CATEGORY_BUTTON_SPACING / menuFrame.AbsoluteSize.X) + CONFIG.CATEGORY_BUTTON_INSET / menuFrame.AbsoluteSize.X, 
+        0, 
+        0, 
+        0
+    )
     button.BackgroundColor3 = CONFIG.BUTTON_COLOR
     button.Text = cat
     button.TextColor3 = CONFIG.TEXT_COLOR
