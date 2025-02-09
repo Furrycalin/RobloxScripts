@@ -215,7 +215,7 @@ while true do
     if UserInputService:IsKeyDown(Enum.KeyCode.K) then
         AutoValue = not AutoValue
         Text3.Text = AutoValue and "Auto Parry (ON)" or "Auto Parry (OFF)"
-        CreateNotification("提示", AutoValue and "自动格挡已开启" or "自动格挡已关闭", 5, AutoValue)
+        CreateNotification("提示", AutoValue and "自动格挡已开启" or "自动格挡已关闭", 5, true)
         wait(0.5)
     elseif UserInputService:IsKeyDown(Enum.KeyCode.Delete) then
         _G.DeathBallScriptLoaded = false
