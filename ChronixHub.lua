@@ -9,14 +9,112 @@ Gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 _G.ChronixHubisNightVisiton = false
 _G.ChronixHubisChuanQiang = false
 
+local SoundService = game:GetService("SoundService")
+
+local notifications = {}
+
+-- 加载成就音效
+local achievementSound = Instance.new("Sound")
+achievementSound.SoundId = "rbxassetid://4590662766" -- 替换为你的音频ID
+achievementSound.Volume = 0.5 -- 音量大小
+achievementSound.Parent = SoundService
+
+local function UpdatePositions()
+    for index, frame in ipairs(notifications) do
+        local targetPosition = UDim2.new(0.8, 0, 0.1 + (index - 1) * 0.11, 0)
+        local tween = TweenService:Create(frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+            Position = targetPosition
+        })
+        tween:Play()
+    end
+end
+
+local function CreateNotification(title, text, duration, isAchievement)
+    local notificationFrame = Instance.new("Frame")
+    notificationFrame.Size = UDim2.new(0.2, 0, 0.1, 0)
+    notificationFrame.Position = UDim2.new(1, 0, 0.1 + #notifications * 0.11, 0)
+    notificationFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- 背景颜色
+    notificationFrame.BackgroundTransparency = 0.8 -- 背景透明度降低
+    notificationFrame.BorderSizePixel = 0
+    notificationFrame.ZIndex = 999
+    notificationFrame.Parent = Gui
+
+    local uiCorner = Instance.new("UICorner", notificationFrame)
+    uiCorner.CornerRadius = UDim.new(0, 8)
+
+    -- 标题
+    local titleLabel = Instance.new("TextLabel", notificationFrame)
+    titleLabel.Size = UDim2.new(0.95, 0, 0.3, 0)
+    titleLabel.Position = UDim2.new(0.025, 0, 0.05, 0)
+    titleLabel.Text = title
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- 标题文字颜色
+    titleLabel.TextSize = 16
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+    -- 分隔线
+    local divider = Instance.new("Frame", notificationFrame)
+    divider.Size = UDim2.new(0.95, 0, 0, 1)
+    divider.Position = UDim2.new(0.025, 0, 0.35, 0)
+    divider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    divider.BackgroundTransparency = 0.8
+    divider.BorderSizePixel = 0
+
+    -- 正文
+    local textLabel = Instance.new("TextLabel", notificationFrame)
+    textLabel.Size = UDim2.new(0.95, 0, 0.6, 0)
+    textLabel.Position = UDim2.new(0.025, 0, 0.3, 0)
+    textLabel.Text = text
+    textLabel.TextColor3 = Color3.fromRGB(220, 220, 220) -- 正文文字颜色
+    textLabel.TextSize = 14
+    textLabel.BackgroundTransparency = 1
+    textLabel.TextWrapped = true
+    textLabel.Font = Enum.Font.GothamSemibold
+    textLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+    table.insert(notifications, notificationFrame)
+
+    -- 如果是成就通知，播放音效
+    if isAchievement then
+        achievementSound:Play()
+    end
+
+    -- 滑入动画
+    local tweenIn = TweenService:Create(notificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+        Position = UDim2.new(0.8, 0, notificationFrame.Position.Y.Scale, 0)
+    })
+    tweenIn:Play()
+
+    -- 独立协程处理通知生命周期
+    coroutine.wrap(function()
+        wait(duration)
+        
+        -- 滑出动画
+        local tweenOut = TweenService:Create(notificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+            Position = UDim2.new(1, 0, notificationFrame.Position.Y.Scale, 0)
+        })
+        tweenOut:Play()
+        tweenOut.Completed:Wait()
+
+        -- 移除元素并更新队列
+        local index = table.find(notifications, notificationFrame)
+        if index then
+            table.remove(notifications, index)
+            notificationFrame:Destroy()
+            UpdatePositions()
+        end
+    end)()
+end
+
 -- 配置常量
 local CONFIG = {
-    ARROW_SIZE = UDim2.new(0.3, 0, 0.03, 0), -- 更小的箭头
+    ARROW_SIZE = UDim2.new(0.5, 0, 0.03, 0), -- 更小的箭头
     ARROW_POSITION_HIDDEN = UDim2.new(0.5, 0, 1.1, 0), -- 初始隐藏在屏幕下方
     ARROW_POSITION_VISIBLE = UDim2.new(0.5, 0, 0.97, 0), -- 贴近屏幕底部
-    MENU_SIZE = UDim2.new(0.3, 0, 0.4, 0),
-    MENU_POSITION_HIDDEN = UDim2.new(0.35, 0, 1.1, 0), -- 初始隐藏在屏幕下方
-    MENU_POSITION_VISIBLE = UDim2.new(0.35, 0, 0.6, 0), -- 点击箭头后弹出
+    MENU_SIZE = UDim2.new(0.4, 0, 0.5, 0),
+    MENU_POSITION_HIDDEN = UDim2.new(0.3, 0, 1.1, 0), -- 初始隐藏在屏幕下方
+    MENU_POSITION_VISIBLE = UDim2.new(0.3, 0, 0.4, 0), -- 点击箭头后弹出
     BACKGROUND_COLOR = Color3.fromRGB(40, 40, 40),
     BUTTON_COLOR = Color3.fromRGB(60, 60, 60),
     TEXT_COLOR = Color3.fromRGB(255, 255, 255),
@@ -601,9 +699,24 @@ local function AddMenuContent(category)
         button.TextSize = 14
         button.Parent = contentFrame
 
+        local button2 = Instance.new("TextButton")
+        button2.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button2.Position = UDim2.new(0.35, 0, 0.1, 0) -- 按钮位置
+        button2.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button2.Text = "反挂机被踢"
+        button2.TextColor3 = CONFIG.TEXT_COLOR
+        button2.TextSize = 14
+        button2.Parent = contentFrame
+
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
-            LocalPlayer.Character.Humanoid.Health = LocalPlayer.Character.Humanoid.MaxHealth 
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/flyv3.lua"))()
+            CreateNotification("正在启动", "飞行 V3", 5, true)
+        end)
+
+        button.MouseButton1Click:Connect(function()
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/AntiAFKKick.lua"))()
+            CreateNotification("正在启动", "反挂机被踢", 5, true)
         end)
     end
 end
@@ -685,3 +798,5 @@ UserInputService.InputBegan:Connect(function(input)
         Gui:Destroy() -- 卸载整个菜单系统
     end
 end)
+
+CreateNotification("欢迎使用", "Chronix已启动!", 10, true)
