@@ -766,11 +766,26 @@ local function AddMenuContent(category)
             loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/DongLingLobby.lua"))()
             CreateNotification("提示", "冬凌中心 已经成功启动!", 10, true)
         end)
+    elseif category == "设置" then
+        -- 添加“卸载菜单”按钮
+        local unloadButton = Instance.new("TextButton")
+        unloadButton.Size = UDim2.new(0.8, 0, 0.1, 0)
+        unloadButton.Position = UDim2.new(0.1, 0, 0.1, 0)
+        unloadButton.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        unloadButton.Text = "卸载菜单"
+        unloadButton.TextColor3 = CONFIG.TEXT_COLOR
+        unloadButton.TextSize = 18
+        unloadButton.Parent = contentFrame
+
+        -- 点击按钮卸载菜单
+        unloadButton.MouseButton1Click:Connect(function()
+            Gui:Destroy() -- 卸载整个菜单系统
+        end)
     end
 end
 
 -- 添加分类按钮
-local categories = {"基础", "工具", "脚本中心"}
+local categories = {"基础", "工具", "脚本中心", "设置"}
 for i, cat in ipairs(categories) do
     local button = Instance.new("TextButton")
     button.Size = CONFIG.CATEGORY_BUTTON_SIZE
