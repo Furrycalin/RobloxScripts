@@ -727,29 +727,44 @@ local function AddMenuContent(category)
         button4.TextSize = 14
         button4.Parent = contentFrame
 
+        local button5 = Instance.new("TextButton")
+        button5.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button5.Position = UDim2.new(0.1, 0, 0.5, 0) -- 按钮位置
+        button5.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button5.Text = "冬凌中心"
+        button5.TextColor3 = CONFIG.TEXT_COLOR
+        button5.TextSize = 14
+        button5.Parent = contentFrame
+
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
-            CreateNotification("提示", "正在启动 飞行 V3 脚本，请耐心等待.", 5, true)
+            CreateNotification("提示", "正在启动 飞行 V3 脚本，请耐心等待.", 10, true)
             loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/flyv3.lua"))()
-            CreateNotification("提示", "飞行 V3 已经成功启动!", 5, true)
+            CreateNotification("提示", "飞行 V3 已经成功启动!", 10, true)
         end)
 
         button2.MouseButton1Click:Connect(function()
-            CreateNotification("提示", "正在启动 反挂机被踢 脚本，请耐心等待.", 5, true)
+            CreateNotification("提示", "正在启动 反挂机被踢 脚本，请耐心等待.", 10, true)
             loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/AntiAFKKick.lua"))()
-            CreateNotification("提示", "反挂机被踢 已经成功启动!", 5, true)
+            CreateNotification("提示", "反挂机被踢 已经成功启动!", 10, true)
         end)
 
         button3.MouseButton1Click:Connect(function()
-            CreateNotification("提示", "正在启动 Doors扫描器 脚本，请耐心等待.", 5, true)
+            CreateNotification("提示", "正在启动 Doors扫描器 脚本，请耐心等待.", 10, true)
             loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/DoorsNVC3000.lua"))()
-            CreateNotification("提示", "Doors扫描器 已经成功启动!", 5, true)
+            CreateNotification("提示", "Doors扫描器 已经成功启动!", 10, true)
         end)
 
         button4.MouseButton1Click:Connect(function()
-            CreateNotification("提示", "正在启动 通用ESP 脚本，请耐心等待.", 5, true)
+            CreateNotification("提示", "正在启动 通用ESP 脚本，请耐心等待.", 10, true)
             loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/ESP.lua"))()
-            CreateNotification("提示", "通用ESP 已经成功启动!", 5, true)
+            CreateNotification("提示", "通用ESP 已经成功启动!", 10, true)
+        end)
+
+        button5.MouseButton1Click:Connect(function()
+            CreateNotification("提示", "正在启动 冬凌中心 脚本，请耐心等待.", 10, true)
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/DongLingLobby.lua"))()
+            CreateNotification("提示", "冬凌中心 已经成功启动!", 10, true)
         end)
     end
 end
