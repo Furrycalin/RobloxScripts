@@ -799,4 +799,4 @@ UserInputService.InputBegan:Connect(function(input)
     end
 end)
 
-CreateNotification("欢迎使用", "Chronix已启动!", 10, true)
+CreateNotification("欢迎使用", "ChronixHub已启动!", 10, true)
