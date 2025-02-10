@@ -126,6 +126,51 @@ local CONFIG = {
     CATEGORY_BUTTON_INSET = 10 -- 按钮向内偏移
 }
 
+local function CreateLabel(parent, text, size, position, textSize)
+    local label = Instance.new("TextLabel")
+    label.Size = size
+    label.Position = position
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = CONFIG.TEXT_COLOR
+    label.TextSize = textSize
+    label.Parent = parent
+    return label
+end
+
+local function CreateButton(parent, text, size, position, textSize)
+    local button = Instance.new("TextButton")
+    button.Size = size -- 按钮大小
+    button.Position = position -- 按钮位置
+    button.BackgroundColor3 = CONFIG.BUTTON_COLOR
+    button.Text = text
+    button.TextColor3 = CONFIG.TEXT_COLOR
+    button.TextSize = textSize
+    button.Parent = parent
+    return button
+end
+
+local function CreateTextBox(parent, text, size, position, textSize)
+    local textBox = Instance.new("TextBox")
+    textBox.Size = size -- 输入框大小
+    textBox.Position = position -- 输入框位置
+    textBox.BackgroundColor3 = CONFIG.BUTTON_COLOR
+    textBox.TextColor3 = CONFIG.TEXT_COLOR
+    textBox.TextSize = textSize
+    textBox.Text = text
+    textBox.Parent = parent
+    return textBox
+end
+
+local function CreateFrame(parent, size, position)
+    local slider = Instance.new("Frame")
+    slider.Size = size -- 滑轮背景大小
+    slider.Position = position -- 滑轮背景位置
+    slider.BackgroundColor3 = CONFIG.BUTTON_COLOR
+    slider.Parent = parent
+    return slider
+end
+
 -- 创建箭头按钮
 local arrowButton = Instance.new("TextButton")
 arrowButton.Size = CONFIG.ARROW_SIZE
@@ -188,210 +233,45 @@ local function AddMenuContent(category)
 
     -- 根据分类添加内容
     if category == "基础" then
-        -- 添加“更改移速”标签
-        local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(0.8, 0, 0.1, 0)
-        label.Position = UDim2.new(0.1, 0, 0, 0)
-        label.BackgroundTransparency = 1
-        label.Text = "更改移速"
-        label.TextColor3 = CONFIG.TEXT_COLOR
-        label.TextSize = 15
-        label.Parent = contentFrame
-
-        local label2 = Instance.new("TextLabel")
-        label2.Size = UDim2.new(0.8, 0, 0.1, 0)
-        label2.Position = UDim2.new(0.1, 0, 0.2, 0)
-        label2.BackgroundTransparency = 1
-        label2.Text = "更改跳跃高度"
-        label2.TextColor3 = CONFIG.TEXT_COLOR
-        label2.TextSize = 15
-        label2.Parent = contentFrame
-
-        local label3 = Instance.new("TextLabel")
-        label3.Size = UDim2.new(0.8, 0, 0.1, 0)
-        label3.Position = UDim2.new(0.1, 0, 0.4, 0)
-        label3.BackgroundTransparency = 1
-        label3.Text = "更改最大血量"
-        label3.TextColor3 = CONFIG.TEXT_COLOR
-        label3.TextSize = 15
-        label3.Parent = contentFrame
-
-        local label4 = Instance.new("TextLabel")
-        label4.Size = UDim2.new(0.8, 0, 0.1, 0)
-        label4.Position = UDim2.new(0.1, 0, 0.6, 0)
-        label4.BackgroundTransparency = 1
-        label4.Text = "更改当前血量"
-        label4.TextColor3 = CONFIG.TEXT_COLOR
-        label4.TextSize = 15
-        label4.Parent = contentFrame
-
-        local label5 = Instance.new("TextLabel")
-        label5.Size = UDim2.new(0.8, 0, 0.1, 0)
-        label5.Position = UDim2.new(0.1, 0, 0.8, 0)
-        label5.BackgroundTransparency = 1
-        label5.Text = "更改重力"
-        label5.TextColor3 = CONFIG.TEXT_COLOR
-        label5.TextSize = 15
-        label5.Parent = contentFrame
+        -- 添加标签
+        local label = CreateLabel(contentFrame, "更改移速", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0, 0), 15)
+        local label2 = CreateLabel(contentFrame, "更改跳跃高度", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0.2, 0), 15)
+        local label3 = CreateLabel(contentFrame, "更改最大血量", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0.4, 0), 15)
+        local label4 = CreateLabel(contentFrame, "更改当前血量", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0.6, 0), 15)
+        local label5 = CreateLabel(contentFrame, "更改重力", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0.8, 0), 15)
 
         -- 添加按钮
-        local button = Instance.new("TextButton")
-        button.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button.Position = UDim2.new(0.1, 0, 0.1, 0) -- 按钮位置
-        button.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button.Text = "设置"
-        button.TextColor3 = CONFIG.TEXT_COLOR
-        button.TextSize = 14
-        button.Parent = contentFrame
-
-        local button2 = Instance.new("TextButton")
-        button2.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button2.Position = UDim2.new(0.1, 0, 0.3, 0) -- 按钮位置
-        button2.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button2.Text = "设置"
-        button2.TextColor3 = CONFIG.TEXT_COLOR
-        button2.TextSize = 14
-        button2.Parent = contentFrame
-
-        local button3 = Instance.new("TextButton")
-        button3.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button3.Position = UDim2.new(0.1, 0, 0.5, 0) -- 按钮位置
-        button3.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button3.Text = "设置"
-        button3.TextColor3 = CONFIG.TEXT_COLOR
-        button3.TextSize = 14
-        button3.Parent = contentFrame
-
-        local button4 = Instance.new("TextButton")
-        button4.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button4.Position = UDim2.new(0.1, 0, 0.7, 0) -- 按钮位置
-        button4.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button4.Text = "设置"
-        button4.TextColor3 = CONFIG.TEXT_COLOR
-        button4.TextSize = 14
-        button4.Parent = contentFrame
-
-        local button5 = Instance.new("TextButton")
-        button5.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button5.Position = UDim2.new(0.1, 0, 0.9, 0) -- 按钮位置
-        button5.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button5.Text = "设置"
-        button5.TextColor3 = CONFIG.TEXT_COLOR
-        button5.TextSize = 14
-        button5.Parent = contentFrame
+        local button = CreateButton(contentFrame, "设置", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.1, 0), 14)
+        local button2 = CreateButton(contentFrame, "设置", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.3, 0), 14)
+        local button3 = CreateButton(contentFrame, "设置", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.5, 0), 14)
+        local button4 = CreateButton(contentFrame, "设置", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.7, 0), 14)
+        local button5 = CreateButton(contentFrame, "设置", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.9, 0), 14)
 
         -- 添加输入框
-        local textBox = Instance.new("TextBox")
-        textBox.Size = UDim2.new(0.2, 0, 0.1, 0) -- 输入框大小
-        textBox.Position = UDim2.new(0.35, 0, 0.1, 0) -- 输入框位置
-        textBox.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        textBox.TextColor3 = CONFIG.TEXT_COLOR
-        textBox.TextSize = 14
-        textBox.Text = LocalPlayer.Character.Humanoid.WalkSpeed
-        textBox.Parent = contentFrame
-
-        local textBox2 = Instance.new("TextBox")
-        textBox2.Size = UDim2.new(0.2, 0, 0.1, 0) -- 输入框大小
-        textBox2.Position = UDim2.new(0.35, 0, 0.3, 0) -- 输入框位置
-        textBox2.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        textBox2.TextColor3 = CONFIG.TEXT_COLOR
-        textBox2.TextSize = 14
-        textBox2.Text = LocalPlayer.Character.Humanoid.JumpPower
-        textBox2.Parent = contentFrame
-
-        local textBox3 = Instance.new("TextBox")
-        textBox3.Size = UDim2.new(0.2, 0, 0.1, 0) -- 输入框大小
-        textBox3.Position = UDim2.new(0.35, 0, 0.5, 0) -- 输入框位置
-        textBox3.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        textBox3.TextColor3 = CONFIG.TEXT_COLOR
-        textBox3.TextSize = 14
-        textBox3.Text = LocalPlayer.Character.Humanoid.MaxHealth
-        textBox3.Parent = contentFrame
-
-        local textBox4 = Instance.new("TextBox")
-        textBox4.Size = UDim2.new(0.2, 0, 0.1, 0) -- 输入框大小
-        textBox4.Position = UDim2.new(0.35, 0, 0.7, 0) -- 输入框位置
-        textBox4.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        textBox4.TextColor3 = CONFIG.TEXT_COLOR
-        textBox4.TextSize = 14
-        textBox4.Text = LocalPlayer.Character.Humanoid.Health
-        textBox4.Parent = contentFrame
-
-        local textBox5 = Instance.new("TextBox")
-        textBox5.Size = UDim2.new(0.2, 0, 0.1, 0) -- 输入框大小
-        textBox5.Position = UDim2.new(0.35, 0, 0.9, 0) -- 输入框位置
-        textBox5.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        textBox5.TextColor3 = CONFIG.TEXT_COLOR
-        textBox5.TextSize = 14
-        textBox5.Text = game.Workspace.Gravity
-        textBox5.Parent = contentFrame
+        local textBox = CreateTextBox(contentFrame, LocalPlayer.Character.Humanoid.WalkSpeed, UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.1, 0), 14)
+        local textBox2 = CreateTextBox(contentFrame, LocalPlayer.Character.Humanoid.JumpPower, UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.3, 0), 14)
+        local textBox3 = CreateTextBox(contentFrame, LocalPlayer.Character.Humanoid.MaxHealth, UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.5, 0), 14)
+        local textBox4 = CreateTextBox(contentFrame, LocalPlayer.Character.Humanoid.Health, UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.7, 0), 14)
+        local textBox5 = CreateTextBox(contentFrame, game.Workspace.Gravity, UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.9, 0), 14)
 
         -- 添加滑轮
-        local slider = Instance.new("Frame")
-        slider.Size = UDim2.new(0.3, 0, 0.05, 0) -- 滑轮背景大小
-        slider.Position = UDim2.new(0.6, 0, 0.125, 0) -- 滑轮背景位置
-        slider.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        slider.Parent = contentFrame
-
-        local slider2 = Instance.new("Frame")
-        slider2.Size = UDim2.new(0.3, 0, 0.05, 0) -- 滑轮背景大小
-        slider2.Position = UDim2.new(0.6, 0, 0.325, 0) -- 滑轮背景位置
-        slider2.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        slider2.Parent = contentFrame
-
-        local slider3 = Instance.new("Frame")
-        slider3.Size = UDim2.new(0.3, 0, 0.05, 0) -- 滑轮背景大小
-        slider3.Position = UDim2.new(0.6, 0, 0.525, 0) -- 滑轮背景位置
-        slider3.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        slider3.Parent = contentFrame
-
-        local slider4 = Instance.new("Frame")
-        slider4.Size = UDim2.new(0.3, 0, 0.05, 0) -- 滑轮背景大小
-        slider4.Position = UDim2.new(0.6, 0, 0.725, 0) -- 滑轮背景位置
-        slider4.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        slider4.Parent = contentFrame
-
-        local slider5 = Instance.new("Frame")
-        slider5.Size = UDim2.new(0.3, 0, 0.05, 0) -- 滑轮背景大小
-        slider5.Position = UDim2.new(0.6, 0, 0.925, 0) -- 滑轮背景位置
-        slider5.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        slider5.Parent = contentFrame
+        local slider = CreateFrame(contentFrame, UDim2.new(0.3, 0, 0.05, 0), UDim2.new(0.6, 0, 0.125, 0))
+        local slider2 = CreateFrame(contentFrame, UDim2.new(0.3, 0, 0.05, 0), UDim2.new(0.6, 0, 0.325, 0))
+        local slider3 = CreateFrame(contentFrame, UDim2.new(0.3, 0, 0.05, 0), UDim2.new(0.6, 0, 0.525, 0))
+        local slider4 = CreateFrame(contentFrame, UDim2.new(0.3, 0, 0.05, 0), UDim2.new(0.6, 0, 0.725, 0))
+        local slider5 = CreateFrame(contentFrame, UDim2.new(0.3, 0, 0.05, 0), UDim2.new(0.6, 0, 0.925, 0))
 
         -- 滑轮滑块
-        local sliderButton = Instance.new("TextButton")
-        sliderButton.Size = UDim2.new(0.1, 0, 1, 0) -- 滑块大小
-        sliderButton.Position = UDim2.new(LocalPlayer.Character.Humanoid.WalkSpeed / 100 or 0, 0, 0, 0) -- 滑块初始位置
+        local sliderButton = CreateButton(slider, "", UDim2.new(0.1, 0, 1, 0), UDim2.new(LocalPlayer.Character.Humanoid.WalkSpeed / 100 or 0, 0, 0, 0), 0)
+        local sliderButton2 = CreateButton(slider2, "", UDim2.new(0.1, 0, 1, 0), UDim2.new(LocalPlayer.Character.Humanoid.JumpPower / 100 or 0, 0, 0, 0), 0)
+        local sliderButton3 = CreateButton(slider3, "", UDim2.new(0.1, 0, 1, 0), UDim2.new(LocalPlayer.Character.Humanoid.MaxHealth / 1000 or 0, 0, 0, 0), 0)
+        local sliderButton4 = CreateButton(slider4, "", UDim2.new(0.1, 0, 1, 0), UDim2.new(LocalPlayer.Character.Humanoid.Health / textBox3.Text or 0, 0, 0, 0), 0)
+        local sliderButton5 = CreateButton(slider5, "", UDim2.new(0.1, 0, 1, 0), UDim2.new(game.Workspace.Gravity / 500 or 0, 0, 0, 0), 0)
         sliderButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-        sliderButton.Text = ""
-        sliderButton.Parent = slider
-
-        local sliderButton2 = Instance.new("TextButton")
-        sliderButton2.Size = UDim2.new(0.1, 0, 1, 0) -- 滑块大小
-        sliderButton2.Position = UDim2.new(LocalPlayer.Character.Humanoid.JumpPower / 100 or 0, 0, 0, 0) -- 滑块初始位置
         sliderButton2.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-        sliderButton2.Text = ""
-        sliderButton2.Parent = slider2
-
-        local sliderButton3 = Instance.new("TextButton")
-        sliderButton3.Size = UDim2.new(0.1, 0, 1, 0) -- 滑块大小
-        sliderButton3.Position = UDim2.new(LocalPlayer.Character.Humanoid.MaxHealth / 1000 or 0, 0, 0, 0) -- 滑块初始位置
         sliderButton3.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-        sliderButton3.Text = ""
-        sliderButton3.Parent = slider3
-
-        local sliderButton4 = Instance.new("TextButton")
-        sliderButton4.Size = UDim2.new(0.1, 0, 1, 0) -- 滑块大小
-        sliderButton4.Position = UDim2.new(LocalPlayer.Character.Humanoid.Health / textBox3.Text or 0, 0, 0, 0) -- 滑块初始位置
         sliderButton4.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-        sliderButton4.Text = ""
-        sliderButton4.Parent = slider4
-
-        local sliderButton5 = Instance.new("TextButton")
-        sliderButton5.Size = UDim2.new(0.1, 0, 1, 0) -- 滑块大小
-        sliderButton5.Position = UDim2.new(game.Workspace.Gravity / 500 or 0, 0, 0, 0) -- 滑块初始位置
         sliderButton5.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-        sliderButton5.Text = ""
-        sliderButton5.Parent = slider5
 
         -- 滑轮逻辑
         local isDragging = false
@@ -594,50 +474,11 @@ local function AddMenuContent(category)
         end)
     elseif category == "工具" then
         -- 添加按钮
-        local button = Instance.new("TextButton")
-        button.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button.Position = UDim2.new(0.1, 0, 0.1, 0) -- 按钮位置
-        button.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button.Text = "回满血"
-        button.TextColor3 = CONFIG.TEXT_COLOR
-        button.TextSize = 14
-        button.Parent = contentFrame
-
-        local button2 = Instance.new("TextButton")
-        button2.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button2.Position = UDim2.new(0.35, 0, 0.1, 0) -- 按钮位置
-        button2.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button2.Text = "自杀"
-        button2.TextColor3 = CONFIG.TEXT_COLOR
-        button2.TextSize = 14
-        button2.Parent = contentFrame
-
-        local button3 = Instance.new("TextButton")
-        button3.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button3.Position = UDim2.new(0.6, 0, 0.1, 0) -- 按钮位置
-        button3.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button3.Text = _G.ChronixHubisNightVisiton and "夜视(开)" or "夜视(关)"
-        button3.TextColor3 = CONFIG.TEXT_COLOR
-        button3.TextSize = 14
-        button3.Parent = contentFrame
-
-        local button4 = Instance.new("TextButton")
-        button4.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button4.Position = UDim2.new(0.1, 0, 0.3, 0) -- 按钮位置
-        button4.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button4.Text = "点击传送工具"
-        button4.TextColor3 = CONFIG.TEXT_COLOR
-        button4.TextSize = 14
-        button4.Parent = contentFrame
-
-        local button5 = Instance.new("TextButton")
-        button5.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button5.Position = UDim2.new(0.35, 0, 0.3, 0) -- 按钮位置
-        button5.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button5.Text = _G.ChronixHubisChuanQiang and "穿墙(开)" or "穿墙(关)"
-        button5.TextColor3 = CONFIG.TEXT_COLOR
-        button5.TextSize = 14
-        button5.Parent = contentFrame
+        local button = CreateButton(contentFrame, "回满血", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.1, 0), 14)
+        local button2 = CreateButton(contentFrame, "自杀", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.1, 0), 14)
+        local button3 = CreateButton(contentFrame, _G.ChronixHubisNightVisiton and "夜视(开)" or "夜视(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.6, 0, 0.1, 0), 14)
+        local button4 = CreateButton(contentFrame, "点击传送工具", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.3, 0), 14)
+        local button5 = CreateButton(contentFrame, _G.ChronixHubisChuanQiang and "穿墙(开)" or "穿墙(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.3, 0), 14)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
@@ -691,50 +532,11 @@ local function AddMenuContent(category)
         end)
     elseif category == "脚本中心" then
         -- 添加按钮
-        local button = Instance.new("TextButton")
-        button.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button.Position = UDim2.new(0.1, 0, 0.1, 0) -- 按钮位置
-        button.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button.Text = "飞行 V3"
-        button.TextColor3 = CONFIG.TEXT_COLOR
-        button.TextSize = 14
-        button.Parent = contentFrame
-
-        local button2 = Instance.new("TextButton")
-        button2.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button2.Position = UDim2.new(0.35, 0, 0.1, 0) -- 按钮位置
-        button2.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button2.Text = "反挂机被踢"
-        button2.TextColor3 = CONFIG.TEXT_COLOR
-        button2.TextSize = 14
-        button2.Parent = contentFrame
-
-        local button3 = Instance.new("TextButton")
-        button3.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button3.Position = UDim2.new(0.1, 0, 0.3, 0) -- 按钮位置
-        button3.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button3.Text = "Doors扫描器"
-        button3.TextColor3 = CONFIG.TEXT_COLOR
-        button3.TextSize = 14
-        button3.Parent = contentFrame
-
-        local button4 = Instance.new("TextButton")
-        button4.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button4.Position = UDim2.new(0.6, 0, 0.1, 0) -- 按钮位置
-        button4.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button4.Text = "通用ESP"
-        button4.TextColor3 = CONFIG.TEXT_COLOR
-        button4.TextSize = 14
-        button4.Parent = contentFrame
-
-        local button5 = Instance.new("TextButton")
-        button5.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
-        button5.Position = UDim2.new(0.1, 0, 0.5, 0) -- 按钮位置
-        button5.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        button5.Text = "冬凌中心"
-        button5.TextColor3 = CONFIG.TEXT_COLOR
-        button5.TextSize = 14
-        button5.Parent = contentFrame
+        local button = CreateButton(contentFrame, "飞行 V3", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.1, 0), 14)
+        local button2 = CreateButton(contentFrame, "反挂机被踢", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.1, 0), 14)
+        local button3 = CreateButton(contentFrame, "Doors扫描器", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.3, 0), 14)
+        local button4 = CreateButton(contentFrame, "通用ESP", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.6, 0, 0.1, 0), 14)
+        local button5 = CreateButton(contentFrame, "冬凌中心", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.5, 0), 14)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
@@ -768,14 +570,7 @@ local function AddMenuContent(category)
         end)
     elseif category == "设置" then
         -- 添加“卸载菜单”按钮
-        local unloadButton = Instance.new("TextButton")
-        unloadButton.Size = UDim2.new(0.8, 0, 0.1, 0)
-        unloadButton.Position = UDim2.new(0.1, 0, 0.1, 0)
-        unloadButton.BackgroundColor3 = CONFIG.BUTTON_COLOR
-        unloadButton.Text = "卸载菜单"
-        unloadButton.TextColor3 = CONFIG.TEXT_COLOR
-        unloadButton.TextSize = 18
-        unloadButton.Parent = contentFrame
+        local unloadButton = CreateButton(contentFrame, "卸载菜单", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0.1, 0), 18)
 
         -- 点击按钮卸载菜单
         unloadButton.MouseButton1Click:Connect(function()
