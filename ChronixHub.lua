@@ -709,6 +709,24 @@ local function AddMenuContent(category)
         button2.TextSize = 14
         button2.Parent = contentFrame
 
+        local button3 = Instance.new("TextButton")
+        button3.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button3.Position = UDim2.new(0.1, 0, 0.3, 0) -- 按钮位置
+        button3.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button3.Text = "Doors扫描器"
+        button3.TextColor3 = CONFIG.TEXT_COLOR
+        button3.TextSize = 14
+        button3.Parent = contentFrame
+
+        local button4 = Instance.new("TextButton")
+        button4.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button4.Position = UDim2.new(0.6, 0, 0.1, 0) -- 按钮位置
+        button4.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button4.Text = "通用ESP"
+        button4.TextColor3 = CONFIG.TEXT_COLOR
+        button4.TextSize = 14
+        button4.Parent = contentFrame
+
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
             CreateNotification("提示", "正在启动 飞行 V3 脚本，请耐心等待.", 5, true)
@@ -720,6 +738,18 @@ local function AddMenuContent(category)
             CreateNotification("提示", "正在启动 反挂机被踢 脚本，请耐心等待.", 5, true)
             loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/AntiAFKKick.lua"))()
             CreateNotification("提示", "反挂机被踢 已经成功启动!", 5, true)
+        end)
+
+        button3.MouseButton1Click:Connect(function()
+            CreateNotification("提示", "正在启动 Doors扫描器 脚本，请耐心等待.", 5, true)
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/DoorsNVC3000.lua"))()
+            CreateNotification("提示", "Doors扫描器 已经成功启动!", 5, true)
+        end)
+
+        button4.MouseButton1Click:Connect(function()
+            CreateNotification("提示", "正在启动 通用ESP 脚本，请耐心等待.", 5, true)
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/ESP.lua"))()
+            CreateNotification("提示", "通用ESP 已经成功启动!", 5, true)
         end)
     end
 end
