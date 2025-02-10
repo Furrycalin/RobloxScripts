@@ -6,9 +6,12 @@ local LocalPlayer = Players.LocalPlayer
 local Gui = Instance.new("ScreenGui")
 Gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
+_G.ChronixHubisNightVisiton = false
+_G.ChronixHubisChuanQiang = false
+
 -- 配置常量
 local CONFIG = {
-    ARROW_SIZE = UDim2.new(0.03, 0, 0.03, 0), -- 更小的箭头
+    ARROW_SIZE = UDim2.new(0.3, 0, 0.03, 0), -- 更小的箭头
     ARROW_POSITION_HIDDEN = UDim2.new(0.5, 0, 1.1, 0), -- 初始隐藏在屏幕下方
     ARROW_POSITION_VISIBLE = UDim2.new(0.5, 0, 0.97, 0), -- 贴近屏幕底部
     MENU_SIZE = UDim2.new(0.3, 0, 0.4, 0),
@@ -86,37 +89,527 @@ local function AddMenuContent(category)
 
     -- 根据分类添加内容
     if category == "基础" then
+        -- 添加“更改移速”标签
         local label = Instance.new("TextLabel")
         label.Size = UDim2.new(0.8, 0, 0.1, 0)
-        label.Position = UDim2.new(0.1, 0, 0.1, 0)
+        label.Position = UDim2.new(0.1, 0, 0, 0)
         label.BackgroundTransparency = 1
-        label.Text = "设置内容"
+        label.Text = "更改移速"
         label.TextColor3 = CONFIG.TEXT_COLOR
-        label.TextSize = 18
+        label.TextSize = 15
         label.Parent = contentFrame
+
+        local label2 = Instance.new("TextLabel")
+        label2.Size = UDim2.new(0.8, 0, 0.1, 0)
+        label2.Position = UDim2.new(0.1, 0, 0.2, 0)
+        label2.BackgroundTransparency = 1
+        label2.Text = "更改跳跃高度"
+        label2.TextColor3 = CONFIG.TEXT_COLOR
+        label2.TextSize = 15
+        label2.Parent = contentFrame
+
+        local label3 = Instance.new("TextLabel")
+        label3.Size = UDim2.new(0.8, 0, 0.1, 0)
+        label3.Position = UDim2.new(0.1, 0, 0.4, 0)
+        label3.BackgroundTransparency = 1
+        label3.Text = "更改最大血量"
+        label3.TextColor3 = CONFIG.TEXT_COLOR
+        label3.TextSize = 15
+        label3.Parent = contentFrame
+
+        local label4 = Instance.new("TextLabel")
+        label4.Size = UDim2.new(0.8, 0, 0.1, 0)
+        label4.Position = UDim2.new(0.1, 0, 0.6, 0)
+        label4.BackgroundTransparency = 1
+        label4.Text = "更改当前血量"
+        label4.TextColor3 = CONFIG.TEXT_COLOR
+        label4.TextSize = 15
+        label4.Parent = contentFrame
+
+        local label5 = Instance.new("TextLabel")
+        label5.Size = UDim2.new(0.8, 0, 0.1, 0)
+        label5.Position = UDim2.new(0.1, 0, 0.8, 0)
+        label5.BackgroundTransparency = 1
+        label5.Text = "更改重力"
+        label5.TextColor3 = CONFIG.TEXT_COLOR
+        label5.TextSize = 15
+        label5.Parent = contentFrame
+
+        -- 添加按钮
+        local button = Instance.new("TextButton")
+        button.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button.Position = UDim2.new(0.1, 0, 0.1, 0) -- 按钮位置
+        button.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button.Text = "设置"
+        button.TextColor3 = CONFIG.TEXT_COLOR
+        button.TextSize = 14
+        button.Parent = contentFrame
+
+        local button2 = Instance.new("TextButton")
+        button2.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button2.Position = UDim2.new(0.1, 0, 0.3, 0) -- 按钮位置
+        button2.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button2.Text = "设置"
+        button2.TextColor3 = CONFIG.TEXT_COLOR
+        button2.TextSize = 14
+        button2.Parent = contentFrame
+
+        local button3 = Instance.new("TextButton")
+        button3.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button3.Position = UDim2.new(0.1, 0, 0.5, 0) -- 按钮位置
+        button3.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button3.Text = "设置"
+        button3.TextColor3 = CONFIG.TEXT_COLOR
+        button3.TextSize = 14
+        button3.Parent = contentFrame
+
+        local button4 = Instance.new("TextButton")
+        button4.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button4.Position = UDim2.new(0.1, 0, 0.7, 0) -- 按钮位置
+        button4.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button4.Text = "设置"
+        button4.TextColor3 = CONFIG.TEXT_COLOR
+        button4.TextSize = 14
+        button4.Parent = contentFrame
+
+        local button5 = Instance.new("TextButton")
+        button5.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button5.Position = UDim2.new(0.1, 0, 0.9, 0) -- 按钮位置
+        button5.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button5.Text = "设置"
+        button5.TextColor3 = CONFIG.TEXT_COLOR
+        button5.TextSize = 14
+        button5.Parent = contentFrame
+
+        -- 添加输入框
+        local textBox = Instance.new("TextBox")
+        textBox.Size = UDim2.new(0.2, 0, 0.1, 0) -- 输入框大小
+        textBox.Position = UDim2.new(0.35, 0, 0.1, 0) -- 输入框位置
+        textBox.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        textBox.TextColor3 = CONFIG.TEXT_COLOR
+        textBox.TextSize = 14
+        textBox.Text = LocalPlayer.Character.Humanoid.WalkSpeed
+        textBox.Parent = contentFrame
+
+        local textBox2 = Instance.new("TextBox")
+        textBox2.Size = UDim2.new(0.2, 0, 0.1, 0) -- 输入框大小
+        textBox2.Position = UDim2.new(0.35, 0, 0.3, 0) -- 输入框位置
+        textBox2.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        textBox2.TextColor3 = CONFIG.TEXT_COLOR
+        textBox2.TextSize = 14
+        textBox2.Text = LocalPlayer.Character.Humanoid.JumpPower
+        textBox2.Parent = contentFrame
+
+        local textBox3 = Instance.new("TextBox")
+        textBox3.Size = UDim2.new(0.2, 0, 0.1, 0) -- 输入框大小
+        textBox3.Position = UDim2.new(0.35, 0, 0.5, 0) -- 输入框位置
+        textBox3.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        textBox3.TextColor3 = CONFIG.TEXT_COLOR
+        textBox3.TextSize = 14
+        textBox3.Text = LocalPlayer.Character.Humanoid.MaxHealth
+        textBox3.Parent = contentFrame
+
+        local textBox4 = Instance.new("TextBox")
+        textBox4.Size = UDim2.new(0.2, 0, 0.1, 0) -- 输入框大小
+        textBox4.Position = UDim2.new(0.35, 0, 0.7, 0) -- 输入框位置
+        textBox4.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        textBox4.TextColor3 = CONFIG.TEXT_COLOR
+        textBox4.TextSize = 14
+        textBox4.Text = LocalPlayer.Character.Humanoid.Health
+        textBox4.Parent = contentFrame
+
+        local textBox5 = Instance.new("TextBox")
+        textBox5.Size = UDim2.new(0.2, 0, 0.1, 0) -- 输入框大小
+        textBox5.Position = UDim2.new(0.35, 0, 0.9, 0) -- 输入框位置
+        textBox5.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        textBox5.TextColor3 = CONFIG.TEXT_COLOR
+        textBox5.TextSize = 14
+        textBox5.Text = game.Workspace.Gravity
+        textBox5.Parent = contentFrame
+
+        -- 添加滑轮
+        local slider = Instance.new("Frame")
+        slider.Size = UDim2.new(0.3, 0, 0.05, 0) -- 滑轮背景大小
+        slider.Position = UDim2.new(0.6, 0, 0.125, 0) -- 滑轮背景位置
+        slider.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        slider.Parent = contentFrame
+
+        local slider2 = Instance.new("Frame")
+        slider2.Size = UDim2.new(0.3, 0, 0.05, 0) -- 滑轮背景大小
+        slider2.Position = UDim2.new(0.6, 0, 0.325, 0) -- 滑轮背景位置
+        slider2.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        slider2.Parent = contentFrame
+
+        local slider3 = Instance.new("Frame")
+        slider3.Size = UDim2.new(0.3, 0, 0.05, 0) -- 滑轮背景大小
+        slider3.Position = UDim2.new(0.6, 0, 0.525, 0) -- 滑轮背景位置
+        slider3.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        slider3.Parent = contentFrame
+
+        local slider4 = Instance.new("Frame")
+        slider4.Size = UDim2.new(0.3, 0, 0.05, 0) -- 滑轮背景大小
+        slider4.Position = UDim2.new(0.6, 0, 0.725, 0) -- 滑轮背景位置
+        slider4.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        slider4.Parent = contentFrame
+
+        local slider5 = Instance.new("Frame")
+        slider5.Size = UDim2.new(0.3, 0, 0.05, 0) -- 滑轮背景大小
+        slider5.Position = UDim2.new(0.6, 0, 0.925, 0) -- 滑轮背景位置
+        slider5.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        slider5.Parent = contentFrame
+
+        -- 滑轮滑块
+        local sliderButton = Instance.new("TextButton")
+        sliderButton.Size = UDim2.new(0.1, 0, 1, 0) -- 滑块大小
+        sliderButton.Position = UDim2.new(LocalPlayer.Character.Humanoid.WalkSpeed / 100 or 0, 0, 0, 0) -- 滑块初始位置
+        sliderButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        sliderButton.Text = ""
+        sliderButton.Parent = slider
+
+        local sliderButton2 = Instance.new("TextButton")
+        sliderButton2.Size = UDim2.new(0.1, 0, 1, 0) -- 滑块大小
+        sliderButton2.Position = UDim2.new(LocalPlayer.Character.Humanoid.JumpPower / 100 or 0, 0, 0, 0) -- 滑块初始位置
+        sliderButton2.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        sliderButton2.Text = ""
+        sliderButton2.Parent = slider2
+
+        local sliderButton3 = Instance.new("TextButton")
+        sliderButton3.Size = UDim2.new(0.1, 0, 1, 0) -- 滑块大小
+        sliderButton3.Position = UDim2.new(LocalPlayer.Character.Humanoid.MaxHealth / 1000 or 0, 0, 0, 0) -- 滑块初始位置
+        sliderButton3.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        sliderButton3.Text = ""
+        sliderButton3.Parent = slider3
+
+        local sliderButton4 = Instance.new("TextButton")
+        sliderButton4.Size = UDim2.new(0.1, 0, 1, 0) -- 滑块大小
+        sliderButton4.Position = UDim2.new(LocalPlayer.Character.Humanoid.Health / textBox3.Text or 0, 0, 0, 0) -- 滑块初始位置
+        sliderButton4.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        sliderButton4.Text = ""
+        sliderButton4.Parent = slider4
+
+        local sliderButton5 = Instance.new("TextButton")
+        sliderButton5.Size = UDim2.new(0.1, 0, 1, 0) -- 滑块大小
+        sliderButton5.Position = UDim2.new(game.Workspace.Gravity / 500 or 0, 0, 0, 0) -- 滑块初始位置
+        sliderButton5.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        sliderButton5.Text = ""
+        sliderButton5.Parent = slider5
+
+        -- 滑轮逻辑
+        local isDragging = false
+        local function updateSlider(input)
+            local sliderSize = slider.AbsoluteSize.X
+            local sliderPosition = math.clamp((input.Position.X - slider.AbsolutePosition.X) / sliderSize, 0, 1)
+            sliderButton.Position = UDim2.new(sliderPosition, 0, 0, 0)
+            local speed = math.floor(sliderPosition * 100) -- 将滑轮值映射到 0-100
+            textBox.Text = tostring(speed) -- 更新输入框的值
+        end
+
+        local isDragging2 = false
+        local function updateSlider2(input)
+            local sliderSize2 = slider2.AbsoluteSize.X
+            local sliderPosition2 = math.clamp((input.Position.X - slider2.AbsolutePosition.X) / sliderSize2, 0, 1)
+            sliderButton2.Position = UDim2.new(sliderPosition2, 0, 0, 0)
+            local jump = math.floor(sliderPosition2 * 100) -- 将滑轮值映射到 0-100
+            textBox2.Text = tostring(jump) -- 更新输入框的值
+        end
+
+        local isDragging3 = false
+        local function updateSlider3(input)
+            local sliderSize3 = slider3.AbsoluteSize.X
+            local sliderPosition3 = math.clamp((input.Position.X - slider3.AbsolutePosition.X) / sliderSize3, 0, 1)
+            sliderButton3.Position = UDim2.new(sliderPosition3, 0, 0, 0)
+            local mh = math.floor(sliderPosition3 * 1000) -- 将滑轮值映射到 0-100
+            textBox3.Text = tostring(mh) -- 更新输入框的值
+        end
+
+        local isDragging4 = false
+        local function updateSlider4(input)
+            local sliderSize4 = slider4.AbsoluteSize.X
+            local sliderPosition4 = math.clamp((input.Position.X - slider4.AbsolutePosition.X) / sliderSize4, 0, 1)
+            sliderButton4.Position = UDim2.new(sliderPosition4, 0, 0, 0)
+            local heal = math.floor(sliderPosition4 * textBox3.Text) -- 将滑轮值映射到 0-100
+            textBox4.Text = tostring(heal) -- 更新输入框的值
+        end
+
+        local isDragging5 = false
+        local function updateSlider5(input)
+            local sliderSize5 = slider5.AbsoluteSize.X
+            local sliderPosition5 = math.clamp((input.Position.X - slider5.AbsolutePosition.X) / sliderSize5, 0, 1)
+            sliderButton5.Position = UDim2.new(sliderPosition5, 0, 0, 0)
+            local grav = math.floor(sliderPosition5 * 500) -- 将滑轮值映射到 0-100
+            textBox5.Text = tostring(grav) -- 更新输入框的值
+        end
+
+        sliderButton.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                isDragging = true
+            end
+        end)
+
+        sliderButton.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                isDragging = false
+            end
+        end)
+
+        sliderButton2.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                isDragging2 = true
+            end
+        end)
+
+        sliderButton2.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                isDragging2 = false
+            end
+        end)
+
+        sliderButton3.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                isDragging3 = true
+            end
+        end)
+
+        sliderButton3.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                isDragging3 = false
+            end
+        end)
+
+        sliderButton4.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                isDragging4 = true
+            end
+        end)
+
+        sliderButton4.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                isDragging4 = false
+            end
+        end)
+
+        sliderButton5.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                isDragging5 = true
+            end
+        end)
+
+        sliderButton5.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                isDragging5 = false
+            end
+        end)
+
+        UserInputService.InputChanged:Connect(function(input)
+            if isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+                updateSlider(input)
+            end
+
+            if isDragging2 and input.UserInputType == Enum.UserInputType.MouseMovement then
+                updateSlider2(input)
+            end
+
+            if isDragging3 and input.UserInputType == Enum.UserInputType.MouseMovement then
+                updateSlider3(input)
+            end
+
+            if isDragging4 and input.UserInputType == Enum.UserInputType.MouseMovement then
+                updateSlider4(input)
+            end
+
+            if isDragging5 and input.UserInputType == Enum.UserInputType.MouseMovement then
+                updateSlider5(input)
+            end
+        end)
+
+        -- 按钮点击逻辑
+        button.MouseButton1Click:Connect(function()
+            local speed = tonumber(textBox.Text)
+            if speed then
+                LocalPlayer.Character.Humanoid.WalkSpeed = speed
+            end
+        end)
+
+        button2.MouseButton1Click:Connect(function()
+            local JumpPower = tonumber(textBox2.Text)
+            if JumpPower then
+                LocalPlayer.Character.Humanoid.JumpPower = JumpPower
+            end
+        end)
+
+        button3.MouseButton1Click:Connect(function()
+            local mh = tonumber(textBox3.Text)
+            if mh then
+                LocalPlayer.Character.Humanoid.MaxHealth = mh
+            end
+        end)
+
+        button4.MouseButton1Click:Connect(function()
+            local heal = tonumber(textBox4.Text)
+            if heal then
+                LocalPlayer.Character.Humanoid.Health = heal
+            end
+        end)
+
+        button5.MouseButton1Click:Connect(function()
+            local grav = tonumber(textBox5.Text)
+            if grav then
+                game.Workspace.Gravity = grav
+            end
+        end)
+
+        -- 滑轮值改变时执行命令
+        sliderButton:GetPropertyChangedSignal("Position"):Connect(function()
+            local speed = tonumber(textBox.Text)
+            if speed then
+                LocalPlayer.Character.Humanoid.WalkSpeed = speed
+            end
+        end)
+
+        sliderButton2:GetPropertyChangedSignal("Position"):Connect(function()
+            local JumpPower = tonumber(textBox2.Text)
+            if JumpPower then
+                LocalPlayer.Character.Humanoid.JumpPower = JumpPower
+            end
+        end)
+
+        sliderButton3:GetPropertyChangedSignal("Position"):Connect(function()
+            local mh = tonumber(textBox3.Text)
+            if mh then
+                LocalPlayer.Character.Humanoid.MaxHealth = mh
+            end
+        end)
+
+        sliderButton4:GetPropertyChangedSignal("Position"):Connect(function()
+            local heal = tonumber(textBox4.Text)
+            if heal then
+                LocalPlayer.Character.Humanoid.Health = heal
+            end
+        end)
+
+        sliderButton5:GetPropertyChangedSignal("Position"):Connect(function()
+            local grav = tonumber(textBox5.Text)
+            if grav then
+                game.Workspace.Gravity = grav
+            end
+        end)
     elseif category == "工具" then
-        local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(0.8, 0, 0.1, 0)
-        label.Position = UDim2.new(0.1, 0, 0.1, 0)
-        label.BackgroundTransparency = 1
-        label.Text = "工具内容"
-        label.TextColor3 = CONFIG.TEXT_COLOR
-        label.TextSize = 18
-        label.Parent = contentFrame
-    elseif category == "帮助" then
-        local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(0.8, 0, 0.1, 0)
-        label.Position = UDim2.new(0.1, 0, 0.1, 0)
-        label.BackgroundTransparency = 1
-        label.Text = "帮助内容"
-        label.TextColor3 = CONFIG.TEXT_COLOR
-        label.TextSize = 18
-        label.Parent = contentFrame
+        -- 添加按钮
+        local button = Instance.new("TextButton")
+        button.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button.Position = UDim2.new(0.1, 0, 0.1, 0) -- 按钮位置
+        button.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button.Text = "回满血"
+        button.TextColor3 = CONFIG.TEXT_COLOR
+        button.TextSize = 14
+        button.Parent = contentFrame
+
+        local button2 = Instance.new("TextButton")
+        button2.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button2.Position = UDim2.new(0.35, 0, 0.1, 0) -- 按钮位置
+        button2.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button2.Text = "自杀"
+        button2.TextColor3 = CONFIG.TEXT_COLOR
+        button2.TextSize = 14
+        button2.Parent = contentFrame
+
+        local button3 = Instance.new("TextButton")
+        button3.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button3.Position = UDim2.new(0.6, 0, 0.1, 0) -- 按钮位置
+        button3.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button3.Text = _G.ChronixHubisNightVisiton and "夜视(开)" or "夜视(关)"
+        button3.TextColor3 = CONFIG.TEXT_COLOR
+        button3.TextSize = 14
+        button3.Parent = contentFrame
+
+        local button4 = Instance.new("TextButton")
+        button4.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button4.Position = UDim2.new(0.1, 0, 0.3, 0) -- 按钮位置
+        button4.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button4.Text = "点击传送工具"
+        button4.TextColor3 = CONFIG.TEXT_COLOR
+        button4.TextSize = 14
+        button4.Parent = contentFrame
+
+        local button5 = Instance.new("TextButton")
+        button5.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button5.Position = UDim2.new(0.35, 0, 0.3, 0) -- 按钮位置
+        button5.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button5.Text = _G.ChronixHubisChuanQiang and "穿墙(开)" or "穿墙(关)"
+        button5.TextColor3 = CONFIG.TEXT_COLOR
+        button5.TextSize = 14
+        button5.Parent = contentFrame
+
+        -- 按钮点击逻辑
+        button.MouseButton1Click:Connect(function()
+            LocalPlayer.Character.Humanoid.Health = LocalPlayer.Character.Humanoid.MaxHealth 
+        end)
+
+        button2.MouseButton1Click:Connect(function()
+            LocalPlayer.Character.Humanoid.Health = 0
+            HumanDied = true
+        end)
+
+        button3.MouseButton1Click:Connect(function()
+            if _G.ChronixHubisNightVisiton then
+                game.Lighting.Ambient = Color3.new(0, 0, 0)
+                button3.Text = "夜视(关)"
+                _G.ChronixHubisNightVisiton = false
+            else
+                game.Lighting.Ambient = Color3.new(1, 1, 1)
+                button3.Text = "夜视(开)"
+                _G.ChronixHubisNightVisiton = true
+            end
+        end)
+
+        button4.MouseButton1Click:Connect(function()
+            mouse = game.Players.LocalPlayer:GetMouse() tool = Instance.new("Tool") tool.RequiresHandle = false tool.Name = "手持点击传送" tool.Activated:connect(function() local pos = mouse.Hit+Vector3.new(0,2.5,0) pos = CFrame.new(pos.X,pos.Y,pos.Z) game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos end) tool.Parent = game.Players.LocalPlayer.Backpack
+        end)
+
+        button5.MouseButton1Click:Connect(function()
+            local Workspace = game:GetService("Workspace")
+            local Players = game:GetService("Players")
+            _G.ChronixHubisChuanQiang = not _G.ChronixHubisChuanQiang
+            button5.Text = _G.ChronixHubisChuanQiang and "穿墙(开)" or "穿墙(关)"
+            Stepped = game:GetService("RunService").Stepped:Connect(function()
+	            if not _G.ChronixHubisChuanQiang == false then
+		            for a, b in pairs(Workspace:GetChildren()) do
+                        if b.Name == Players.LocalPlayer.Name then
+                            for i, v in pairs(Workspace[Players.LocalPlayer.Name]:GetChildren()) do
+                                if v:IsA("BasePart") then
+                                    v.CanCollide = false
+                                end end end end
+	            else
+                    for a, b in pairs(Workspace:GetChildren()) do
+                        if b.Name == Players.LocalPlayer.Name then
+                            for i, v in pairs(Workspace[Players.LocalPlayer.Name]:GetChildren()) do
+                                if v:IsA("BasePart") then
+                                    v.CanCollide = true
+                                end end end end
+		        Stepped:Disconnect()
+	            end
+            end)
+        end)
+    elseif category == "脚本中心" then
+        -- 添加按钮
+        local button = Instance.new("TextButton")
+        button.Size = UDim2.new(0.2, 0, 0.1, 0) -- 按钮大小
+        button.Position = UDim2.new(0.1, 0, 0.1, 0) -- 按钮位置
+        button.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        button.Text = "飞行 V3"
+        button.TextColor3 = CONFIG.TEXT_COLOR
+        button.TextSize = 14
+        button.Parent = contentFrame
+
+        -- 按钮点击逻辑
+        button.MouseButton1Click:Connect(function()
+            LocalPlayer.Character.Humanoid.Health = LocalPlayer.Character.Humanoid.MaxHealth 
+        end)
     end
 end
 
 -- 添加分类按钮
-local categories = {"基础", "工具", "帮助"}
+local categories = {"基础", "工具", "脚本中心"}
 for i, cat in ipairs(categories) do
     local button = Instance.new("TextButton")
     button.Size = CONFIG.CATEGORY_BUTTON_SIZE
@@ -183,7 +676,7 @@ end)
 -- 点击箭头按钮弹出菜单
 arrowButton.MouseButton1Click:Connect(function()
     ToggleMenu(true)
-    AddMenuContent("设置") -- 默认显示“设置”分类
+    AddMenuContent("基础")
 end)
 
 -- 按下 Delete 键卸载菜单
