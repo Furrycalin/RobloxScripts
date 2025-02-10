@@ -5,6 +5,7 @@ local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 local Gui = Instance.new("ScreenGui")
 Gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+Gui.ResetOnSpawn = false
 
 _G.ChronixHubisNightVisiton = false
 _G.ChronixHubisChuanQiang = false
@@ -67,7 +68,7 @@ local function CreateNotification(title, text, duration, isAchievement)
     textLabel.Position = UDim2.new(0.025, 0, 0.3, 0)
     textLabel.Text = text
     textLabel.TextColor3 = Color3.fromRGB(220, 220, 220) -- 正文文字颜色
-    textLabel.TextSize = 14
+    textLabel.TextSize = 18
     textLabel.BackgroundTransparency = 1
     textLabel.TextWrapped = true
     textLabel.Font = Enum.Font.GothamSemibold
@@ -710,13 +711,15 @@ local function AddMenuContent(category)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
+            CreateNotification("提示", "正在启动 飞行 V3 脚本，请耐心等待.", 5, true)
             loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/flyv3.lua"))()
-            CreateNotification("正在启动", "飞行 V3", 5, true)
+            CreateNotification("提示", "飞行 V3 已经成功启动!", 5, true)
         end)
 
-        button.MouseButton1Click:Connect(function()
+        button2.MouseButton1Click:Connect(function()
+            CreateNotification("提示", "正在启动 反挂机被踢 脚本，请耐心等待.", 5, true)
             loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/AntiAFKKick.lua"))()
-            CreateNotification("正在启动", "反挂机被踢", 5, true)
+            CreateNotification("提示", "反挂机被踢 已经成功启动!", 5, true)
         end)
     end
 end
