@@ -1,3 +1,10 @@
+if _G.ChronixHubisLoaded then
+    warn("⛔ ChronixHub Already loaded! Please do not repeat the execution.")
+    return
+end
+ 
+_G.ChronixHubisLoaded = true
+
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -579,6 +586,7 @@ local function AddMenuContent(category)
 
         -- 点击按钮卸载菜单
         unloadButton.MouseButton1Click:Connect(function()
+            _G.ChronixHubisLoaded = false
             Gui:Destroy() -- 卸载整个菜单系统
         end)
 
@@ -722,6 +730,7 @@ end)
 -- 按下 Delete 键卸载菜单
 UserInputService.InputBegan:Connect(function(input)
     if input.KeyCode == Enum.KeyCode.Delete then
+        _G.ChronixHubisLoaded = false
         Gui:Destroy() -- 卸载整个菜单系统
     end
 end)
