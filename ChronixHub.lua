@@ -9,6 +9,7 @@ Gui.ResetOnSpawn = false
 
 _G.ChronixHubisNightVisiton = false
 _G.ChronixHubisChuanQiang = false
+_G.ChronixHubExecuteText = "print(\"Hello world!\")"
 
 local boundKey = Enum.KeyCode.F -- 默认快捷键为 F
 local keyText = "F"
@@ -597,11 +598,50 @@ local function AddMenuContent(category)
                 CreateNotification("错误", "无效的快捷键: " .. keyText, 5, false)
             end
         end)
+    elseif category == "执行器" then
+        -- 添加多行文本框
+        local scriptTextBox = Instance.new("TextBox")
+        scriptTextBox.Size = UDim2.new(0.9, 0, 0.8, 0) -- 文本框大小
+        scriptTextBox.Position = UDim2.new(0.05, 0, 0.05, 0) -- 文本框位置
+        scriptTextBox.BackgroundColor3 = CONFIG.BUTTON_COLOR
+        scriptTextBox.TextColor3 = CONFIG.TEXT_COLOR
+        scriptTextBox.TextSize = 14
+        scriptTextBox.TextWrapped = true -- 允许多行输入
+        scriptTextBox.MultiLine = true -- 允许多行输入
+        scriptTextBox.ClearTextOnFocus = false
+        scriptTextBox.TextXAlignment = Enum.TextXAlignment.Left -- 文本靠左对齐
+        scriptTextBox.TextYAlignment = Enum.TextYAlignment.Top -- 文本靠左对齐
+        scriptTextBox.Parent = contentFrame
+        scriptTextBox.Text = _G.ChronixHubExecuteText
+
+        -- 添加执行按钮
+        local saveButton = CreateButton(contentFrame, "保存", UDim2.new(0.45, 0, 0.1, 0), UDim2.new(0.05, 0, 0.85, 0), 18)
+        saveButton.MouseButton1Click:Connect(function()
+            CreateNotification("提示", "脚本保存成功! 卸载脚本将会丢失", 5, true)
+            _G.ChronixHubExecuteText = scriptTextBox.Text
+        end)
+        local executeButton = CreateButton(contentFrame, "执行", UDim2.new(0.45, 0, 0.1, 0), UDim2.new(0.5, 0, 0.85, 0), 18)
+        executeButton.MouseButton1Click:Connect(function()
+            local script = scriptTextBox.Text
+            if script and script ~= "" then
+                -- 尝试执行脚本
+                local success, errorMessage = pcall(function()
+                    loadstring(script)()
+                end)
+                if not success then
+                    CreateNotification("错误", "脚本执行失败: " .. errorMessage, 5, true)
+                else
+                    CreateNotification("提示", "脚本执行成功!", 5, true)
+                end
+            else
+                CreateNotification("错误", "请输入有效的脚本!", 5, true)
+            end
+        end)
     end
 end
 
 -- 添加分类按钮
-local categories = {"基础", "工具", "脚本中心", "设置"}
+local categories = {"基础", "工具", "脚本中心", "执行器", "设置"}
 for i, cat in ipairs(categories) do
     local button = Instance.new("TextButton")
     button.Size = CONFIG.CATEGORY_BUTTON_SIZE
