@@ -552,10 +552,11 @@ local function AddMenuContent(category)
     elseif category == "脚本中心" then
         -- 添加按钮
         local button = CreateButton(contentFrame, "飞行 V3", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.1, 0), 14)
-        local button2 = CreateButton(contentFrame, "反挂机被踢", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.1, 0), 14)
+        local button2 = CreateButton(contentFrame, "通用自瞄", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.1, 0), 14)
         local button3 = CreateButton(contentFrame, "Doors扫描器", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.3, 0), 14)
         local button4 = CreateButton(contentFrame, "通用ESP", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.6, 0, 0.1, 0), 14)
         local button5 = CreateButton(contentFrame, "冬凌中心", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.5, 0), 14)
+        local button6 = CreateButton(contentFrame, "OldMSPaint", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.3, 0), 14)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
@@ -565,9 +566,9 @@ local function AddMenuContent(category)
         end)
 
         button2.MouseButton1Click:Connect(function()
-            CreateNotification("提示", "正在启动 反挂机被踢 脚本，请耐心等待.", 10, true)
-            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/AntiAFKKick.lua"))()
-            CreateNotification("提示", "反挂机被踢 已经成功启动!", 10, true)
+            CreateNotification("提示", "正在启动 通用自瞄 脚本，请耐心等待.", 10, true)
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/Zimiao.lua"))()
+            CreateNotification("提示", "通用自瞄 已经成功启动!", 10, true)
         end)
 
         button3.MouseButton1Click:Connect(function()
@@ -586,6 +587,12 @@ local function AddMenuContent(category)
             CreateNotification("提示", "正在启动 冬凌中心 脚本，请耐心等待.", 10, true)
             loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/DongLingLobby.lua"))()
             CreateNotification("提示", "冬凌中心 已经成功启动!", 10, true)
+        end)
+
+        button6.MouseButton1Click:Connect(function()
+            CreateNotification("提示", "正在启动 OldMSPaint 脚本，请耐心等待.", 10, true)
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/notpoiu/mspaint/main/main.lua"))()
+            CreateNotification("提示", "OldMSPaint 已经成功启动!", 10, true)
         end)
     elseif category == "设置" then
         -- 添加“卸载菜单”按钮
