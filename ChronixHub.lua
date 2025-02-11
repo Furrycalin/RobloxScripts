@@ -601,9 +601,9 @@ local function AddMenuContent(category)
             local keyCode = Enum.KeyCode[keyText]
             if keyCode then
                 boundKey = Enum.KeyCode[keyText]
-                CreateNotification("提示", "快捷键已绑定为: " .. keyText, 5, false)
+                CreateNotification("提示", "快捷键已绑定为: " .. keyText, 5, true)
             else
-                CreateNotification("错误", "无效的快捷键: " .. keyText, 5, false)
+                CreateNotification("错误", "无效的快捷键: " .. keyText, 5, true)
             end
         end)
     elseif category == "执行器" then
