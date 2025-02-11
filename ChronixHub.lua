@@ -1,3 +1,7 @@
+if not game:IsLoaded() then
+	game.Loaded:Wait()
+end
+
 if _G.ChronixHubisLoaded then
     warn("⛔ ChronixHub Already loaded! Please do not repeat the execution.")
     return
