@@ -10,6 +10,10 @@ Gui.ResetOnSpawn = false
 _G.ChronixHubisNightVisiton = false
 _G.ChronixHubisChuanQiang = false
 
+local boundKey = Enum.KeyCode.F -- 默认快捷键为 F
+local keyText = "F"
+local isMenuVisible = false
+
 local SoundService = game:GetService("SoundService")
 
 local notifications = {}
@@ -570,11 +574,28 @@ local function AddMenuContent(category)
         end)
     elseif category == "设置" then
         -- 添加“卸载菜单”按钮
-        local unloadButton = CreateButton(contentFrame, "卸载菜单", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0.1, 0), 18)
+        local unloadButton = CreateButton(contentFrame, "卸载菜单 (DELETE)", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0.1, 0), 18)
 
         -- 点击按钮卸载菜单
         unloadButton.MouseButton1Click:Connect(function()
             Gui:Destroy() -- 卸载整个菜单系统
+        end)
+
+                -- 添加快捷键绑定功能
+        local shortcutLabel = CreateLabel(contentFrame, "绑定快捷键", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0.3, 0), 15)
+        local shortcutTextBox = CreateTextBox(contentFrame, keyText, UDim2.new(0.35, 0, 0.1, 0), UDim2.new(0.1, 0, 0.4, 0), 14)
+        local saveShortcutButton = CreateButton(contentFrame, "保存快捷键", UDim2.new(0.35, 0, 0.1, 0), UDim2.new(0.55, 0, 0.4, 0), 14)
+
+        -- 保存快捷键绑定
+        saveShortcutButton.MouseButton1Click:Connect(function()
+            keyText = shortcutTextBox.Text
+            local keyCode = Enum.KeyCode[keyText]
+            if keyCode then
+                boundKey = Enum.KeyCode[keyText]
+                CreateNotification("提示", "快捷键已绑定为: " .. keyText, 5, false)
+            else
+                CreateNotification("错误", "无效的快捷键: " .. keyText, 5, false)
+            end
         end)
     end
 end
@@ -648,6 +669,14 @@ end)
 arrowButton.MouseButton1Click:Connect(function()
     ToggleMenu(true)
     AddMenuContent("基础")
+end)
+
+-- 监听快捷键
+UserInputService.InputBegan:Connect(function(input)
+    if input.KeyCode == boundKey then
+        isMenuVisible = not isMenuVisible
+        ToggleMenu(isMenuVisible)
+    end
 end)
 
 -- 按下 Delete 键卸载菜单
