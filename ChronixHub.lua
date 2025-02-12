@@ -29,7 +29,7 @@ local boundKey = Enum.KeyCode.F -- 默认快捷键为 F
 local keyText = "F"
 local isMenuVisible = false
 local CheckBox1_isChecked = false
-local GD_speed = 0
+local GD_speed = LocalPlayer.Character.Humanoid.WalkSpeed
 
 local SoundService = game:GetService("SoundService")
 
