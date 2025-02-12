@@ -703,7 +703,7 @@ end
 
 -- 鼠标移动检测
 UserInputService.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement then
+    if input.UserInputType == Enum.UserInputType.MouseMovement and not isMenuVisible then
         local mouseY = input.Position.Y
         local screenHeight = Gui.AbsoluteSize.Y
         if mouseY > screenHeight * 0.95 then -- 鼠标在屏幕底部 5% 区域
@@ -716,21 +716,22 @@ end)
 
 -- 点击菜单外部关闭菜单
 UserInputService.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+    if input.UserInputType == Enum.UserInputType.MouseButton1 and isMenuVisible then
         local mousePosition = input.Position
         local menuPosition = menuFrame.AbsolutePosition
         local menuSize = menuFrame.AbsoluteSize
         if not (mousePosition.X >= menuPosition.X and mousePosition.X <= menuPosition.X + menuSize.X and
                 mousePosition.Y >= menuPosition.Y and mousePosition.Y <= menuPosition.Y + menuSize.Y) then
-            ToggleMenu(false)
+            isMenuVisible = not isMenuVisible
+            ToggleMenu(isMenuVisible)
         end
     end
 end)
 
 -- 点击箭头按钮弹出菜单
 arrowButton.MouseButton1Click:Connect(function()
-    ToggleMenu(true)
-    AddMenuContent("基础")
+    isMenuVisible = not isMenuVisible
+    ToggleMenu(isMenuVisible)
 end)
 
 -- 监听快捷键
@@ -750,3 +751,61 @@ UserInputService.InputBegan:Connect(function(input)
 end)
 
 CreateNotification("欢迎使用", "ChronixHub已启动!\n反挂机系统已自动开启", 10, true)
+
+local dragButton = Instance.new("TextButton")
+dragButton.Size = UDim2.new(0.045, 0, 0.09, 0) -- 圆形悬浮窗大小
+dragButton.Position = UDim2.new(0.4, 0, 0.1, 0) -- 初始位置
+dragButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60) -- 背景颜色
+dragButton.Text = "☄" -- 悬浮窗图标
+dragButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- 文字颜色
+dragButton.BackgroundTransparency = 0.2
+dragButton.TextSize = 20
+dragButton.ZIndex = 999
+if UserInputService.Platform == Enum.UserInputType.Mobile then
+    dragButton.Parent = Gui
+    CreateNotification(" 提示", "检测到使用设备为移动端，已启用悬浮窗", 10, false)
+end
+
+-- 圆角效果
+local uiCorner = Instance.new("UICorner", dragButton)
+uiCorner.CornerRadius = UDim.new(1, 0) -- 完全圆形
+
+-- 悬浮窗拖动逻辑
+local isDragging = false
+local ismenuopen = false
+local dragStartPos
+local dragStartMousePos
+
+dragButton.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        isDragging = true
+        dragStartPos = dragButton.Position
+        dragStartMousePos = Vector2.new(input.Position.X, input.Position.Y)
+    end
+end)
+
+dragButton.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        isDragging = false
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = Vector2.new(input.Position.X, input.Position.Y) - dragStartMousePos
+        dragButton.Position = UDim2.new(dragStartPos.X.Scale, dragStartPos.X.Offset + delta.X, dragStartPos.Y.Scale, dragStartPos.Y.Offset + delta.Y)
+    end
+end)
+
+-- 点击悬浮窗开关菜单
+dragButton.MouseButton1Click:Connect(function()
+    if isMenuVisible == false and ismenuopen == false then
+        isMenuVisible = true
+        ismenuopen = true
+        ToggleMenu(true)
+    elseif ismenuopen == true then
+        isMenuVisible = false
+        ismenuopen = false
+        ToggleMenu(false)
+    end
+end)
