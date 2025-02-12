@@ -28,6 +28,8 @@ _G.ChronixHubExecuteText = "print(\"Hello world!\")"
 local boundKey = Enum.KeyCode.F -- 默认快捷键为 F
 local keyText = "F"
 local isMenuVisible = false
+local CheckBox1_isChecked = false
+local GD_speed = 0
 
 local SoundService = game:GetService("SoundService")
 
@@ -266,6 +268,9 @@ local function AddMenuContent(category)
         local button4 = CreateButton(contentFrame, "设置", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.7, 0), 14)
         local button5 = CreateButton(contentFrame, "设置", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.9, 0), 14)
 
+        local CheckBox1 = CreateButton(contentFrame, CheckBox1_isChecked and "●" or "", UDim2.new(0.04, 0, 0.08, 0), UDim2.new(0.92, 0, 0.11, 0), 25)
+        CheckBox1.TextColor3 = Color3.new(1, 1, 1)
+
         -- 添加输入框
         local textBox = CreateTextBox(contentFrame, LocalPlayer.Character.Humanoid.WalkSpeed, UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.1, 0), 14)
         local textBox2 = CreateTextBox(contentFrame, LocalPlayer.Character.Humanoid.JumpPower, UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.3, 0), 14)
@@ -423,6 +428,7 @@ local function AddMenuContent(category)
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
             local speed = tonumber(textBox.Text)
+            GD_speed = speed
             if speed then
                 LocalPlayer.Character.Humanoid.WalkSpeed = speed
             end
@@ -459,6 +465,7 @@ local function AddMenuContent(category)
         -- 滑轮值改变时执行命令
         sliderButton:GetPropertyChangedSignal("Position"):Connect(function()
             local speed = tonumber(textBox.Text)
+            GD_speed = speed
             if speed then
                 LocalPlayer.Character.Humanoid.WalkSpeed = speed
             end
@@ -490,6 +497,18 @@ local function AddMenuContent(category)
             if grav then
                 game.Workspace.Gravity = grav
             end
+        end)
+
+        CheckBox1.MouseButton1Click:Connect(function()
+            CheckBox1_isChecked = not CheckBox1_isChecked
+            if CheckBox1_isChecked then CheckBox1.Text = "●" else CheckBox1.Text = "" end
+            Stepped1 = game:GetService("RunService").Stepped:Connect(function()
+                if not CheckBox1_isChecked then
+                    Stepped1:Disconnect()
+                else
+                    LocalPlayer.Character.Humanoid.WalkSpeed = GD_speed
+                end
+            end)
         end)
     elseif category == "工具" then
         -- 添加按钮
