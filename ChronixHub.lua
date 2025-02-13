@@ -668,7 +668,7 @@ local function AddMenuContent(category)
         button7.MouseButton1Click:Connect(function()
             _G.ChronixHubisTime = not _G.ChronixHubisTime
             button7.Text = _G.ChronixHubisTime and "切换时间(黑夜)" or "切换时间(白天)"
-            if _G.ChronixHubisTime then setNight() else setDay()
+            if _G.ChronixHubisTime then setNight() else setDay() end
         end)
     elseif category == "脚本中心" then
         -- 添加按钮
