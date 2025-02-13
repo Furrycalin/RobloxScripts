@@ -797,9 +797,9 @@ UserInputService.InputBegan:Connect(function(input)
 end)
 
 if GetDeviceType() == "Desktop" then
-    CreateNotification("欢迎使用，电脑用户" .. LocalPlayer.DisplayName, "ChronixHub已启动!\n反挂机系统已自动开启", 10, true)
+    CreateNotification("欢迎使用，电脑用户" .. displayName, "ChronixHub已启动!\n反挂机系统已自动开启", 10, true)
 elseif GetDeviceType() == "Mobile" then
-    CreateNotification("欢迎使用，手机用户" .. LocalPlayer.DisplayName, "ChronixHub已启动!\n反挂机系统已自动开启", 10, true)
+    CreateNotification("欢迎使用，手机用户" .. displayName, "ChronixHub已启动!\n反挂机系统已自动开启", 10, true)
 end
 
 local dragButton = Instance.new("TextButton")
