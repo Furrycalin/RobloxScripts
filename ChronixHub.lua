@@ -21,6 +21,21 @@ local Gui = Instance.new("ScreenGui")
 Gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 Gui.ResetOnSpawn = false
 
+-- 获取玩家信息
+local playerName = LocalPlayer.Name -- 玩家名
+local displayName = LocalPlayer.DisplayName -- 显示名
+local userId = LocalPlayer.UserId -- 用户 ID
+-- 获取玩家头像
+local thumbnailType = Enum.ThumbnailType.HeadShot -- 头像类型
+local thumbnailSize = Enum.ThumbnailSize.Size100x100 -- 头像尺寸
+local success, thumbnailUrl = pcall(function()
+    return Players:GetUserThumbnailAsync(LocalPlayer.UserId, thumbnailType, thumbnailSize)
+end)
+-- 获取玩家角色外观信息
+local success, appearanceInfo = pcall(function()
+    return Players:GetCharacterAppearanceInfoAsync(LocalPlayer.UserId)
+end)
+
 _G.ChronixHubisNightVisiton = false
 _G.ChronixHubisChuanQiang = false
 _G.ChronixHubExecuteText = "print(\"Hello world!\")"
@@ -40,6 +55,18 @@ local achievementSound = Instance.new("Sound")
 achievementSound.SoundId = "rbxassetid://4590662766" -- 替换为你的音频ID
 achievementSound.Volume = 0.5 -- 音量大小
 achievementSound.Parent = SoundService
+
+local function GetDeviceType()
+    if UserInputService.TouchEnabled and not UserInputService.MouseEnabled then
+        return "Mobile" -- 移动端
+    elseif UserInputService.MouseEnabled and not UserInputService.TouchEnabled then
+        return "Desktop" -- 桌面端
+    elseif UserInputService.GamepadEnabled then
+        return "Console" -- 控制台
+    else
+        return "Unknown" -- 未知设备
+    end
+end
 
 local function UpdatePositions()
     for index, frame in ipairs(notifications) do
@@ -769,7 +796,11 @@ UserInputService.InputBegan:Connect(function(input)
     end
 end)
 
-CreateNotification("欢迎使用", "ChronixHub已启动!\n反挂机系统已自动开启", 10, true)
+if GetDeviceType() == "Desktop" then
+    CreateNotification("欢迎使用，电脑用户" .. LocalPlayer.DisplayName, "ChronixHub已启动!\n反挂机系统已自动开启", 10, true)
+elseif GetDeviceType() == "Mobile" then
+    CreateNotification("欢迎使用，手机用户" .. LocalPlayer.DisplayName, "ChronixHub已启动!\n反挂机系统已自动开启", 10, true)
+end
 
 local dragButton = Instance.new("TextButton")
 dragButton.Size = UDim2.new(0.045, 0, 0.09, 0) -- 圆形悬浮窗大小
@@ -780,7 +811,7 @@ dragButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- 文字颜色
 dragButton.BackgroundTransparency = 0.2
 dragButton.TextSize = 20
 dragButton.ZIndex = 999
-if UserInputService.Platform == Enum.UserInputType.Mobile then
+if GetDeviceType() == "Mobile" then
     dragButton.Parent = Gui
     CreateNotification(" 提示", "检测到使用设备为移动端，已启用悬浮窗", 10, false)
 end
