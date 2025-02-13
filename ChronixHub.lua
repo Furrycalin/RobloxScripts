@@ -18,6 +18,7 @@ _G.ChronixHubisLoaded = true
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
+local Lighting = game:GetService("Lighting")
 
 local LocalPlayer = Players.LocalPlayer
 local Gui = Instance.new("ScreenGui")
@@ -39,9 +40,49 @@ local success, appearanceInfo = pcall(function()
     return Players:GetCharacterAppearanceInfoAsync(LocalPlayer.UserId)
 end)
 
+-- 定义白天和黑夜的光照属性
+local daySettings = {
+    ClockTime = 14, -- 白天时间（14:00）
+    GeographicLatitude = 41.73, -- 纬度（影响太阳高度）
+    -- Ambient = Color3.new(0.5, 0.5, 0.5), -- 环境光
+    -- OutdoorAmbient = Color3.new(0.5, 0.5, 0.5), -- 室外环境光
+    -- Brightness = 2, -- 亮度
+    -- FogColor = Color3.new(0.8, 0.8, 0.8), -- 雾颜色
+    -- FogEnd = 1000 -- 雾结束距离
+}
+
+local nightSettings = {
+    ClockTime = 2, -- 黑夜时间（02:00）
+    GeographicLatitude = 41.73, -- 纬度
+    -- Ambient = Color3.new(0.1, 0.1, 0.1), -- 环境光
+    -- OutdoorAmbient = Color3.new(0.1, 0.1, 0.1), -- 室外环境光
+    -- Brightness = 0.2, -- 亮度
+    -- FogColor = Color3.new(0.1, 0.1, 0.1), -- 雾颜色
+    -- FogEnd = 500 -- 雾结束距离
+}
+
+-- 切换为白天
+local function setDay()
+    for property, value in pairs(daySettings) do
+        local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local tween = TweenService:Create(Lighting, tweenInfo, { [property] = value })
+        tween:Play()
+    end
+end
+
+-- 切换为黑夜
+local function setNight()
+    for property, value in pairs(nightSettings) do
+        local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local tween = TweenService:Create(Lighting, tweenInfo, { [property] = value })
+        tween:Play()
+    end
+end
+
 _G.ChronixHubisNightVisiton = false
 _G.ChronixHubisChuanQiang = false
 _G.ChronixHubisInfJump = false
+_G.ChronixHubisTime = false
 _G.ChronixHubExecuteText = "print(\"Hello world!\")"
 
 local boundKey = Enum.KeyCode.F -- 默认快捷键为 F
@@ -549,6 +590,7 @@ local function AddMenuContent(category)
         local button4 = CreateButton(contentFrame, "点击传送工具", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.3, 0), 14)
         local button5 = CreateButton(contentFrame, _G.ChronixHubisChuanQiang and "穿墙(开)" or "穿墙(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.3, 0), 14)
         local button6 = CreateButton(contentFrame, _G.ChronixHubisInfJump and "连跳(开)" or "连跳(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.6, 0, 0.3, 0), 14)
+        local button7 = CreateButton(contentFrame, _G.ChronixHubisTime and "切换时间(黑夜)" or "切换时间(白天)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.5, 0), 14)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
@@ -621,6 +663,12 @@ local function AddMenuContent(category)
                     end
                 end
             end)
+        end)
+
+        button7.MouseButton1Click:Connect(function()
+            _G.ChronixHubisTime = not _G.ChronixHubisTime
+            button7.Text = _G.ChronixHubisTime and "切换时间(黑夜)" or "切换时间(白天)"
+            if _G.ChronixHubisTime then setNight() else setDay()
         end)
     elseif category == "脚本中心" then
         -- 添加按钮
