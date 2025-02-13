@@ -35,6 +35,19 @@ title.BackgroundTransparency = 1
 title.TextTransparency = 1 -- 初始完全透明
 title.Parent = screenGui
 
+local title2 = Instance.new("TextLabel")
+title2.Text = "正在加载中..."
+title2.TextXAlignment = Enum.TextXAlignment.Left
+title2.TextColor3 = Color3.fromRGB(150, 150, 150)
+title2.TextSize = 20
+title2.Font = Enum.Font.GothamBold
+title2.Size = UDim2.new(0, 300, 0, 50)
+title2.Position = UDim2.new(0.51, 0, 0.57, -50)
+title2.AnchorPoint = Vector2.new(0.5, 0.5)
+title2.BackgroundTransparency = 1
+title2.TextTransparency = 1
+title2.Parent = screenGui
+
 -- 创建进度条背景
 local progressBarBackground = Instance.new("Frame")
 progressBarBackground.Size = UDim2.new(0, 300, 0, 10)
@@ -82,6 +95,12 @@ local function showTitleAndProgressBar()
     })
     titleTween:Play()
 
+    -- 标题透明度渐变
+    local title2Tween = TweenService:Create(title2, tweenInfo, {
+        TextTransparency = 0 -- 从不透明到完全可见
+    })
+    title2Tween:Play()
+
     -- 进度条背景透明度渐变
     local progressBarBackgroundTween = TweenService:Create(progressBarBackground, tweenInfo, {
         BackgroundTransparency = 0 -- 从不透明到完全可见
@@ -112,11 +131,22 @@ local function hideTitleAndProgressBar()
         TextTransparency = 1 -- 从完全可见到透明
     })
     titleTween:Play()
+
+    local title2Tween = TweenService:Create(title2, tweenInfo, {
+        TextTransparency = 1 -- 从完全可见到透明
+    })
+    title2Tween:Play()
+
     -- 进度条背景透明度渐变
     local progressBarBackgroundTween = TweenService:Create(progressBarBackground, tweenInfo, {
         BackgroundTransparency = 1 -- 从完全可见到透明
     })
     progressBarBackgroundTween:Play()
+
+    local progressBarTween = TweenService:Create(progressBar, tweenInfo, {
+        BackgroundTransparency = 1 -- 从完全可见到透明
+    })
+    progressBarTween:Play()
 
     titleTween.Completed:Wait()
 end
@@ -137,5 +167,7 @@ end
 expandMask()
 showTitleAndProgressBar()
 simulateLoading()
+title2.Text = "已完成!"
+wait(1)
 hideTitleAndProgressBar()
 shrinkMask()
