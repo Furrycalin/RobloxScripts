@@ -247,7 +247,7 @@ uiCorner.CornerRadius = UDim.new(0, 10)
 -- 创建菜单标题
 local titleLabel = Instance.new("TextLabel")
 titleLabel.Size = UDim2.new(0.8, 0, 0.1, 0)
-titleLabel.Position = UDim2.new(0.05, 0, 0.02, 0) -- 左上角
+titleLabel.Position = UDim2.new(0.04, 0, 0.01, 0) -- 左上角
 titleLabel.Text = "ChronixHub"
 titleLabel.TextColor3 = CONFIG.TEXT_COLOR
 titleLabel.TextSize = 20
