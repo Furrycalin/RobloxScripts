@@ -606,7 +606,7 @@ local function AddMenuContent(category)
             local Players = game:GetService("Players")
             local lp = Players.LocalPlayer
             _G.ChronixHubisInfJump = not _G.ChronixHubisInfJump
-            button5.Text = _G.ChronixHubisInfJump and "连跳(开)" or "连跳(关)"
+            button6.Text = _G.ChronixHubisInfJump and "连跳(开)" or "连跳(关)"
             JR = game:GetService("UserInputService").JumpRequest:Connect(function()
                 if not _G.ChronixHubisInfJump then
                     JR:Disconnect()
