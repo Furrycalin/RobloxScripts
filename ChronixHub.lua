@@ -41,6 +41,7 @@ end)
 
 _G.ChronixHubisNightVisiton = false
 _G.ChronixHubisChuanQiang = false
+_G.ChronixHubisInfJump = false
 _G.ChronixHubExecuteText = "print(\"Hello world!\")"
 
 local boundKey = Enum.KeyCode.F -- 默认快捷键为 F
@@ -547,6 +548,7 @@ local function AddMenuContent(category)
         local button3 = CreateButton(contentFrame, _G.ChronixHubisNightVisiton and "夜视(开)" or "夜视(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.6, 0, 0.1, 0), 14)
         local button4 = CreateButton(contentFrame, "点击传送工具", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.3, 0), 14)
         local button5 = CreateButton(contentFrame, _G.ChronixHubisChuanQiang and "穿墙(开)" or "穿墙(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.3, 0), 14)
+        local button6 = CreateButton(contentFrame, _G.ChronixHubisInfJump and "连跳(开)" or "连跳(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.6, 0, 0.3, 0), 14)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
@@ -596,6 +598,28 @@ local function AddMenuContent(category)
                                 end end end end
 		        Stepped:Disconnect()
 	            end
+            end)
+        end)
+
+        button6.MouseButton1Click:Connect(function()
+            local Workspace = game:GetService("Workspace")
+            local Players = game:GetService("Players")
+            local lp = Players.LocalPlayer
+            _G.ChronixHubisInfJump = not _G.ChronixHubisInfJump
+            button5.Text = _G.ChronixHubisInfJump and "连跳(开)" or "连跳(关)"
+            JR = game:GetService("UserInputService").JumpRequest:Connect(function()
+                if not _G.ChronixHubisInfJump then
+                    JR:Disconnect()
+                end
+                if _G.ChronixHubisInfJump then
+                    local c = lp.Character
+                    if c and c.Parent then
+                        local hum = c:FindFirstChildOfClass("Humanoid")
+                        if hum then
+                            hum:ChangeState("Jumping")
+                        end
+                    end
+                end
             end)
         end)
     elseif category == "脚本中心" then
