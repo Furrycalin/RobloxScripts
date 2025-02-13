@@ -804,6 +804,8 @@ if GetDeviceType() == "Desktop" then
 elseif GetDeviceType() == "Mobile" then
     CreateNotification("欢迎使用，手机用户" .. displayName, "ChronixHub已启动!\n反挂机系统已自动开启", 10, true)
 end
+wait(0.5)
+CreateNotification("启用方法", "默认快捷键F开关, 鼠标移动到屏幕正下方点击弹出\n手机端点击悬浮球开关菜单", 10, true)
 
 local dragButton = Instance.new("TextButton")
 dragButton.Size = UDim2.new(0.045, 0, 0.09, 0) -- 圆形悬浮窗大小
