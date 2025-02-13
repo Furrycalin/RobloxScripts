@@ -7,6 +7,9 @@ if _G.ChronixHubisLoaded then
     return
 end
 
+-- 启动加载动画
+loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/LoadAnimation.lua"))()
+
 local bb=game:service'VirtualUser'
 game:service'Players'.LocalPlayer.Idled:connect(function()bb:CaptureController()bb:ClickButton2(Vector2.new())end)
  
