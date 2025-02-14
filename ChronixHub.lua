@@ -805,7 +805,6 @@ local function AddMenuContent(category)
         local Pitchdown = CreateButton(contentFrame, "-", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.67, 0, 0.355, 0), 14)
 
         playbutton.MouseButton1Click:Connect(function()
-            _G.ChronixHubMusicPlayLocation = 0
             sound.SoundId = "rbxassetid://" .. rbxassetidinputbox.Text
             _G.ChronixHubMusicisPlay = not _G.ChronixHubMusicisPlay
             playbutton.Text = _G.ChronixHubMusicisPlay and "停止" or "播放"
@@ -818,14 +817,6 @@ local function AddMenuContent(category)
                     CreateNotification("正在播放...", productInfo.Name .. "\n" .. productInfo.Description, 20, true)
                     wait(1)
                     sound:play()
-                    sound.Ended:Connect(function()
-                        sound:Stop()
-                        pausebutton.Text = "暂停"
-                        _G.ChronixHubMusicisPause = false
-                        _G.ChronixHubMusicisPlay = false
-                        playbutton.Text = "播放"
-                        pausebutton.Text = "暂停"
-                    end)
                 else
                     _G.ChronixHubMusicisPlay = false
                     playbutton.Text = "播放"
