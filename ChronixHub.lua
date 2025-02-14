@@ -810,15 +810,16 @@ local function AddMenuContent(category)
             _G.ChronixHubMusicisPlay = not _G.ChronixHubMusicisPlay
             playbutton.Text = _G.ChronixHubMusicisPlay and "停止" or "播放"
             if _G.ChronixHubMusicisPlay then
-                sound:play()
                 local success, productInfo = pcall(function()
                     return MarketplaceService:GetProductInfo(_G.ChronixHubMusicID)
                 end)
                 if success then
-                    CreateNotification("正在播放...", productInfo.Name .. "\n" .. productInfo.Description, 10, false)
+                    CreateNotification("正在播放...", productInfo.Name .. "\n" .. productInfo.Description, 5, true)
                 else
-                    CreateNotification("正在播放...", _G.ChronixHubMusicID, 5, false)
+                    CreateNotification("正在播放...", _G.ChronixHubMusicID, 5, true)
                 end
+                wait(1)
+                sound:play()
             else
                 sound:Stop()
                 pausebutton.Text = "暂停"
