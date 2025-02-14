@@ -805,6 +805,7 @@ local function AddMenuContent(category)
         local Pitchdown = CreateButton(contentFrame, "-", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.67, 0, 0.355, 0), 14)
 
         playbutton.MouseButton1Click:Connect(function()
+            _G.ChronixHubMusicPlayLocation = 0
             sound.SoundId = "rbxassetid://" .. rbxassetidinputbox.Text
             _G.ChronixHubMusicisPlay = not _G.ChronixHubMusicisPlay
             playbutton.Text = _G.ChronixHubMusicisPlay and "停止" or "播放"
