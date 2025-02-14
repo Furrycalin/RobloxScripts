@@ -956,6 +956,7 @@ UserInputService.InputBegan:Connect(function(input)
     if input.KeyCode == Enum.KeyCode.Delete then
         _G.ChronixHubisLoaded = false
         Gui:Destroy() -- 卸载整个菜单系统
+        SoundService:Destroy()
     end
 end)
 
