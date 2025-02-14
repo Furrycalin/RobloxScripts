@@ -821,7 +821,7 @@ local function AddMenuContent(category)
                     _G.ChronixHubMusicisPlay = false
                     playbutton.Text = "播放"
                     pausebutton.Text = "暂停"
-                    CreateNotification("播放失败", _G.ChronixHubMusicID .. "\n不是一个有效的rbxassetid", 20, true)
+                    CreateNotification("播放失败", rbxassetidinputbox.Text .. "\n不是一个有效的rbxassetid", 20, true)
                 end
             else
                 sound:Stop()
