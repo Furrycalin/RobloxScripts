@@ -805,21 +805,24 @@ local function AddMenuContent(category)
         local Pitchdown = CreateButton(contentFrame, "-", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.67, 0, 0.355, 0), 14)
 
         playbutton.MouseButton1Click:Connect(function()
-            _G.ChronixHubMusicID = rbxassetidinputbox.Text
-            sound.SoundId = "rbxassetid://" .. _G.ChronixHubMusicID
+            sound.SoundId = "rbxassetid://" .. rbxassetidinputbox.Text
             _G.ChronixHubMusicisPlay = not _G.ChronixHubMusicisPlay
             playbutton.Text = _G.ChronixHubMusicisPlay and "停止" or "播放"
             if _G.ChronixHubMusicisPlay then
                 local success, productInfo = pcall(function()
-                    return MarketplaceService:GetProductInfo(_G.ChronixHubMusicID)
+                    return MarketplaceService:GetProductInfo(rbxassetidinputbox.Text)
                 end)
                 if success then
+                    _G.ChronixHubMusicID = rbxassetidinputbox.Text
                     CreateNotification("正在播放...", productInfo.Name .. "\n" .. productInfo.Description, 20, true)
+                    wait(1)
+                    sound:play()
                 else
-                    CreateNotification("正在播放...", _G.ChronixHubMusicID, 20, true)
+                    _G.ChronixHubMusicisPlay = false
+                    playbutton.Text = "播放"
+                    pausebutton.Text = "暂停"
+                    CreateNotification("播放失败", _G.ChronixHubMusicID .. "\n不是一个有效的rbxassetid", 20, true)
                 end
-                wait(1)
-                sound:play()
             else
                 sound:Stop()
                 pausebutton.Text = "暂停"
