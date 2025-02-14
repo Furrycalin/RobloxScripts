@@ -732,6 +732,8 @@ local function AddMenuContent(category)
         unloadButton.MouseButton1Click:Connect(function()
             _G.ChronixHubisLoaded = false
             Gui:Destroy() -- 卸载整个菜单系统
+            sound:Stop() -- 先停止播放
+            sound:Destroy()
         end)
 
                 -- 添加快捷键绑定功能
@@ -956,7 +958,8 @@ UserInputService.InputBegan:Connect(function(input)
     if input.KeyCode == Enum.KeyCode.Delete then
         _G.ChronixHubisLoaded = false
         Gui:Destroy() -- 卸载整个菜单系统
-        SoundService:Destroy()
+        sound:Stop() -- 先停止播放
+        sound:Destroy()
     end
 end)
 
