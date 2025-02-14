@@ -19,6 +19,7 @@ local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local Lighting = game:GetService("Lighting")
+local MarketplaceService = game:GetService("MarketplaceService")
 
 local LocalPlayer = Players.LocalPlayer
 local Gui = Instance.new("ScreenGui")
@@ -85,8 +86,9 @@ _G.ChronixHubisInfJump = false
 _G.ChronixHubisTime = false
 _G.ChronixHubExecuteText = "print(\"Hello world!\")"
 _G.ChronixHubMusicID = "142376088"
+_G.ChronixHubMusicisPlay = false
 _G.ChronixHubMusicisPause = false
-_G.ChronixHubMusicisLoop = false
+_G.ChronixHubMusicPlayLocation = 0
 
 local boundKey = Enum.KeyCode.F -- 默认快捷键为 F
 local keyText = "F"
@@ -790,27 +792,77 @@ local function AddMenuContent(category)
     elseif category == "播放器" then
         local labeltitle = CreateLabel(contentFrame, "输入正确的rbxassetid", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0.02, 0), 15)
         local rbxassetidinputbox = CreateTextBox(contentFrame, _G.ChronixHubMusicID, UDim2.new(0.55, 0, 0.1, 0), UDim2.new(0.22, 0, 0.12, 0), 14)
-        local playbutton = CreateButton(contentFrame, _G.ChronixHubMusicisPause and "停止" or "播放", UDim2.new(0.35, 0, 0.1, 0), UDim2.new(0.1, 0, 0.85, 0), 18)
-        local loopbutton = CreateButton(contentFrame, _G.ChronixHubMusicisLoop and "不循环播放" or "循环播放", UDim2.new(0.35, 0, 0.1, 0), UDim2.new(0.55, 0, 0.85, 0), 18)
+        local playbutton = CreateButton(contentFrame, _G.ChronixHubMusicisPlay and "停止" or "播放", UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.07, 0, 0.85, 0), 18)
+        local loopbutton = CreateButton(contentFrame, sound.Looped and "不循环播放" or "循环播放", UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.67, 0, 0.85, 0), 18)
+        local labeltitle2 = CreateLabel(contentFrame, "音量", UDim2.new(0.3, 0, 0.1, 0), UDim2.new(0.1, 0, 0.25, 0), 18)
+        local vinputbox = CreateLabel(contentFrame, string.format("%.0f", sound.Volume*100) .. "%", UDim2.new(0.15, 0, 0.1, 0), UDim2.new(0.28, 0, 0.255, 0), 14)
+        local volumeup = CreateButton(contentFrame, "+", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.55, 0, 0.255, 0), 14)
+        local volumedown = CreateButton(contentFrame, "-", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.67, 0, 0.255, 0), 14)
+        local pausebutton = CreateButton(contentFrame, _G.ChronixHubMusicisPause and "继续" or "暂停", UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.37, 0, 0.85, 0), 18)
+        local labeltitle3 = CreateLabel(contentFrame, "音高", UDim2.new(0.3, 0, 0.1, 0), UDim2.new(0.1, 0, 0.35, 0), 18)
+        local pinputbox = CreateLabel(contentFrame, string.format("%.1f", sound.Pitch), UDim2.new(0.15, 0, 0.1, 0), UDim2.new(0.28, 0, 0.355, 0), 14)
+        local Pitchup = CreateButton(contentFrame, "+", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.55, 0, 0.355, 0), 14)
+        local Pitchdown = CreateButton(contentFrame, "-", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.67, 0, 0.355, 0), 14)
 
         playbutton.MouseButton1Click:Connect(function()
             _G.ChronixHubMusicID = rbxassetidinputbox.Text
             sound.SoundId = "rbxassetid://" .. _G.ChronixHubMusicID
-            _G.ChronixHubMusicisPause = not _G.ChronixHubMusicisPause
-            playbutton.Text = _G.ChronixHubMusicisPause and "停止" or "播放"
-            if _G.ChronixHubMusicisPause then sound:play() else sound:Stop() end
+            _G.ChronixHubMusicisPlay = not _G.ChronixHubMusicisPlay
+            playbutton.Text = _G.ChronixHubMusicisPlay and "停止" or "播放"
+            if _G.ChronixHubMusicisPlay then
+                sound:play()
+                local success, productInfo = pcall(function()
+                    return MarketplaceService:GetProductInfo(_G.ChronixHubMusicID)
+                end)
+                if success then
+                    CreateNotification("正在播放...", productInfo.Name .. "\n" .. productInfo.Description, 10, false)
+                else
+                    CreateNotification("正在播放...", _G.ChronixHubMusicID, 5, false)
+                end
+            else
+                sound:Stop()
+                pausebutton.Text = "暂停"
+                _G.ChronixHubMusicisPause = false
+            end
+        end)
+
+        pausebutton.MouseButton1Click:Connect(function()
+            if _G.ChronixHubMusicisPlay then
+                _G.ChronixHubMusicisPause = not _G.ChronixHubMusicisPause
+                pausebutton.Text = _G.ChronixHubMusicisPause and "继续" or "暂停"
+                if _G.ChronixHubMusicisPause == true then
+                    _G.ChronixHubMusicPlayLocation = sound.TimePosition
+                    sound:Stop()
+                elseif _G.ChronixHubMusicisPause == false then
+                    sound.TimePosition = _G.ChronixHubMusicPlayLocation
+                    sound:Play()
+                end
+            end
+        end)
+
+        volumeup.MouseButton1Click:Connect(function()
+            sound.Volume = sound.Volume + 0.1
+            vinputbox.Text = string.format("%.0f", sound.Volume*100) .. "%"
+        end)
+
+        volumedown.MouseButton1Click:Connect(function()
+            if sound.Volume ~= 0 then sound.Volume = sound.Volume - 0.1 end
+            vinputbox.Text = string.format("%.0f", sound.Volume*100) .. "%"
+        end)
+
+        Pitchup.MouseButton1Click:Connect(function()
+            sound.Pitch = sound.Pitch + 0.1
+            pinputbox.Text = string.format("%.1f", sound.Pitch)
+        end)
+
+        Pitchdown.MouseButton1Click:Connect(function()
+            if sound.Pitch ~= 0 then sound.Pitch = sound.Pitch - 0.1 end
+            pinputbox.Text = string.format("%.1f", sound.Pitch)
         end)
 
         loopbutton.MouseButton1Click:Connect(function()
-            _G.ChronixHubMusicisLoop = not _G.ChronixHubMusicisLoop
-            loopbutton.Text = _G.ChronixHubMusicisLoop and "不循环播放" or "循环播放"
-            musicloop = sound.Ended:Connect(function()
-                if not _G.ChronixHubMusicisLoop then
-                    JR:Disconnect()
-                else
-                    sound:Play()
-                end
-            end)
+            sound.Looped = not sound.Looped
+            loopbutton.Text = sound.Looped and "不循环播放" or "循环播放"
         end)
     end
 end
