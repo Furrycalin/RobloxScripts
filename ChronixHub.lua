@@ -813,12 +813,14 @@ local function AddMenuContent(category)
                     _G.ChronixHubMusicPlayLocation = 0
                     _G.ChronixHubMusicisPlay = false
                     playbutton.Text = "播放"
+                    sound:Stop()
                     sec:Disconnect()
                 end)
                 local success, productInfo = pcall(function()
                     return MarketplaceService:GetProductInfo(rbxassetidinputbox.Text)
                 end)
                 if success then
+                    sound:Stop()
                     _G.ChronixHubMusicPlayLocation = 0
                     _G.ChronixHubMusicID = rbxassetidinputbox.Text
                     CreateNotification("正在播放...", productInfo.Name .. "\n" .. productInfo.Description, 20, true)
