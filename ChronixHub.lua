@@ -814,9 +814,9 @@ local function AddMenuContent(category)
                     return MarketplaceService:GetProductInfo(_G.ChronixHubMusicID)
                 end)
                 if success then
-                    CreateNotification("正在播放...", productInfo.Name .. "\n" .. productInfo.Description, 5, true)
+                    CreateNotification("正在播放...", productInfo.Name .. "\n" .. productInfo.Description, 20, true)
                 else
-                    CreateNotification("正在播放...", _G.ChronixHubMusicID, 5, true)
+                    CreateNotification("正在播放...", _G.ChronixHubMusicID, 20, true)
                 end
                 wait(1)
                 sound:play()
