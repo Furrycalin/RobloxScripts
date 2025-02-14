@@ -84,6 +84,9 @@ _G.ChronixHubisChuanQiang = false
 _G.ChronixHubisInfJump = false
 _G.ChronixHubisTime = false
 _G.ChronixHubExecuteText = "print(\"Hello world!\")"
+_G.ChronixHubMusicID = "142376088"
+_G.ChronixHubMusicisPause = false
+_G.ChronixHubMusicisLoop = false
 
 local boundKey = Enum.KeyCode.F -- 默认快捷键为 F
 local keyText = "F"
@@ -94,6 +97,10 @@ local GD_speed = LocalPlayer.Character.Humanoid.WalkSpeed
 local SoundService = game:GetService("SoundService")
 
 local notifications = {}
+
+-- 创建 Sound 对象
+local sound = Instance.new("Sound")
+sound.Parent = SoundService
 
 -- 加载成就音效
 local achievementSound = Instance.new("Sound")
@@ -215,7 +222,7 @@ local CONFIG = {
     ARROW_TRANSPARENCY = 0.5, -- 半透明箭头
     TWEEN_INFO = TweenInfo.new(0.5, Enum.EasingStyle.Quad),
     CATEGORY_BUTTON_SIZE = UDim2.new(0.15, 0, 1, 0), -- 更大的分类按钮
-    CATEGORY_BUTTON_SPACING = 10, -- 按钮之间的间距
+    CATEGORY_BUTTON_SPACING = 8, -- 按钮之间的间距
     CATEGORY_BUTTON_INSET = 10 -- 按钮向内偏移
 }
 
@@ -780,11 +787,36 @@ local function AddMenuContent(category)
                 CreateNotification("错误", "请输入有效的脚本!", 5, true)
             end
         end)
+    elseif category == "播放器" then
+        local labeltitle = CreateLabel(contentFrame, "输入正确的rbxassetid", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0.02, 0), 15)
+        local rbxassetidinputbox = CreateTextBox(contentFrame, _G.ChronixHubMusicID, UDim2.new(0.55, 0, 0.1, 0), UDim2.new(0.22, 0, 0.12, 0), 14)
+        local playbutton = CreateButton(contentFrame, _G.ChronixHubMusicisPause and "停止" or "播放", UDim2.new(0.35, 0, 0.1, 0), UDim2.new(0.1, 0, 0.85, 0), 18)
+        local loopbutton = CreateButton(contentFrame, _G.ChronixHubMusicisLoop and "不循环播放" or "循环播放", UDim2.new(0.35, 0, 0.1, 0), UDim2.new(0.55, 0, 0.85, 0), 18)
+
+        playbutton.MouseButton1Click:Connect(function()
+            _G.ChronixHubMusicID = rbxassetidinputbox.Text
+            sound.SoundId = "rbxassetid://" .. _G.ChronixHubMusicID
+            _G.ChronixHubMusicisPause = not _G.ChronixHubMusicisPause
+            playbutton.Text = _G.ChronixHubMusicisPause and "停止" or "播放"
+            if _G.ChronixHubMusicisPause then sound:play() else sound:Stop() end
+        end)
+
+        loopbutton.MouseButton1Click:Connect(function()
+            _G.ChronixHubMusicisLoop = not _G.ChronixHubMusicisLoop
+            loopbutton.Text = _G.ChronixHubMusicisLoop and "不循环播放" or "循环播放"
+            musicloop = sound.Ended:Connect(function()
+                if not _G.ChronixHubMusicisLoop then
+                    JR:Disconnect()
+                else
+                    sound:Play()
+                end
+            end)
+        end)
     end
 end
 
 -- 添加分类按钮
-local categories = {"基础", "工具", "脚本中心", "执行器", "设置"}
+local categories = {"基础", "工具", "脚本中心", "执行器", "播放器", "设置"}
 for i, cat in ipairs(categories) do
     local button = Instance.new("TextButton")
     button.Size = CONFIG.CATEGORY_BUTTON_SIZE
