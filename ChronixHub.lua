@@ -81,16 +81,20 @@ local function setNight()
     end
 end
 
-_G.ChronixHubisNightVisiton = false
-_G.ChronixHubisChuanQiang = false
-_G.ChronixHubisInfJump = false
-_G.ChronixHubisTime = false
-_G.ChronixHubExecuteText = "print(\"Hello world!\")"
-_G.ChronixHubMusicID = "142376088"
-_G.ChronixHubMusicisPlay = false
-_G.ChronixHubMusicisPause = false
-_G.ChronixHubMusicPlayLocation = 0
-_G.ChronixHubHLEnable = false
+local function resetBianLiang()
+    _G.ChronixHubisNightVisiton = false
+    _G.ChronixHubisChuanQiang = false
+    _G.ChronixHubisInfJump = false
+    _G.ChronixHubisTime = false
+    _G.ChronixHubExecuteText = "print(\"Hello world!\")"
+    _G.ChronixHubMusicID = "142376088"
+    _G.ChronixHubMusicisPlay = false
+    _G.ChronixHubMusicisPause = false
+    _G.ChronixHubMusicPlayLocation = 0
+    _G.ChronixHubHLEnable = false
+end
+
+resetBianLiang()
 
 local boundKey = Enum.KeyCode.F -- 默认快捷键为 F
 local keyText = "F"
@@ -766,6 +770,9 @@ local function AddMenuContent(category)
             Stepped3 = game:GetService("RunService").Stepped:Connect(function()
 	            if not _G.ChronixHubHLEnable then
                     -- 关闭功能时移除所有高亮和用户名标签
+                    for _, player in ipairs(Players:GetPlayers()) do
+                        removePlayerEffects(player)
+                    end
                     for player, highlight in pairs(highlights) do
                         highlight:Destroy()
                     end
@@ -774,12 +781,11 @@ local function AddMenuContent(category)
                     end
                     highlights = {}
                     usernameLabels = {}
-                    for _, player in ipairs(Players:GetPlayers()) do
-                        removePlayerEffects(player)
-                    end
                     Stepped3:Disconnect()
                 else
+                    wait(0.5)
                     for _, player in ipairs(Players:GetPlayers()) do
+                        removePlayerEffects(player)
                         addHighlight(player)
                         addUsernameLabel(player)
                     end
@@ -837,6 +843,7 @@ local function AddMenuContent(category)
 
         -- 点击按钮卸载菜单
         unloadButton.MouseButton1Click:Connect(function()
+            resetBianLiang()
             _G.ChronixHubisLoaded = false
             Gui:Destroy() -- 卸载整个菜单系统
             for _, player in ipairs(Players:GetPlayers()) do
@@ -1068,6 +1075,7 @@ end)
 -- 按下 Delete 键卸载菜单
 UserInputService.InputBegan:Connect(function(input)
     if input.KeyCode == Enum.KeyCode.Delete then
+        resetBianLiang()
         _G.ChronixHubisLoaded = false
         Gui:Destroy() -- 卸载整个菜单系统
         for _, player in ipairs(Players:GetPlayers()) do
