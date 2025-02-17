@@ -763,40 +763,27 @@ local function AddMenuContent(category)
         end)
 
         button8.MouseButton1Click:Connect(function()
-            local Workspace = game:GetService("Workspace")
-            local Players = game:GetService("Players")
             _G.ChronixHubHLEnable = not _G.ChronixHubHLEnable
             button8.Text = _G.ChronixHubHLEnable and "高级透视(开)" or "高级透视(关)"
-            Stepped3 = game:GetService("RunService").Stepped:Connect(function()
-	            if not _G.ChronixHubHLEnable then
-                    -- 关闭功能时移除所有高亮和用户名标签
-                    for _, player in ipairs(Players:GetPlayers()) do
-                        removePlayerEffects(player)
-                    end
-                    for player, highlight in pairs(highlights) do
-                        highlight:Destroy()
-                    end
-                    for player, label in pairs(usernameLabels) do
-                        billboard:Destroy()
-                    end
-                    highlights = {}
-                    usernameLabels = {}
-                    Stepped3:Disconnect()
-                else
-                    wait(0.5)
-                    for player, highlight in pairs(highlights) do
-                        highlight:Destroy()
-                    end
-                    for player, label in pairs(usernameLabels) do
-                        billboard:Destroy()
-                    end
-                    for _, player in ipairs(Players:GetPlayers()) do
-                        removePlayerEffects(player)
-                        addHighlight(player)
-                        addUsernameLabel(player)
-                    end
+	        if not _G.ChronixHubHLEnable then
+                -- 关闭功能时移除所有高亮和用户名标签
+                for _, player in ipairs(Players:GetPlayers()) do
+                    removePlayerEffects(player)
                 end
-            end)
+                for player, highlight in pairs(highlights) do
+                    highlight:Destroy()
+                end
+                for player, label in pairs(usernameLabels) do
+                    billboard:Destroy()
+                end
+                highlights = {}
+                usernameLabels = {}
+            else
+                for _, player in ipairs(Players:GetPlayers()) do
+                    addHighlight(player)
+                    addUsernameLabel(player)
+                end
+            end
         end)
     elseif category == "脚本中心" then
         -- 添加按钮
@@ -1101,6 +1088,25 @@ elseif GetDeviceType() == "Mobile" then
 end
 wait(1)
 CreateNotification("启用方法", "默认快捷键F开关, 鼠标移动到屏幕正下方点击弹出\n手机端点击悬浮球开关菜单", 10, true)
+
+-- 监听玩家加入
+Players.PlayerAdded:Connect(function(player)
+    if _G.ChronixHubHLEnable then
+        wait(2)
+        for _, player in ipairs(Players:GetPlayers()) do
+            removePlayerEffects(player)
+            addHighlight(player)
+            addUsernameLabel(player)
+        end
+    end
+end)
+
+-- 监听玩家离开
+Players.PlayerRemoving:Connect(function(player)
+    if _G.ChronixHubHLEnable then
+        removePlayerEffects(player)
+    end
+end)
 
 local dragButton = Instance.new("TextButton")
 dragButton.Size = UDim2.new(0.045, 0, 0.09, 0) -- 圆形悬浮窗大小
