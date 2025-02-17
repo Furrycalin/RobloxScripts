@@ -20,6 +20,7 @@ local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local Lighting = game:GetService("Lighting")
 local MarketplaceService = game:GetService("MarketplaceService")
+local RunService = game:GetService("RunService")
 
 local LocalPlayer = Players.LocalPlayer
 local Gui = Instance.new("ScreenGui")
@@ -89,6 +90,7 @@ _G.ChronixHubMusicID = "142376088"
 _G.ChronixHubMusicisPlay = false
 _G.ChronixHubMusicisPause = false
 _G.ChronixHubMusicPlayLocation = 0
+_G.ChronixHubHLEnable = false
 
 local boundKey = Enum.KeyCode.F -- 默认快捷键为 F
 local keyText = "F"
@@ -109,6 +111,81 @@ local achievementSound = Instance.new("Sound")
 achievementSound.SoundId = "rbxassetid://4590662766" -- 替换为你的音频ID
 achievementSound.Volume = 0.5 -- 音量大小
 achievementSound.Parent = SoundService
+
+
+-- 存储高亮和用户名标签
+local highlights = {}
+local usernameLabels = {}
+
+-- 为玩家添加高亮
+local function addHighlight(player)
+    if player == LocalPlayer or not _G.ChronixHubHLEnable then return end -- 排除自己和未启用时
+
+    local character = player.Character
+    if character then
+        -- 创建 Highlight 对象
+        local highlight = Instance.new("Highlight")
+        highlight.Adornee = character
+        highlight.FillColor = Color3.new(1, 0, 0)
+        highlight.FillTransparency = 0.8
+        highlight.OutlineColor = Color3.new(1, 0, 0)
+        highlight.OutlineTransparency = 0
+        highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop -- 隔墙显示
+        highlight.Parent = character
+
+        -- 如果只描边，则隐藏整体覆盖颜色
+        if onlyOutline then
+            highlight.FillTransparency = 1
+        end
+
+        -- 存储高亮对象
+        highlights[player] = highlight
+    end
+end
+
+-- 为玩家添加用户名标签
+local function addUsernameLabel(player)
+    if player == LocalPlayer or not _G.ChronixHubHLEnable then return end -- 排除自己和未启用时
+
+    local character = player.Character
+    if character then
+        local head = character:FindFirstChild("Head")
+        if head then
+            -- 创建 BillboardGui
+            local billboard = Instance.new("BillboardGui")
+            billboard.Adornee = head
+            billboard.Size = UDim2.new(0, 200, 0, 50)
+            billboard.StudsOffset = Vector3.new(0, 3, 0) -- 在头顶上方显示
+            billboard.AlwaysOnTop = true
+            billboard.Parent = head
+
+            -- 创建 TextLabel
+            local label = Instance.new("TextLabel")
+            label.Size = UDim2.new(1, 0, 1, 0)
+            label.Text = player.Name -- 显示用户名
+            label.TextColor3 = Color3.new(1, 1, 1) -- 白色文字
+            label.BackgroundTransparency = 1 -- 透明背景
+            label.Font = Enum.Font.SourceSansBold
+            label.TextSize = 18
+            label.Parent = billboard
+
+            -- 存储用户名标签
+            usernameLabels[player] = billboard
+        end
+    end
+end
+
+-- 移除玩家的高亮和用户名标签
+local function removePlayerEffects(player)
+    if highlights[player] then
+        highlights[player]:Destroy()
+        highlights[player] = nil
+    end
+    if usernameLabels[player] then
+        usernameLabels[player]:Destroy()
+        usernameLabels[player] = nil
+    end
+end
 
 local function GetDeviceType()
     if UserInputService.TouchEnabled and not UserInputService.MouseEnabled then
@@ -600,6 +677,7 @@ local function AddMenuContent(category)
         local button5 = CreateButton(contentFrame, _G.ChronixHubisChuanQiang and "穿墙(开)" or "穿墙(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.3, 0), 14)
         local button6 = CreateButton(contentFrame, _G.ChronixHubisInfJump and "连跳(开)" or "连跳(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.6, 0, 0.3, 0), 14)
         local button7 = CreateButton(contentFrame, _G.ChronixHubisTime and "切换时间(黑夜)" or "切换时间(白天)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.5, 0), 14)
+        local button8 = CreateButton(contentFrame, _G.ChronixHubHLEnable and "高级透视(开)" or "高级透视(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.5, 0), 14)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
@@ -678,6 +756,32 @@ local function AddMenuContent(category)
             _G.ChronixHubisTime = not _G.ChronixHubisTime
             button7.Text = _G.ChronixHubisTime and "切换时间(黑夜)" or "切换时间(白天)"
             if _G.ChronixHubisTime then setNight() else setDay() end
+        end)
+
+        button8.MouseButton1Click:Connect(function()
+            local Workspace = game:GetService("Workspace")
+            local Players = game:GetService("Players")
+            _G.ChronixHubHLEnable = not _G.ChronixHubHLEnable
+            button8.Text = _G.ChronixHubHLEnable and "高级透视(开)" or "高级透视(关)"
+            Stepped3 = game:GetService("RunService").Stepped:Connect(function()
+	            if not _G.ChronixHubHLEnable then
+                    -- 关闭功能时移除所有高亮和用户名标签
+                    for player, highlight in pairs(highlights) do
+                        highlight:Destroy()
+                    end
+                    for player, label in pairs(usernameLabels) do
+                        label:Destroy()
+                    end
+                    highlights = {}
+                    usernameLabels = {}
+                    Stepped3:Disconnect()
+                else
+                    for _, player in ipairs(Players:GetPlayers()) do
+                        addHighlight(player)
+                        addUsernameLabel(player)
+                    end
+                end
+            end)
         end)
     elseif category == "脚本中心" then
         -- 添加按钮
