@@ -784,6 +784,12 @@ local function AddMenuContent(category)
                     Stepped3:Disconnect()
                 else
                     wait(0.5)
+                    for player, highlight in pairs(highlights) do
+                        highlight:Destroy()
+                    end
+                    for player, label in pairs(usernameLabels) do
+                        billboard:Destroy()
+                    end
                     for _, player in ipairs(Players:GetPlayers()) do
                         removePlayerEffects(player)
                         addHighlight(player)
