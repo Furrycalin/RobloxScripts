@@ -119,7 +119,7 @@ local usernameLabels = {}
 
 -- 为玩家添加高亮
 local function addHighlight(player)
-    if player == LocalPlayer or not _G.ChronixHubHLEnable then return end -- 排除自己和未启用时
+    if player == LocalPlayer then return end -- 排除自己和未启用时
 
     local character = player.Character
     if character then
@@ -145,7 +145,7 @@ end
 
 -- 为玩家添加用户名标签
 local function addUsernameLabel(player)
-    if player == LocalPlayer or not _G.ChronixHubHLEnable then return end -- 排除自己和未启用时
+    if player == LocalPlayer then return end -- 排除自己和未启用时
 
     local character = player.Character
     if character then
@@ -770,10 +770,13 @@ local function AddMenuContent(category)
                         highlight:Destroy()
                     end
                     for player, label in pairs(usernameLabels) do
-                        label:Destroy()
+                        billboard:Destroy()
                     end
                     highlights = {}
                     usernameLabels = {}
+                    for _, player in ipairs(Players:GetPlayers()) do
+                        removePlayerEffects(player)
+                    end
                     Stepped3:Disconnect()
                 else
                     for _, player in ipairs(Players:GetPlayers()) do
@@ -836,6 +839,11 @@ local function AddMenuContent(category)
         unloadButton.MouseButton1Click:Connect(function()
             _G.ChronixHubisLoaded = false
             Gui:Destroy() -- 卸载整个菜单系统
+            for _, player in ipairs(Players:GetPlayers()) do
+                removePlayerEffects(player)
+            end
+            highlight:Destroy()
+            billboard:Destroy()
             sound:Stop() -- 先停止播放
             sound:Destroy()
         end)
@@ -1062,6 +1070,11 @@ UserInputService.InputBegan:Connect(function(input)
     if input.KeyCode == Enum.KeyCode.Delete then
         _G.ChronixHubisLoaded = false
         Gui:Destroy() -- 卸载整个菜单系统
+        for _, player in ipairs(Players:GetPlayers()) do
+            removePlayerEffects(player)
+        end
+        highlight:Destroy()
+        billboard:Destroy()
         sound:Stop() -- 先停止播放
         sound:Destroy()
     end
