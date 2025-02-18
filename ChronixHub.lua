@@ -166,7 +166,7 @@ local function addUsernameLabel(player)
             -- 创建 TextLabel
             local label = Instance.new("TextLabel")
             label.Size = UDim2.new(1, 0, 1, 0)
-            label.Text = player.DisplayName .. "(@" .. player.Name .. ")" -- 显示用户名
+            if player.DisplayName == player.Name then label.Text = player.DisplayName else label.Text = player.DisplayName .. " (@" .. player.Name .. ")" end -- 显示用户名
             label.TextColor3 = Color3.new(1, 1, 1) -- 白色文字
             label.BackgroundTransparency = 1 -- 透明背景
             label.Font = Enum.Font.SourceSansBold
