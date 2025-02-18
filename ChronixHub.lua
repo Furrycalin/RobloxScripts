@@ -96,8 +96,8 @@ end
 
 resetBianLiang()
 
-local boundKey = Enum.KeyCode.Insert -- 默认快捷键为 Delete
-local keyText = "Insert"
+local boundKey = Enum.KeyCode.F1 -- 默认快捷键为 Delete
+local keyText = "F1"
 local isMenuVisible = false
 local CheckBox1_isChecked = false
 local GD_speed = LocalPlayer.Character.Humanoid.WalkSpeed
@@ -681,7 +681,7 @@ local function AddMenuContent(category)
         local button6 = CreateButton(contentFrame, _G.ChronixHubisInfJump and "连跳(开)" or "连跳(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.6, 0, 0.3, 0), 14)
         local button7 = CreateButton(contentFrame, _G.ChronixHubisTime and "切换时间(黑夜)" or "切换时间(白天)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.5, 0), 14)
         local button8 = CreateButton(contentFrame, _G.ChronixHubHLEnable and "高级透视(开)" or "高级透视(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.5, 0), 14)
-        local button9 = CreateButton(contentFrame, "解锁鼠标(F1)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.6, 0, 0.5, 0), 14)
+        local button9 = CreateButton(contentFrame, "解锁鼠标(F5)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.6, 0, 0.5, 0), 14)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
@@ -1078,7 +1078,7 @@ UserInputService.InputBegan:Connect(function(input)
         billboard:Destroy()
         sound:Stop() -- 先停止播放
         sound:Destroy()
-    elseif input.KeyCode == Enum.KeyCode.F1 then
+    elseif input.KeyCode == Enum.KeyCode.F5 then
         UserInputService.MouseBehavior = Enum.MouseBehavior.Default -- 解锁鼠标
         if UserInputService.MouseBehavior == Enum.MouseBehavior.LockCenter then CreateNotification("警告", "解锁失败, 第一人称无法解锁或已被作者刻意锁定.", 5, true) else CreateNotification("提示", "已解锁鼠标.", 5, true) end
     end
@@ -1090,7 +1090,7 @@ elseif GetDeviceType() == "Mobile" then
     CreateNotification("欢迎使用，手机用户" .. displayName, "ChronixHub已启动!\n反挂机系统已自动开启", 10, true)
 end
 wait(1)
-CreateNotification("启用方法", "按下Insert开关菜单, 鼠标移动到屏幕正下方点击弹出\n手机端点击悬浮球开关菜单", 10, true)
+CreateNotification("启用方法", "按下F1开关菜单, 鼠标移动到屏幕正下方点击弹出\n手机端点击悬浮球开关菜单", 10, true)
 
 -- 监听玩家加入
 Players.PlayerAdded:Connect(function(player)
