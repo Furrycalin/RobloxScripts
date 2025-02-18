@@ -92,6 +92,9 @@ local function resetBianLiang()
     _G.ChronixHubMusicisPause = false
     _G.ChronixHubMusicPlayLocation = 0
     _G.ChronixHubHLEnable = false
+    _G.ChronixHubMouseIconEnabled = false
+    _G.ChronixHubMouseBehavior = Enum.MouseBehavior.Default
+    _G.ChronixHubMouseisUnlock = false
 end
 
 resetBianLiang()
@@ -115,7 +118,6 @@ local achievementSound = Instance.new("Sound")
 achievementSound.SoundId = "rbxassetid://4590662766" -- 替换为你的音频ID
 achievementSound.Volume = 0.5 -- 音量大小
 achievementSound.Parent = SoundService
-
 
 -- 存储高亮和用户名标签
 local highlights = {}
@@ -1062,6 +1064,21 @@ UserInputService.InputBegan:Connect(function(input)
     if input.KeyCode == boundKey then
         isMenuVisible = not isMenuVisible
         ToggleMenu(isMenuVisible)
+        if isMenuVisible then
+            if UserInputService.MouseBehavior == Enum.MouseBehavior.LockCenter then
+                _G.ChronixHubMouseBehavior = UserInputService.MouseBehavior
+                _G.ChronixHubMouseIconEnabled = UserInputService.MouseIconEnabled
+                _G.ChronixHubMouseisUnlock = true
+                UserInputService.MouseIconEnabled = true
+                UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+            end
+        else
+            if _G.ChronixHubMouseisUnlock then
+                UserInputService.MouseIconEnabled = _G.ChronixHubMouseIconEnabled
+                UserInputService.MouseBehavior = _G.ChronixHubMouseBehavior
+                _G.ChronixHubMouseisUnlock = false
+            end
+        end
     end
 end)
 
