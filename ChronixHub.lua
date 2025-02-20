@@ -1099,7 +1099,26 @@ Players.PlayerAdded:Connect(function(player)
             removePlayerEffects(player)
             addHighlight(player)
             addUsernameLabel(player)
+            if player.Character then
+                local humanoid = player.Character:FindFirstChild("Humanoid")
+                if humanoid then
+                    humanoid.Died:Connect(function()
+                        removePlayerEffects(player)
+                        addHighlight(player)
+                        addUsernameLabel(player)
+                    end)
+                end
+            end
         end
+        -- 监听玩家角色加载
+        player.CharacterAdded:Connect(function(character)
+        local humanoid = character:WaitForChild("Humanoid")
+            humanoid.Died:Connect(function()
+                removePlayerEffects(player)
+                addHighlight(player)
+                addUsernameLabel(player)
+            end)
+        end)
     end
 end)
 
