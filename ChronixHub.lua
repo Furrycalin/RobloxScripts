@@ -106,6 +106,11 @@ local floorPart = nil
 
 -- 创建地板
 local function createFloor()
+    if floorPart then return end -- 如果地板已存在，则不重复创建
+    
+    local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local Humanoid = Character:WaitForChild("Humanoid")
+    local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
 
     -- 创建地板
     floorPart = Instance.new("Part")
@@ -1211,6 +1216,16 @@ local function onCharacterDied()
         destroyFloor()
     end
 end
+
+-- 监听角色变化
+LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+    Character = newCharacter
+    Humanoid = Character:WaitForChild("Humanoid")
+    HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+
+    -- 重新绑定死亡事件
+    Humanoid.Died:Connect(onCharacterDied)
+end)
 
 -- 初始绑定死亡事件
 Humanoid.Died:Connect(onCharacterDied)
