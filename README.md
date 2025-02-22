@@ -20,3 +20,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 ⑤▶ Deathball.lua  
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/Deathball.lua"))()  
 死亡球脚本，目前无法使用自动格挡功能，开发已被暂停，希望有心人帮忙开发  
+  
+⑥▶ FlyV4.lua  
+loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/FlyV4.lua"))()  
+我魔改的FlyV3脚本，重写了UI优化了代码，并允许使用快捷键Ctrl+F来切换飞行  
