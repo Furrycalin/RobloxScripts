@@ -98,11 +98,12 @@ local function resetBianLiang()
     _G.ChronixHubHLEnable = false
     _G.ChronixHubisAirWalking = false
     _G.ChronixHubfloorFixedY = nil
-    local floorPart = nil
-    local floorruns = nil
 end
 
 resetBianLiang()
+
+local floorPart = nil
+local floorruns = nil
 
 -- 创建地板
 local function createFloor()
@@ -145,6 +146,7 @@ local function destroyFloor()
         floorPart:Destroy()
         floorruns:Destroy()
         floorPart = nil
+        floorruns = nil
         _G.ChronixHubfloorFixedY = nil
     end
 end
