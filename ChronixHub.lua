@@ -134,6 +134,7 @@ end
 local function destroyFloor()
     if floorPart then
         floorPart:Destroy()
+        floorPart = nil
         _G.ChronixHubfloorFixedY = nil
     end
 end
