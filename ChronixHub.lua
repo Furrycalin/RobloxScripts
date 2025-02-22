@@ -1210,7 +1210,7 @@ end)
 -- 监听玩家死亡事件
 local function onCharacterDied()
     if _G.ChronixHubisAirWalking then
-        toggleAirWalk() -- 关闭功能并删除地板
+        destroyFloor()
     end
 end
 
