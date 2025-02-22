@@ -1206,8 +1206,10 @@ end)
 
 -- 监听玩家死亡事件
 local function onCharacterDied()
-    _G.ChronixHubisAirWalking = false
-    destroyFloor()
+    if _G.ChronixHubisAirWalking then
+        _G.ChronixHubisAirWalking = false
+        destroyFloor()
+    end
 end
 
 -- 初始绑定死亡事件
