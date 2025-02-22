@@ -98,12 +98,10 @@ local function resetBianLiang()
     _G.ChronixHubHLEnable = false
     _G.ChronixHubisAirWalking = false
     _G.ChronixHubfloorFixedY = nil
+    local floorPart = nil
 end
 
 resetBianLiang()
-
--- 地板实例
-local floorPart = nil
 
 -- 创建地板
 local function createFloor()
@@ -911,6 +909,7 @@ local function AddMenuContent(category)
 
         -- 点击按钮卸载菜单
         unloadButton.MouseButton1Click:Connect(function()
+            destroyFloor()
             resetBianLiang()
             _G.ChronixHubisLoaded = false
             Gui:Destroy() -- 卸载整个菜单系统
@@ -1143,6 +1142,7 @@ end)
 -- 按下 Delete 键卸载菜单
 UserInputService.InputBegan:Connect(function(input)
     if input.KeyCode == Enum.KeyCode.Delete then
+        destroyFloor()
         resetBianLiang()
         _G.ChronixHubisLoaded = false
         Gui:Destroy() -- 卸载整个菜单系统
