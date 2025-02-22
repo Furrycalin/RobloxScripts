@@ -103,7 +103,6 @@ end
 resetBianLiang()
 
 local floorPart = nil
-local floorruns = nil
 
 -- 创建地板
 local function createFloor()
@@ -129,24 +128,12 @@ local function createFloor()
     -- 记录当前地板的 Y 轴高度
     _G.ChronixHubfloorFixedY = HumanoidRootPart.Position.Y - HumanoidRootPart.Size.Y / 2 - floorPart.Size.Y / 2 - 1.8
     floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, _G.ChronixHubfloorFixedY, HumanoidRootPart.Position.Z)
-
-    
-    -- 更新地板位置
-    local floorruns = RunService.Heartbeat:Connect(function()
-        if _G.ChronixHubisAirWalking and floorPart and _G.ChronixHubfloorFixedY then
-            -- 将地板的 X 和 Z 轴与玩家对齐，Y 轴固定
-            floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, _G.ChronixHubfloorFixedY, HumanoidRootPart.Position.Z)
-        end
-    end)
 end
 
 -- 删除地板
 local function destroyFloor()
     if floorPart then
         floorPart:Destroy()
-        floorruns:Destroy()
-        floorPart = nil
-        floorruns = nil
         _G.ChronixHubfloorFixedY = nil
     end
 end
@@ -160,6 +147,14 @@ local function toggleAirWalk()
         destroyFloor() -- 禁用时删除地板
     end
 end
+
+-- 更新地板位置
+RunService.Heartbeat:Connect(function()
+    if _G.ChronixHubisAirWalking and floorPart and _G.ChronixHubfloorFixedY then
+        -- 将地板的 X 和 Z 轴与玩家对齐，Y 轴固定
+        floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, _G.ChronixHubfloorFixedY, HumanoidRootPart.Position.Z)
+    end
+end)
 
 local boundKey = Enum.KeyCode.F1 -- 默认快捷键为 Delete
 local keyText = "F1"
