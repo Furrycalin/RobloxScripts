@@ -124,7 +124,6 @@ local function createFloor()
     frame.BackgroundTransparency = 0.4 -- 半透明
     frame.BorderSizePixel = 0
 
-
     -- 记录当前地板的 Y 轴高度
     _G.ChronixHubfloorFixedY = HumanoidRootPart.Position.Y - HumanoidRootPart.Size.Y / 2 - floorPart.Size.Y / 2 - 1.8
     floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, _G.ChronixHubfloorFixedY, HumanoidRootPart.Position.Z)
@@ -1210,6 +1209,7 @@ end)
 -- 监听玩家死亡事件
 local function onCharacterDied()
     if _G.ChronixHubisAirWalking then
+        _G.ChronixHubisAirWalking = false
         destroyFloor()
     end
 end
