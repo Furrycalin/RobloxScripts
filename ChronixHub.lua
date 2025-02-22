@@ -106,7 +106,6 @@ local floorPart = nil
 
 -- 创建地板
 local function createFloor()
-    if floorPart then return end -- 如果地板已存在，则不重复创建
 
     -- 创建地板
     floorPart = Instance.new("Part")
