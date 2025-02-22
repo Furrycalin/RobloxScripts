@@ -181,6 +181,7 @@ Duration = 5;
 
 local Gui = Instance.new("ScreenGui")
 Gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+Gui.ResetOnSpawn = false
 
 local window = Instance.new("Frame")
 window.Size = UDim2.new(0, 190, 0, 57)
