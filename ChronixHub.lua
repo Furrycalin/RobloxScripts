@@ -144,6 +144,8 @@ local function toggleAirWalk()
     _G.ChronixHubisAirWalking = not _G.ChronixHubisAirWalking
     if _G.ChronixHubisAirWalking then
         createFloor() -- 启用时创建地板
+        _G.ChronixHubfloorFixedY = HumanoidRootPart.Position.Y - HumanoidRootPart.Size.Y / 2 - floorPart.Size.Y / 2 - 1.8
+        floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, _G.ChronixHubfloorFixedY, HumanoidRootPart.Position.Z)
     else
         destroyFloor() -- 禁用时删除地板
     end
