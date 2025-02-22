@@ -1213,6 +1213,7 @@ end)
 local function onCharacterDied()
     if _G.ChronixHubisAirWalking then
         _G.ChronixHubisAirWalking = false
+        button10.Text = "空中移动(关)"
         destroyFloor()
     end
 end
