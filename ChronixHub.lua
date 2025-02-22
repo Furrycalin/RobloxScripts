@@ -27,6 +27,10 @@ local Gui = Instance.new("ScreenGui")
 Gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 Gui.ResetOnSpawn = false
 
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+
 -- 获取玩家信息
 local playerName = LocalPlayer.Name -- 玩家名
 local displayName = LocalPlayer.DisplayName -- 显示名
@@ -92,9 +96,60 @@ local function resetBianLiang()
     _G.ChronixHubMusicisPause = false
     _G.ChronixHubMusicPlayLocation = 0
     _G.ChronixHubHLEnable = false
+    _G.ChronixHubisAirWalking = false
+    _G.ChronixHubfloorFixedY = nil
 end
 
 resetBianLiang()
+
+-- 地板实例
+local floorPart = nil
+
+-- 创建地板
+local function createFloor()
+    if floorPart then return end -- 如果地板已存在，则不重复创建
+
+    -- 创建地板
+    floorPart = Instance.new("Part")
+    floorPart.Size = Vector3.new(10, 1, 10) -- 地板大小
+    floorPart.Transparency = 1 -- 完全透明
+    floorPart.Anchored = true -- 固定位置
+    floorPart.CanCollide = true -- 允许碰撞
+    floorPart.Parent = workspace
+
+    -- 添加发光特效
+    local glow = Instance.new("SurfaceGui", floorPart)
+    glow.Face = Enum.NormalId.Top
+    local frame = Instance.new("Frame", glow)
+    frame.Size = UDim2.new(1, 0, 1, 0)
+    frame.BackgroundColor3 = Color3.new(0, 1, 0) -- 白色发光
+    frame.BackgroundTransparency = 0.4 -- 半透明
+    frame.BorderSizePixel = 0
+
+
+    -- 记录当前地板的 Y 轴高度
+    _G.ChronixHubfloorFixedY = HumanoidRootPart.Position.Y - HumanoidRootPart.Size.Y / 2 - floorPart.Size.Y / 2 - 1.8
+    floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, _G.ChronixHubfloorFixedY, HumanoidRootPart.Position.Z)
+end
+
+-- 删除地板
+local function destroyFloor()
+    if floorPart then
+        floorPart:Destroy()
+        floorPart = nil
+        _G.ChronixHubfloorFixedY = nil
+    end
+end
+
+-- 切换空中行走状态
+local function toggleAirWalk()
+    _G.ChronixHubisAirWalking = not _G.ChronixHubisAirWalking
+    if _G.ChronixHubisAirWalking then
+        createFloor() -- 启用时创建地板
+    else
+        destroyFloor() -- 禁用时删除地板
+    end
+end
 
 local boundKey = Enum.KeyCode.F1 -- 默认快捷键为 Delete
 local keyText = "F1"
@@ -682,6 +737,7 @@ local function AddMenuContent(category)
         local button7 = CreateButton(contentFrame, _G.ChronixHubisTime and "切换时间(黑夜)" or "切换时间(白天)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.5, 0), 14)
         local button8 = CreateButton(contentFrame, _G.ChronixHubHLEnable and "高级透视(开)" or "高级透视(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.5, 0), 14)
         local button9 = CreateButton(contentFrame, "解锁鼠标(F5)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.6, 0, 0.5, 0), 14)
+        local button10 = CreateButton(contentFrame, _G.ChronixHubisAirWalking and "空中移动(开)" or "空中移动(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.7, 0), 14)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
@@ -784,6 +840,11 @@ local function AddMenuContent(category)
                     addUsernameLabel(player)
                 end
             end
+        end)
+
+        button10.MouseButton1Click:Connect(function()
+            toggleAirWalk()
+            button10.Text = _G.ChronixHubisAirWalking and "空中移动(开)" or "空中移动(关)"
         end)
     elseif category == "脚本中心" then
         -- 添加按钮
@@ -1098,6 +1159,14 @@ UserInputService.InputBegan:Connect(function(input)
     end
 end)
 
+-- 更新地板位置
+RunService.Heartbeat:Connect(function()
+    if _G.ChronixHubisAirWalking and floorPart and _G.ChronixHubfloorFixedY then
+        -- 将地板的 X 和 Z 轴与玩家对齐，Y 轴固定
+        floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, _G.ChronixHubfloorFixedY, HumanoidRootPart.Position.Z)
+    end
+end)
+
 if GetDeviceType() == "Desktop" then
     CreateNotification("欢迎使用，电脑用户" .. displayName, "ChronixHub已启动!\n反挂机系统已自动开启", 10, true)
 elseif GetDeviceType() == "Mobile" then
@@ -1135,6 +1204,16 @@ Players.PlayerAdded:Connect(function(player)
         end)
     end
 end)
+
+-- 监听玩家死亡事件
+local function onCharacterDied()
+    if _G.ChronixHubisAirWalking then
+        toggleAirWalk() -- 关闭功能并删除地板
+    end
+end
+
+-- 初始绑定死亡事件
+Humanoid.Died:Connect(onCharacterDied)
 
 -- 监听玩家离开
 Players.PlayerRemoving:Connect(function(player)
