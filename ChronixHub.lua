@@ -793,6 +793,8 @@ local function AddMenuContent(category)
         local button4 = CreateButton(contentFrame, "通用ESP", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.6, 0, 0.1, 0), 14)
         local button5 = CreateButton(contentFrame, "冬凌中心", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.1, 0, 0.5, 0), 14)
         local button6 = CreateButton(contentFrame, "OldMSPaint", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.3, 0), 14)
+        local button7 = CreateButton(contentFrame, "玩家控制", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.6, 0, 0.3, 0), 14)
+        local button8 = CreateButton(contentFrame, "死亡球", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0.35, 0, 0.5, 0), 14)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
@@ -829,6 +831,18 @@ local function AddMenuContent(category)
             CreateNotification("提示", "正在启动 OldMSPaint 脚本，请耐心等待.", 10, true)
             loadstring(game:HttpGet("https://raw.githubusercontent.com/notpoiu/mspaint/main/main.lua"))()
             CreateNotification("提示", "OldMSPaint 已经成功启动!", 10, true)
+        end)
+
+        button7.MouseButton1Click:Connect(function()
+            CreateNotification("提示", "正在启动 玩家控制 脚本，请耐心等待.", 10, true)
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/PlayerControl.lua"))()
+            CreateNotification("提示", "玩家控制 已经成功启动!", 10, true)
+        end)
+
+        button8.MouseButton1Click:Connect(function()
+            CreateNotification("提示", "正在启动 死亡球 脚本，请耐心等待.", 10, true)
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/Deathball.lua"))()
+            CreateNotification("提示", "死亡球 已经成功启动!", 10, true)
         end)
     elseif category == "设置" then
         -- 添加“卸载菜单”按钮
