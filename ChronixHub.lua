@@ -99,6 +99,7 @@ local function resetBianLiang()
     _G.ChronixHubisAirWalking = false
     _G.ChronixHubfloorFixedY = nil
     local floorPart = nil
+    local floorruns = nil
 end
 
 resetBianLiang()
@@ -127,12 +128,22 @@ local function createFloor()
     -- 记录当前地板的 Y 轴高度
     _G.ChronixHubfloorFixedY = HumanoidRootPart.Position.Y - HumanoidRootPart.Size.Y / 2 - floorPart.Size.Y / 2 - 1.8
     floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, _G.ChronixHubfloorFixedY, HumanoidRootPart.Position.Z)
+
+    
+    -- 更新地板位置
+    local floorruns = RunService.Heartbeat:Connect(function()
+        if _G.ChronixHubisAirWalking and floorPart and _G.ChronixHubfloorFixedY then
+            -- 将地板的 X 和 Z 轴与玩家对齐，Y 轴固定
+            floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, _G.ChronixHubfloorFixedY, HumanoidRootPart.Position.Z)
+        end
+    end)
 end
 
 -- 删除地板
 local function destroyFloor()
     if floorPart then
         floorPart:Destroy()
+        floorruns:Destroy()
         floorPart = nil
         _G.ChronixHubfloorFixedY = nil
     end
@@ -143,8 +154,6 @@ local function toggleAirWalk()
     _G.ChronixHubisAirWalking = not _G.ChronixHubisAirWalking
     if _G.ChronixHubisAirWalking then
         createFloor() -- 启用时创建地板
-        _G.ChronixHubfloorFixedY = HumanoidRootPart.Position.Y - HumanoidRootPart.Size.Y / 2 - floorPart.Size.Y / 2 - 1.8
-        floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, _G.ChronixHubfloorFixedY, HumanoidRootPart.Position.Z)
     else
         destroyFloor() -- 禁用时删除地板
     end
@@ -1160,14 +1169,6 @@ UserInputService.InputBegan:Connect(function(input)
     end
 end)
 
--- 更新地板位置
-RunService.Heartbeat:Connect(function()
-    if _G.ChronixHubisAirWalking and floorPart and _G.ChronixHubfloorFixedY then
-        -- 将地板的 X 和 Z 轴与玩家对齐，Y 轴固定
-        floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, _G.ChronixHubfloorFixedY, HumanoidRootPart.Position.Z)
-    end
-end)
-
 if GetDeviceType() == "Desktop" then
     CreateNotification("欢迎使用，电脑用户" .. displayName, "ChronixHub已启动!\n反挂机系统已自动开启", 10, true)
 elseif GetDeviceType() == "Mobile" then
@@ -1208,10 +1209,8 @@ end)
 
 -- 监听玩家死亡事件
 local function onCharacterDied()
-    if _G.ChronixHubisAirWalking then
-        _G.ChronixHubisAirWalking = false
-        destroyFloor()
-    end
+    _G.ChronixHubisAirWalking = false
+    destroyFloor()
 end
 
 -- 初始绑定死亡事件
