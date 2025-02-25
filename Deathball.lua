@@ -153,7 +153,7 @@ local Text2 = CreateTextLabel(Gui, "", Color3.fromRGB(166, 166, 166), UDim2.new(
 local Text3 = CreateTextLabel(Gui, "Auto Parry (OFF)", Color3.fromRGB(230, 230, 250), UDim2.new(0.949, -40, -0.04, 0), 20)
 
 local RB = Color3.new(1, 0, 0)
-local BALLDIYCOLOR = Color3.new(0.352, 0, 0.56)
+local BALLDIYCOLOR = Color3.new(0, 1, 1)
 local AutoValue = false
 
 -- 查找球的函数
@@ -189,7 +189,7 @@ local function UpdateUI()
         Text2.Text = ""
     else
         if ball.Highlight and ball.Highlight.FillColor == RB then
-            ball.Highlight.FillColor = BALLDIYCOLOR
+            ball.Highlight.OutlineColor = BALLDIYCOLOR
             local isLocked = true
         else
             local isLocked = false
