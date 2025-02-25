@@ -188,8 +188,12 @@ local function UpdateUI()
         Text1.Text = "观战中"
         Text2.Text = ""
     else
-        if ball.Highlight and ball.Highlight.FillColor == RB then ball.Highlight.FillColor = BALLDIYCOLOR
-        local isLocked = ball.Highlight and ball.Highlight.FillColor == BALLDIYCOLOR
+        if ball.Highlight and ball.Highlight.FillColor == RB then
+            ball.Highlight.FillColor = BALLDIYCOLOR
+            local isLocked = true
+        else
+            local isLocked = false
+        end
         Text1.Text = isLocked and "已被球锁定" or "未被球锁定"
         Text1.TextColor3 = isLocked and Color3.fromRGB(238, 17, 17) or Color3.fromRGB(17, 238, 17)
 
