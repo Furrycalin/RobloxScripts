@@ -154,7 +154,7 @@ local Text3 = CreateTextLabel(Gui, "Auto Parry (OFF)", Color3.fromRGB(230, 230, 
 
 local RB = Color3.new(1, 0, 0)
 local BALLLINEDIYCOLOR = Color3.new(0, 1, 0)
-local BALLFILLDIYCOLOR = Color3.new(0, 1, 1)
+local BALLFILLDIYCOLOR = Color3.new(1, 1, 0)
 local AutoValue = false
 
 -- 查找球的函数
