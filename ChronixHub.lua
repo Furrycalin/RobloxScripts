@@ -24,7 +24,8 @@ local RunService = game:GetService("RunService")
 
 local LocalPlayer = Players.LocalPlayer
 local Gui = Instance.new("ScreenGui")
-Gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+-- Gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+Gui.Parent = game.CoreGui
 Gui.ResetOnSpawn = false
 Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
