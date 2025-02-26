@@ -24,3 +24,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 ⑥▶ FlyV4.lua  
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/FlyV4.lua"))()  
 我魔改的FlyV3脚本，重写了UI优化了代码，并允许使用快捷键Ctrl+F来切换飞行  
+  
+⑦▶ Grace.lua  
+loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/Grace.lua"))()  
+我制作的Grace脚本，可自动开门与删除所有怪物  
