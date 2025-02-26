@@ -921,7 +921,7 @@ local function AddMenuContent(category)
 
         button9.MouseButton1Click:Connect(function()
             CreateNotification("提示", "正在启动 格蕾丝 脚本，请耐心等待.", 10, true)
-            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/Deathball.lua"))()
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/Grace.lua"))()
             CreateNotification("提示", "格蕾丝 已经成功启动!", 10, true)
         end)
     elseif category == "设置" then
