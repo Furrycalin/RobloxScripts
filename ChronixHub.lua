@@ -422,6 +422,12 @@ local function CreateLabel(parent, text, size, position, textSize)
 end
 
 local function CreateButton(parent, text, size, position, textSize)
+    -- 创建渐变背景
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
+        ColorSequenceKeypoint.new(1, Color3.new(0.7, 0.7, 0.7))
+    })
     local button = Instance.new("TextButton")
     button.Size = size -- 按钮大小
     button.Position = position -- 按钮位置
@@ -430,6 +436,8 @@ local function CreateButton(parent, text, size, position, textSize)
     button.TextColor3 = CONFIG.TEXT_COLOR
     button.TextSize = textSize
     button.Parent = parent
+    gradient.Rotation = 75 -- 渐变方向（从上到下）
+    gradient.Parent = button
     return button
 end
 
