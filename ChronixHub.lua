@@ -375,6 +375,40 @@ local CONFIG = {
     CATEGORY_BUTTON_INSET = 10 -- 按钮向内偏移
 }
 
+local tbz = {
+    lcp1 = "备注",
+    lcp2 = "备注",
+    lcp3 = "备注",
+    lcp4 = "备注",
+    lcp5 = "备注",
+    lcp6 = "备注",
+    lcp7 = "备注",
+    lcp8 = "备注",
+    lcp9 = "备注",
+    lcp10 = "备注",
+    lcp11 = "备注",
+    lcp12 = "备注",
+    lcp13 = "备注",
+    lcp14 = "备注"
+}
+
+local teleportpoint = {
+    locate1 = nil,
+    locate2 = nil,
+    locate3 = nil,
+    locate4 = nil,
+    locate5 = nil,
+    locate6 = nil,
+    locate7 = nil,
+    locate8 = nil,
+    locate9 = nil,
+    locate10 = nil,
+    locate11 = nil,
+    locate12 = nil,
+    locate13 = nil,
+    locate14 = nil
+}
+
 local function CreateLabel(parent, text, size, position, textSize)
     local label = Instance.new("TextLabel")
     label.Size = size
@@ -457,6 +491,17 @@ titleLabel.BackgroundTransparency = 1
 titleLabel.TextXAlignment = Enum.TextXAlignment.Left
 titleLabel.Parent = menuFrame
 
+-- 创建类型标签
+local categoryText = Instance.new("TextLabel")
+categoryText.Size = UDim2.new(0.8, 0, 0.1, 0)
+categoryText.Position = UDim2.new(0, 55, 0.07, 0) -- 左上角
+categoryText.Text = ""
+categoryText.TextColor3 = CONFIG.TEXT_COLOR
+categoryText.TextSize = 25
+categoryText.Font = Enum.Font.GothamBold
+categoryText.BackgroundTransparency = 1
+categoryText.Parent = menuFrame
+
 -- 创建分类按钮区域
 local categoryButtonsFrame = Instance.new("Frame")
 categoryButtonsFrame.Size = UDim2.new(1, 0, 0.1, 0) -- 占菜单高度的 10%
@@ -466,8 +511,8 @@ categoryButtonsFrame.Parent = menuFrame
 
 -- 创建内容区域
 local contentFrame = Instance.new("Frame")
-contentFrame.Size = UDim2.new(1, 0, 0.8, 0) -- 占菜单高度的 80%
-contentFrame.Position = UDim2.new(0, 0, 0, 33) -- 在分类按钮下方
+contentFrame.Size = UDim2.new(1, 0, 0.75, 0) -- 占菜单高度的 80%
+contentFrame.Position = UDim2.new(0, 0, 0, 53) -- 在分类按钮下方
 contentFrame.BackgroundTransparency = 1 -- 透明背景
 contentFrame.Parent = menuFrame
 
@@ -479,6 +524,8 @@ local function AddMenuContent(category)
             child:Destroy()
         end
     end
+
+    categoryText.Text = category
 
     -- 根据分类添加内容
     if category == "基础" then
@@ -1077,11 +1124,147 @@ local function AddMenuContent(category)
             sound.Looped = not sound.Looped
             loopbutton.Text = sound.Looped and "不循环播放" or "循环播放"
         end)
+    elseif category == "传送器" then
+        local lcp1 = CreateTextBox(contentFrame, tbz.lcp1, UDim2.new(0, 113, 0, 32), UDim2.new(0, 13, 0, 10), 14)
+        local lcpb1 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 133, 0, 10), 15)
+        local lcpt1 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 213, 0, 10), 15)
+        local lcp2 = CreateTextBox(contentFrame, tbz.lcp2, UDim2.new(0, 113, 0, 32), UDim2.new(0, 13, 0, 50), 14)
+        local lcpb2 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 133, 0, 50), 15)
+        local lcpt2 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 213, 0, 50), 15)
+        local lcp3 = CreateTextBox(contentFrame, tbz.lcp3, UDim2.new(0, 113, 0, 32), UDim2.new(0, 13, 0, 90), 14)
+        local lcpb3 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 133, 0, 90), 15)
+        local lcpt3 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 213, 0, 90), 15)
+        local lcp4 = CreateTextBox(contentFrame, tbz.lcp4, UDim2.new(0, 113, 0, 32), UDim2.new(0, 13, 0, 130), 14)
+        local lcpb4 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 133, 0, 130), 15)
+        local lcpt4 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 213, 0, 130), 15)
+        local lcp5 = CreateTextBox(contentFrame, tbz.lcp5, UDim2.new(0, 113, 0, 32), UDim2.new(0, 13, 0, 170), 14)
+        local lcpb5 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 133, 0, 170), 15)
+        local lcpt5 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 213, 0, 170), 15)
+        local lcp6 = CreateTextBox(contentFrame, tbz.lcp6, UDim2.new(0, 113, 0, 32), UDim2.new(0, 13, 0, 210), 14)
+        local lcpb6 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 133, 0, 210), 15)
+        local lcpt6 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 213, 0, 210), 15)
+        local lcp7 = CreateTextBox(contentFrame, tbz.lcp7, UDim2.new(0, 113, 0, 32), UDim2.new(0, 13, 0, 250), 14)
+        local lcpb7 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 133, 0, 250), 15)
+        local lcpt7 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 213, 0, 250), 15)
+        local lcp8 = CreateTextBox(contentFrame, tbz.lcp8, UDim2.new(0, 113, 0, 32), UDim2.new(0, 313, 0, 10), 14)
+        local lcpb8 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 433, 0, 10), 15)
+        local lcpt8 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 513, 0, 10), 15)
+        local lcp9 = CreateTextBox(contentFrame, tbz.lcp9, UDim2.new(0, 113, 0, 32), UDim2.new(0, 313, 0, 50), 14)
+        local lcpb9 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 433, 0, 50), 15)
+        local lcpt9 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 513, 0, 50), 15)
+        local lcp10 = CreateTextBox(contentFrame, tbz.lcp10, UDim2.new(0, 113, 0, 32), UDim2.new(0, 313, 0, 90), 14)
+        local lcpb10 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 433, 0, 90), 15)
+        local lcpt10 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 513, 0, 90), 15)
+        local lcp11 = CreateTextBox(contentFrame, tbz.lcp11, UDim2.new(0, 113, 0, 32), UDim2.new(0, 313, 0, 130), 14)
+        local lcpb11 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 433, 0, 130), 15)
+        local lcpt11 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 513, 0, 130), 15)
+        local lcp12 = CreateTextBox(contentFrame, tbz.lcp12, UDim2.new(0, 113, 0, 32), UDim2.new(0, 313, 0, 170), 14)
+        local lcpb12 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 433, 0, 170), 15)
+        local lcpt12 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 513, 0, 170), 15)
+        local lcp13 = CreateTextBox(contentFrame, tbz.lcp13, UDim2.new(0, 113, 0, 32), UDim2.new(0, 313, 0, 210), 14)
+        local lcpb13 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 433, 0, 210), 15)
+        local lcpt13 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 513, 0, 210), 15)
+        local lcp14 = CreateTextBox(contentFrame, tbz.lcp14, UDim2.new(0, 113, 0, 32), UDim2.new(0, 313, 0, 250), 14)
+        local lcpb14 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 433, 0, 250), 15)
+        local lcpt14 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 513, 0, 250), 15)
+
+        local function showjilulocation() CreateNotification("已记录位置", "X:" .. string.format("%.2f", HumanoidRootPart.Position.X) .. ", Y:" .. string.format("%.2f", HumanoidRootPart.Position.Y) .. ", Z:" .. string.format("%.2f", HumanoidRootPart.Position.Z), 5, true) end
+        local function showtplocation(key) CreateNotification("已传送到", "X:" .. string.format("%.2f", teleportpoint[key].X) .. ", Y:" .. string.format("%.2f", teleportpoint[key].Y) .. ", Z:" .. string.format("%.2f", teleportpoint[key].Z), 5, true) end
+
+        -- 定义 TextBox 和 tbz 键的映射关系
+        local textBoxMap = {
+            {textBox = lcp1, key = "lcp1"},
+            {textBox = lcp2, key = "lcp2"},
+            {textBox = lcp3, key = "lcp3"},
+            {textBox = lcp4, key = "lcp4"},
+            {textBox = lcp5, key = "lcp5"},
+            {textBox = lcp6, key = "lcp6"},
+            {textBox = lcp7, key = "lcp7"},
+            {textBox = lcp8, key = "lcp8"},
+            {textBox = lcp9, key = "lcp9"},
+            {textBox = lcp10, key = "lcp10"},
+            {textBox = lcp11, key = "lcp11"},
+            {textBox = lcp12, key = "lcp12"},
+            {textBox = lcp13, key = "lcp13"},
+            {textBox = lcp14, key = "lcp14"}
+        }
+
+        local lcbpMap = {
+            {textBox = lcpb1, key = "locate1"},
+            {textBox = lcpb2, key = "locate2"},
+            {textBox = lcpb3, key = "locate3"},
+            {textBox = lcpb4, key = "locate4"},
+            {textBox = lcpb5, key = "locate5"},
+            {textBox = lcpb6, key = "locate6"},
+            {textBox = lcpb7, key = "locate7"},
+            {textBox = lcpb8, key = "locate8"},
+            {textBox = lcpb9, key = "locate9"},
+            {textBox = lcpb10, key = "locate10"},
+            {textBox = lcpb11, key = "locate11"},
+            {textBox = lcpb12, key = "locate12"},
+            {textBox = lcpb13, key = "locate13"},
+            {textBox = lcpb14, key = "locate14"}
+        }
+
+        local lcbtMap = {
+            {textBox = lcpt1, key = "locate1"},
+            {textBox = lcpt2, key = "locate2"},
+            {textBox = lcpt3, key = "locate3"},
+            {textBox = lcpt4, key = "locate4"},
+            {textBox = lcpt5, key = "locate5"},
+            {textBox = lcpt6, key = "locate6"},
+            {textBox = lcpt7, key = "locate7"},
+            {textBox = lcpt8, key = "locate8"},
+            {textBox = lcpt9, key = "locate9"},
+            {textBox = lcpt10, key = "locate10"},
+            {textBox = lcpt11, key = "locate11"},
+            {textBox = lcpt12, key = "locate12"},
+            {textBox = lcpt13, key = "locate13"},
+            {textBox = lcpt14, key = "locate14"}
+        }
+
+        -- 封装 FocusLost 事件逻辑
+        local function onFocusLost(textBox, key)
+            textBox.FocusLost:Connect(function(enterPressed)
+                if not enterPressed then
+                    tbz[key] = textBox.Text
+                end
+            end)
+        end
+        local function onFocusLost2(textBox, key)
+            textBox.MouseButton1Click:Connect(function()
+                teleportpoint[key] = HumanoidRootPart.Position
+                showjilulocation()
+            end)
+        end
+        local function onFocusLost3(textBox, key)
+            textBox.MouseButton1Click:Connect(function()
+                if teleportpoint[key] ~= nil then HumanoidRootPart.CFrame = CFrame.new(teleportpoint[key]) showtplocation(key) end
+            end)
+        end
+
+        -- 为每个 TextBox 绑定事件
+        for _, item in ipairs(textBoxMap) do
+            onFocusLost(item.textBox, item.key)
+        end
+        for _, item in ipairs(lcbpMap) do
+           onFocusLost2(item.textBox, item.key)
+        end
+        for _, item in ipairs(lcbtMap) do
+           onFocusLost3(item.textBox, item.key)
+        end
+
+    elseif category == "关于" then
+        local l1 = CreateLabel(contentFrame, "作者: Chronix", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0, 55, 0, 50), 14)
+        l1.TextXAlignment = Enum.TextXAlignment.Left
+        local l2 = CreateLabel(contentFrame, "好像没什么可以写的了", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0, 55, 0, 75), 14)
+        l2.TextXAlignment = Enum.TextXAlignment.Left
+        local d1 = CreateLabel(contentFrame, "所有代码均为Chronix编写, 可以参考学习，严禁盗用", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0, 55, 1, 0), 14)
     end
 end
 
 -- 添加分类按钮
-local categories = {"基础", "工具", "脚本中心", "执行器", "播放器", "设置"}
+local categories = {"基础", "工具", "脚本中心", "传送器", "执行器", "播放器", "设置", "关于"}
 for i, cat in ipairs(categories) do
     local button = Instance.new("TextButton")
     button.Size = CONFIG.CATEGORY_BUTTON_SIZE
@@ -1101,6 +1284,9 @@ for i, cat in ipairs(categories) do
         AddMenuContent(cat) -- 切换菜单内容
     end)
 end
+
+-- 默认内容
+AddMenuContent("关于")
 
 -- 箭头按钮滑入滑出逻辑
 local function ToggleArrow(visible)
