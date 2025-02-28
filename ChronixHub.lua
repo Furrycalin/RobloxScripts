@@ -93,7 +93,7 @@ local function resetBianLiang()
     _G.ChronixHubisInfJump = false
     _G.ChronixHubisTime = false
     _G.ChronixHubExecuteText = "print(\"Hello world!\")"
-    _G.ChronixHubMusicID = "142376088"
+    _G.ChronixHubMusicID = "1837879082"
     _G.ChronixHubMusicisPlay = false
     _G.ChronixHubMusicisPause = false
     _G.ChronixHubMusicPlayLocation = 0
