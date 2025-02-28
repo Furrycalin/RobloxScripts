@@ -76,7 +76,7 @@ progressBarInnerCorner.Parent = progressBar
 
 -- 扩散动画（圆形扩散）
 local function expandMask()
-    local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     local tween = TweenService:Create(mask, tweenInfo, {
         Size = UDim2.new(2, 0, 2, 0), -- 扩散到全屏
         Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -153,7 +153,7 @@ end
 
 -- 缩回动画（圆形缩回）
 local function shrinkMask()
-    local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     local tween = TweenService:Create(mask, tweenInfo, {
         Size = UDim2.new(0, 0, 0, 0), -- 缩回到中心
         Position = UDim2.new(0.5, 0, 0.5, 0)
