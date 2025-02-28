@@ -371,7 +371,7 @@ local CONFIG = {
     ARROW_TRANSPARENCY = 0.5, -- 半透明箭头
     TWEEN_INFO = TweenInfo.new(0.5, Enum.EasingStyle.Quad),
     CATEGORY_BUTTON_SIZE = UDim2.new(0.15, 0, 1, 0), -- 更大的分类按钮
-    CATEGORY_BUTTON_SPACING = 8, -- 按钮之间的间距
+    CATEGORY_BUTTON_SPACING = 38, -- 按钮之间的间距
     CATEGORY_BUTTON_INSET = 10 -- 按钮向内偏移
 }
 
@@ -467,7 +467,7 @@ categoryButtonsFrame.Parent = menuFrame
 -- 创建内容区域
 local contentFrame = Instance.new("Frame")
 contentFrame.Size = UDim2.new(1, 0, 0.8, 0) -- 占菜单高度的 80%
-contentFrame.Position = UDim2.new(0, 0, 0.2, 0) -- 在分类按钮下方
+contentFrame.Position = UDim2.new(0, 0, 0, 33) -- 在分类按钮下方
 contentFrame.BackgroundTransparency = 1 -- 透明背景
 contentFrame.Parent = menuFrame
 
@@ -926,7 +926,7 @@ local function AddMenuContent(category)
         end)
     elseif category == "设置" then
         -- 添加“卸载菜单”按钮
-        local unloadButton = CreateButton(contentFrame, "卸载菜单 (DELETE)", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0.1, 0), 18)
+        local unloadButton = CreateButton(contentFrame, "卸载菜单 (DELETE)", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0.1, 0), 14)
 
         -- 点击按钮卸载菜单
         unloadButton.MouseButton1Click:Connect(function()
@@ -962,7 +962,7 @@ local function AddMenuContent(category)
     elseif category == "执行器" then
         -- 添加多行文本框
         local scriptTextBox = Instance.new("TextBox")
-        scriptTextBox.Size = UDim2.new(0.9, 0, 0.8, 0) -- 文本框大小
+        scriptTextBox.Size = UDim2.new(0.9, 0, 0.94, 0) -- 文本框大小
         scriptTextBox.Position = UDim2.new(0.05, 0, 0.05, 0) -- 文本框位置
         scriptTextBox.BackgroundColor3 = CONFIG.BUTTON_COLOR
         scriptTextBox.TextColor3 = CONFIG.TEXT_COLOR
@@ -976,12 +976,12 @@ local function AddMenuContent(category)
         scriptTextBox.Text = _G.ChronixHubExecuteText
 
         -- 添加执行按钮
-        local saveButton = CreateButton(contentFrame, "保存", UDim2.new(0.45, 0, 0.1, 0), UDim2.new(0.05, 0, 0.85, 0), 18)
+        local saveButton = CreateButton(contentFrame, "保存", UDim2.new(0.45, 0, 0.1, 0), UDim2.new(0.05, 0, 1, 0), 18)
         saveButton.MouseButton1Click:Connect(function()
             CreateNotification("提示", "脚本保存成功! 卸载脚本将会丢失", 5, true)
             _G.ChronixHubExecuteText = scriptTextBox.Text
         end)
-        local executeButton = CreateButton(contentFrame, "执行", UDim2.new(0.45, 0, 0.1, 0), UDim2.new(0.5, 0, 0.85, 0), 18)
+        local executeButton = CreateButton(contentFrame, "执行", UDim2.new(0.45, 0, 0.1, 0), UDim2.new(0.5, 0, 1, 0), 18)
         executeButton.MouseButton1Click:Connect(function()
             local script = scriptTextBox.Text
             if script and script ~= "" then
@@ -999,19 +999,19 @@ local function AddMenuContent(category)
             end
         end)
     elseif category == "播放器" then
-        local labeltitle = CreateLabel(contentFrame, "输入正确的rbxassetid", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0.02, 0), 15)
-        local rbxassetidinputbox = CreateTextBox(contentFrame, _G.ChronixHubMusicID, UDim2.new(0.55, 0, 0.1, 0), UDim2.new(0.22, 0, 0.12, 0), 14)
-        local playbutton = CreateButton(contentFrame, _G.ChronixHubMusicisPlay and "停止" or "播放", UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.07, 0, 0.85, 0), 18)
-        local loopbutton = CreateButton(contentFrame, sound.Looped and "不循环播放" or "循环播放", UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.67, 0, 0.85, 0), 18)
-        local labeltitle2 = CreateLabel(contentFrame, "音量", UDim2.new(0.3, 0, 0.1, 0), UDim2.new(0.1, 0, 0.25, 0), 18)
-        local vinputbox = CreateLabel(contentFrame, string.format("%.0f", sound.Volume*100) .. "%", UDim2.new(0.15, 0, 0.1, 0), UDim2.new(0.28, 0, 0.255, 0), 14)
-        local volumeup = CreateButton(contentFrame, "+", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.55, 0, 0.255, 0), 14)
-        local volumedown = CreateButton(contentFrame, "-", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.67, 0, 0.255, 0), 14)
-        local pausebutton = CreateButton(contentFrame, _G.ChronixHubMusicisPause and "继续" or "暂停", UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.37, 0, 0.85, 0), 18)
-        local labeltitle3 = CreateLabel(contentFrame, "音高", UDim2.new(0.3, 0, 0.1, 0), UDim2.new(0.1, 0, 0.35, 0), 18)
-        local pinputbox = CreateLabel(contentFrame, string.format("%.1f", sound.Pitch), UDim2.new(0.15, 0, 0.1, 0), UDim2.new(0.28, 0, 0.355, 0), 14)
-        local Pitchup = CreateButton(contentFrame, "+", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.55, 0, 0.355, 0), 14)
-        local Pitchdown = CreateButton(contentFrame, "-", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.67, 0, 0.355, 0), 14)
+        local labeltitle = CreateLabel(contentFrame, "输入正确的rbxassetid", UDim2.new(0.8, 0, 0.1, 0), UDim2.new(0.1, 0, 0.12, 0), 15)
+        local rbxassetidinputbox = CreateTextBox(contentFrame, _G.ChronixHubMusicID, UDim2.new(0.55, 0, 0.1, 0), UDim2.new(0.22, 0, 0.22, 0), 14)
+        local playbutton = CreateButton(contentFrame, _G.ChronixHubMusicisPlay and "停止" or "播放", UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.07, 0, 1, 0), 18)
+        local loopbutton = CreateButton(contentFrame, sound.Looped and "不循环播放" or "循环播放", UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.67, 0, 1, 0), 18)
+        local labeltitle2 = CreateLabel(contentFrame, "音量", UDim2.new(0.3, 0, 0.1, 0), UDim2.new(0.1, 0, 0.35, 0), 18)
+        local vinputbox = CreateLabel(contentFrame, string.format("%.0f", sound.Volume*100) .. "%", UDim2.new(0.15, 0, 0.1, 0), UDim2.new(0.28, 0, 0.355, 0), 14)
+        local volumeup = CreateButton(contentFrame, "+", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.55, 0, 0.355, 0), 14)
+        local volumedown = CreateButton(contentFrame, "-", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.67, 0, 0.355, 0), 14)
+        local pausebutton = CreateButton(contentFrame, _G.ChronixHubMusicisPause and "继续" or "暂停", UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.37, 0, 1, 0), 18)
+        local labeltitle3 = CreateLabel(contentFrame, "音高", UDim2.new(0.3, 0, 0.1, 0), UDim2.new(0.1, 0, 0.45, 0), 18)
+        local pinputbox = CreateLabel(contentFrame, string.format("%.1f", sound.Pitch), UDim2.new(0.15, 0, 0.1, 0), UDim2.new(0.28, 0, 0.455, 0), 14)
+        local Pitchup = CreateButton(contentFrame, "+", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.55, 0, 0.455, 0), 14)
+        local Pitchdown = CreateButton(contentFrame, "-", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.67, 0, 0.455, 0), 14)
 
         playbutton.MouseButton1Click:Connect(function()
             sound.SoundId = "rbxassetid://" .. rbxassetidinputbox.Text
@@ -1086,9 +1086,9 @@ for i, cat in ipairs(categories) do
     local button = Instance.new("TextButton")
     button.Size = CONFIG.CATEGORY_BUTTON_SIZE
     button.Position = UDim2.new(
-        (i - 1) * (CONFIG.CATEGORY_BUTTON_SIZE.X.Scale + CONFIG.CATEGORY_BUTTON_SPACING / menuFrame.AbsoluteSize.X) + CONFIG.CATEGORY_BUTTON_INSET / menuFrame.AbsoluteSize.X, 
         0, 
-        0, 
+        -100, 
+        (i - 1) * (CONFIG.CATEGORY_BUTTON_SIZE.Y.Scale + CONFIG.CATEGORY_BUTTON_SPACING / menuFrame.AbsoluteSize.Y) + CONFIG.CATEGORY_BUTTON_INSET / menuFrame.AbsoluteSize.Y, 
         0
     )
     button.BackgroundColor3 = CONFIG.BUTTON_COLOR
@@ -1138,7 +1138,7 @@ UserInputService.InputBegan:Connect(function(input)
         local mousePosition = input.Position
         local menuPosition = menuFrame.AbsolutePosition
         local menuSize = menuFrame.AbsoluteSize
-        if not (mousePosition.X >= menuPosition.X and mousePosition.X <= menuPosition.X + menuSize.X and
+        if not (mousePosition.X >= menuPosition.X - 100 and mousePosition.X <= menuPosition.X + menuSize.X and
                 mousePosition.Y >= menuPosition.Y and mousePosition.Y <= menuPosition.Y + menuSize.Y) then
             isMenuVisible = not isMenuVisible
             ToggleMenu(isMenuVisible)
