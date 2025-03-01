@@ -932,8 +932,8 @@ local function AddMenuContent(category)
         end)
 
         button12.MouseButton1Click:Connect(function()
-            _G.ChronixHubAntiDead = not _G.ChronixhubAntiDead
-            button12.Text = _G.ChronixhubAntiDead and "阻止死亡(开)" or "阻止死亡(关)"
+            _G.ChronixHubAntiDead = not _G.ChronixHubAntiDead
+            button12.Text = _G.ChronixHubAntiDead and "阻止死亡(开)" or "阻止死亡(关)"
         end)
     elseif category == "脚本中心" then
         -- 添加按钮
