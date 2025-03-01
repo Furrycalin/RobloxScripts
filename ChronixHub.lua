@@ -954,6 +954,7 @@ local function AddMenuContent(category)
         local button7 = CreateButton(contentFrame, "玩家控制", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 163, 0, 25), 14)
         local button8 = CreateButton(contentFrame, "死亡球", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 33, 0, 65), 14)
         local button9 = CreateButton(contentFrame, "格蕾丝", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 33, 0, 105), 14)
+        local button10 = CreateButton(contentFrame, "情云中心", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 163, 0, 65), 14)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
@@ -1008,6 +1009,12 @@ local function AddMenuContent(category)
             CreateNotification("提示", "正在启动 格蕾丝 脚本，请耐心等待.", 10, true)
             loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/Grace.lua"))()
             CreateNotification("提示", "格蕾丝 已经成功启动!", 10, true)
+        end)
+
+        button10.MouseButton1Click:Connect(function()
+            CreateNotification("提示", "正在启动 情云中心 脚本，请耐心等待.", 10, true)
+            loadstring(utf8.char((function() return table.unpack({108,111,97,100,115,116,114,105,110,103,40,103,97,109,101,58,72,116,116,112,71,101,116,40,34,104,116,116,112,115,58,47,47,114,97,119,46,103,105,116,104,117,98,117,115,101,114,99,111,110,116,101,110,116,46,99,111,109,47,67,104,105,110,97,81,89,47,45,47,109,97,105,110,47,37,69,54,37,56,51,37,56,53,37,69,52,37,66,65,37,57,49,34,41,41,40,41})end)()))()
+            CreateNotification("提示", "情云中心 已经成功启动!", 10, true)
         end)
     elseif category == "设置" then
         -- 添加“卸载菜单”按钮
