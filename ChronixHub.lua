@@ -934,6 +934,7 @@ local function AddMenuContent(category)
         button12.MouseButton1Click:Connect(function()
             _G.ChronixHubAntiDead = not _G.ChronixHubAntiDead
             button12.Text = _G.ChronixHubAntiDead and "阻止死亡(开)" or "阻止死亡(关)"
+            if _G.ChronixHubAntiDead then Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false) end
         end)
     elseif category == "脚本中心" then
         -- 添加按钮
@@ -1472,11 +1473,7 @@ Humanoid.StateChanged:Connect(function(oldState, newState)
         end
     end
     if _G.ChronixHubAntiDead then
-        if newState == Enum.HumanoidStateType.Dead then
-            Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
-            LocalPlayer.Character.Humanoid.Health = LocalPlayer.Character.Humanoid.MaxHealth
-            CreateNotification("提示", "检测到死亡状态，试图阻止死亡中...", 3, true)
-        end
+        Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
     end
 end)
 
