@@ -938,6 +938,7 @@ local function AddMenuContent(category)
 	            if not _G.ChronixHubAntiDead == false then
 		            Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
 	            else
+                    Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
 		            Stepped6:Disconnect()
 	            end
             end)
