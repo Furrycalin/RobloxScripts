@@ -178,6 +178,11 @@ local notifications = {}
 local sound = Instance.new("Sound")
 sound.Parent = SoundService
 
+local uiclicker = Instance.new("Sound")
+uiclicker.SoundId = "rbxassetid://535716488"
+uiclicker.Volume = 0.3
+uiclicker.Parent = SoundService
+
 -- 加载成就音效
 local achievementSound = Instance.new("Sound")
 achievementSound.SoundId = "rbxassetid://4590662766" -- 替换为你的音频ID
@@ -439,6 +444,9 @@ local function CreateButton(parent, text, size, position, textSize)
     button.Parent = parent
     gradient.Rotation = 75 -- 渐变方向（从上到下）
     gradient.Parent = button
+    button.MouseButton1Click:Connect(function()
+        uiclicker:Play()
+    end)
     return button
 end
 
