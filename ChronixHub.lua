@@ -934,7 +934,13 @@ local function AddMenuContent(category)
         button12.MouseButton1Click:Connect(function()
             _G.ChronixHubAntiDead = not _G.ChronixHubAntiDead
             button12.Text = _G.ChronixHubAntiDead and "阻止死亡(开)" or "阻止死亡(关)"
-            if _G.ChronixHubAntiDead then Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false) end
+            Stepped6 = game:GetService("RunService").Stepped:Connect(function()
+	            if not _G.ChronixHubAntiDead == false then
+		            Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
+	            else
+		            Stepped6:Disconnect()
+	            end
+            end)
         end)
     elseif category == "脚本中心" then
         -- 添加按钮
@@ -1471,9 +1477,6 @@ Humanoid.StateChanged:Connect(function(oldState, newState)
             Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp) -- 强制恢复站立状态
             CreateNotification("提示", "检测到被击倒，已恢复站立状态", 5, true)
         end
-    end
-    if _G.ChronixHubAntiDead then
-        Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
     end
 end)
 
