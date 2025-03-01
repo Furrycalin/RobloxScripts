@@ -101,6 +101,7 @@ local function resetBianLiang()
     _G.ChronixHubisAirWalking = false
     _G.ChronixHubfloorFixedY = nil
     _G.ChronixhubAntiFallDown = false
+    _G.ChronixHubAntiDead = false
 end
 
 resetBianLiang()
@@ -815,6 +816,7 @@ local function AddMenuContent(category)
         local button9 = CreateButton(contentFrame, "解锁鼠标(F5)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 423, 0, 25), 14)
         local button10 = CreateButton(contentFrame, _G.ChronixHubisAirWalking and "空中移动(开)" or "空中移动(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 293, 0, 105), 14)
         local button11 = CreateButton(contentFrame, _G.ChronixhubAntiFallDown and "防击倒(开)" or "防击倒(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 163, 0, 145), 14)
+        local button12 = CreateButton(contentFrame, _G.ChronixHubAntiDead and "阻止死亡(开)" or "阻止死亡(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 163, 0, 185), 14)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
@@ -927,6 +929,11 @@ local function AddMenuContent(category)
         button11.MouseButton1Click:Connect(function()
             _G.ChronixhubAntiFallDown = not _G.ChronixhubAntiFallDown
             button11.Text = _G.ChronixhubAntiFallDown and "防击倒(开)" or "防击倒(关)"
+        end)
+
+        button12.MouseButton1Click:Connect(function()
+            _G.ChronixHubAntiDead = not _G.ChronixhubAntiDead
+            button12.Text = _G.ChronixhubAntiDead and "阻止死亡(开)" or "阻止死亡(关)"
         end)
     elseif category == "脚本中心" then
         -- 添加按钮
@@ -1462,6 +1469,13 @@ Humanoid.StateChanged:Connect(function(oldState, newState)
         if newState == Enum.HumanoidStateType.FallingDown or newState == Enum.HumanoidStateType.Ragdoll then
             Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp) -- 强制恢复站立状态
             CreateNotification("提示", "检测到被击倒，已恢复站立状态", 5, true)
+        end
+    end
+    if _G.ChronixHubAntiDead then
+        if newState == Enum.HumanoidStateType.Dead then
+            Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
+            LocalPlayer.Character.Humanoid.Health = LocalPlayer.Character.Humanoid.MaxHealth
+            CreateNotification("提示", "检测到死亡状态，试图阻止死亡中...", 3, true)
         end
     end
 end)
