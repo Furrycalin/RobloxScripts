@@ -100,6 +100,7 @@ local function resetBianLiang()
     _G.ChronixHubHLEnable = false
     _G.ChronixHubisAirWalking = false
     _G.ChronixHubfloorFixedY = nil
+    _G.ChronixhubAntiFallDown = false
 end
 
 resetBianLiang()
@@ -805,6 +806,7 @@ local function AddMenuContent(category)
         local button8 = CreateButton(contentFrame, _G.ChronixHubHLEnable and "高级透视(开)" or "高级透视(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 293, 0, 65), 14)
         local button9 = CreateButton(contentFrame, "解锁鼠标(F5)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 423, 0, 25), 14)
         local button10 = CreateButton(contentFrame, _G.ChronixHubisAirWalking and "空中移动(开)" or "空中移动(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 293, 0, 105), 14)
+        local button11 = CreateButton(contentFrame, _G.ChronixhubAntiFallDown and "防击倒(开)" or "防击倒(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 163, 0, 145), 14)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
@@ -912,6 +914,11 @@ local function AddMenuContent(category)
         button10.MouseButton1Click:Connect(function()
             toggleAirWalk()
             button10.Text = _G.ChronixHubisAirWalking and "空中移动(开)" or "空中移动(关)"
+        end)
+
+        button11.MouseButton1Click:Connect(function()
+            _G.ChronixhubAntiFallDown = not _G.ChronixhubAntiFallDown
+            button11.Text = _G.ChronixhubAntiFallDown and "防击倒(开)" or "防击倒(关)"
         end)
     elseif category == "脚本中心" then
         -- 添加按钮
@@ -1438,6 +1445,16 @@ Humanoid.Died:Connect(onCharacterDied)
 Players.PlayerRemoving:Connect(function(player)
     if _G.ChronixHubHLEnable then
         removePlayerEffects(player)
+    end
+end)
+
+-- 监听状态变化
+Humanoid.StateChanged:Connect(function(oldState, newState)
+    if _G.ChronixhubAntiFallDown then
+        if newState == Enum.HumanoidStateType.FallingDown or newState == Enum.HumanoidStateType.Ragdoll then
+            Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp) -- 强制恢复站立状态
+            CreateNotification("提示", "检测到被击倒，已恢复站立状态", 5, true)
+        end
     end
 end)
 
