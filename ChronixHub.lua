@@ -1191,30 +1191,121 @@ local function AddMenuContent(category)
         local lcp7 = CreateTextBox(contentFrame, tbz.lcp7, UDim2.new(0, 113, 0, 32), UDim2.new(0, 13, 0, 250), 14)
         local lcpb7 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 133, 0, 250), 15)
         local lcpt7 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 213, 0, 250), 15)
-        local lcp8 = CreateTextBox(contentFrame, tbz.lcp8, UDim2.new(0, 113, 0, 32), UDim2.new(0, 313, 0, 10), 14)
-        local lcpb8 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 433, 0, 10), 15)
-        local lcpt8 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 513, 0, 10), 15)
-        local lcp9 = CreateTextBox(contentFrame, tbz.lcp9, UDim2.new(0, 113, 0, 32), UDim2.new(0, 313, 0, 50), 14)
-        local lcpb9 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 433, 0, 50), 15)
-        local lcpt9 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 513, 0, 50), 15)
-        local lcp10 = CreateTextBox(contentFrame, tbz.lcp10, UDim2.new(0, 113, 0, 32), UDim2.new(0, 313, 0, 90), 14)
-        local lcpb10 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 433, 0, 90), 15)
-        local lcpt10 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 513, 0, 90), 15)
-        local lcp11 = CreateTextBox(contentFrame, tbz.lcp11, UDim2.new(0, 113, 0, 32), UDim2.new(0, 313, 0, 130), 14)
-        local lcpb11 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 433, 0, 130), 15)
-        local lcpt11 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 513, 0, 130), 15)
-        local lcp12 = CreateTextBox(contentFrame, tbz.lcp12, UDim2.new(0, 113, 0, 32), UDim2.new(0, 313, 0, 170), 14)
-        local lcpb12 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 433, 0, 170), 15)
-        local lcpt12 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 513, 0, 170), 15)
-        local lcp13 = CreateTextBox(contentFrame, tbz.lcp13, UDim2.new(0, 113, 0, 32), UDim2.new(0, 313, 0, 210), 14)
-        local lcpb13 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 433, 0, 210), 15)
-        local lcpt13 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 513, 0, 210), 15)
-        local lcp14 = CreateTextBox(contentFrame, tbz.lcp14, UDim2.new(0, 113, 0, 32), UDim2.new(0, 313, 0, 250), 14)
-        local lcpb14 = CreateButton(contentFrame, "记录", UDim2.new(0, 73, 0, 32), UDim2.new(0, 433, 0, 250), 15)
-        local lcpt14 = CreateButton(contentFrame, "传送", UDim2.new(0, 73, 0, 32), UDim2.new(0, 513, 0, 250), 15)
+        local teleportto = CreateButton(contentFrame, "传送至", UDim2.new(0, 255, 0, 32), UDim2.new(0, 317, 0, 250), 15)
+        local selectplayer = ""
+        -- 创建 ScrollingFrame
+        local scrollingFrame = Instance.new("ScrollingFrame")
+        scrollingFrame.Size = UDim2.new(0, 250, 0, 230) -- 设置大小
+        scrollingFrame.Position = UDim2.new(0.52, 0, 0.04, 0) -- 设置位置
+        scrollingFrame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
+        scrollingFrame.BorderSizePixel = 0 -- 边框大小
+        scrollingFrame.ScrollBarThickness = 10 -- 滚动条宽度
+        scrollingFrame.Parent = contentFrame
+        -- 设置 CanvasSize（内容区域大小）
+        scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0) -- 初始大小为 0
+        -- 按钮高度和间距
+        local buttonHeight = 30
+        local padding = 5
+
+        -- 创建玩家按钮
+        local function createPlayerButton(playerName, index)
+            local button = Instance.new("TextButton")
+            button.Text = playerName
+            button.Size = UDim2.new(1, -scrollingFrame.ScrollBarThickness, 0, buttonHeight)
+            button.Position = UDim2.new(0, 0, 0, (buttonHeight + padding) * (index - 1))
+            button.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+            button.TextColor3 = Color3.new(1, 1, 1)
+            button.Font = Enum.Font.GothamBold
+            button.TextSize = 18
+            button.Parent = scrollingFrame
+
+            -- 点击按钮触发代码
+            button.MouseButton1Click:Connect(function()
+                selectplayer = button.Text
+                teleportto.Text = "传送至 " .. button.Text
+            end)
+        end
+
+        -- 更新玩家列表
+        local function updatePlayerList()
+            -- 清空现有按钮
+            for _, child in ipairs(scrollingFrame:GetChildren()) do
+                if child:IsA("TextButton") then
+                    child:Destroy()
+                end
+            end
+
+            -- 获取所有玩家并创建按钮
+            local players = Players:GetPlayers()
+            for i, player in ipairs(players) do
+                createPlayerButton(player.Name, i)
+            end
+
+            -- 更新 CanvasSize
+            scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, (buttonHeight + padding) * #players)
+        end
+
+        -- 初始化玩家列表
+        updatePlayerList()
+
+        -- 监听玩家加入和离开事件
+        Players.PlayerAdded:Connect(updatePlayerList)
+        Players.PlayerRemoving:Connect(updatePlayerList)
+
+        -- 根据玩家名传送自己到目标玩家位置
+        local function teleportToPlayerByName(playerName)
+            -- 获取目标玩家
+            local targetPlayer
+            for _, player in ipairs(Players:GetPlayers()) do
+                if player.Name == playerName then
+                    targetPlayer = player
+                    break
+                end
+            end
+
+            if not targetPlayer then
+                warn("未找到目标玩家:", playerName)
+                return
+            end
+
+            -- 获取目标玩家的位置
+            local targetCharacter = targetPlayer.Character
+            if not targetCharacter then
+                warn("目标玩家没有角色！")
+                return
+            end
+
+            local targetRootPart = targetCharacter:FindFirstChild("HumanoidRootPart")
+            if not targetRootPart then
+                warn("目标玩家没有 HumanoidRootPart！")
+                return
+            end
+
+            -- 获取自己的角色
+            local localCharacter = LocalPlayer.Character
+            if not localCharacter then
+                warn("自己还没有角色！")
+                return
+         end
+
+            local localRootPart = localCharacter:FindFirstChild("HumanoidRootPart")
+            if not localRootPart then
+                warn("自己还没有 HumanoidRootPart！")
+                return
+            end
+
+            -- 传送自己到目标位置
+            localRootPart.CFrame = targetRootPart.CFrame
+        end
 
         local function showjilulocation() CreateNotification("已记录位置", "X:" .. string.format("%.2f", HumanoidRootPart.Position.X) .. ", Y:" .. string.format("%.2f", HumanoidRootPart.Position.Y) .. ", Z:" .. string.format("%.2f", HumanoidRootPart.Position.Z), 5, true) end
         local function showtplocation(key) CreateNotification("已传送到", "X:" .. string.format("%.2f", teleportpoint[key].X) .. ", Y:" .. string.format("%.2f", teleportpoint[key].Y) .. ", Z:" .. string.format("%.2f", teleportpoint[key].Z), 5, true) end
+
+        teleportto.MouseButton1Click:Connect(function()
+            if selectplayer ~= "" then
+                teleportToPlayerByName(selectplayer)
+            end
+        end)
 
         -- 定义 TextBox 和 tbz 键的映射关系
         local textBoxMap = {
@@ -1224,14 +1315,7 @@ local function AddMenuContent(category)
             {textBox = lcp4, key = "lcp4"},
             {textBox = lcp5, key = "lcp5"},
             {textBox = lcp6, key = "lcp6"},
-            {textBox = lcp7, key = "lcp7"},
-            {textBox = lcp8, key = "lcp8"},
-            {textBox = lcp9, key = "lcp9"},
-            {textBox = lcp10, key = "lcp10"},
-            {textBox = lcp11, key = "lcp11"},
-            {textBox = lcp12, key = "lcp12"},
-            {textBox = lcp13, key = "lcp13"},
-            {textBox = lcp14, key = "lcp14"}
+            {textBox = lcp7, key = "lcp7"}
         }
 
         local lcbpMap = {
@@ -1242,13 +1326,7 @@ local function AddMenuContent(category)
             {textBox = lcpb5, key = "locate5"},
             {textBox = lcpb6, key = "locate6"},
             {textBox = lcpb7, key = "locate7"},
-            {textBox = lcpb8, key = "locate8"},
-            {textBox = lcpb9, key = "locate9"},
-            {textBox = lcpb10, key = "locate10"},
-            {textBox = lcpb11, key = "locate11"},
-            {textBox = lcpb12, key = "locate12"},
-            {textBox = lcpb13, key = "locate13"},
-            {textBox = lcpb14, key = "locate14"}
+            {textBox = lcpb8, key = "locate8"}
         }
 
         local lcbtMap = {
@@ -1259,13 +1337,7 @@ local function AddMenuContent(category)
             {textBox = lcpt5, key = "locate5"},
             {textBox = lcpt6, key = "locate6"},
             {textBox = lcpt7, key = "locate7"},
-            {textBox = lcpt8, key = "locate8"},
-            {textBox = lcpt9, key = "locate9"},
-            {textBox = lcpt10, key = "locate10"},
-            {textBox = lcpt11, key = "locate11"},
-            {textBox = lcpt12, key = "locate12"},
-            {textBox = lcpt13, key = "locate13"},
-            {textBox = lcpt14, key = "locate14"}
+            {textBox = lcpt8, key = "locate8"}
         }
 
         -- 封装 FocusLost 事件逻辑
