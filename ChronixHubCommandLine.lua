@@ -2,11 +2,56 @@ local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 local playerGui = LocalPlayer:WaitForChild("PlayerGui")
+local TweenService = game:GetService("TweenService")
+local Lighting = game:GetService("Lighting")
+local MarketplaceService = game:GetService("MarketplaceService")
+local RunService = game:GetService("RunService")
 
 local CONFIG = {
     lockSpeed = false,
     Speed = LocalPlayer.Character.Humanoid.WalkSpeed,
+    NoClip = false,
+    InfJump = false
 }
+
+-- 定义白天和黑夜的光照属性
+local daySettings = {
+    ClockTime = 14, -- 白天时间（14:00）
+    GeographicLatitude = 41.73, -- 纬度（影响太阳高度）
+    -- Ambient = Color3.new(0.5, 0.5, 0.5), -- 环境光
+    -- OutdoorAmbient = Color3.new(0.5, 0.5, 0.5), -- 室外环境光
+    -- Brightness = 2, -- 亮度
+    -- FogColor = Color3.new(0.8, 0.8, 0.8), -- 雾颜色
+    -- FogEnd = 1000 -- 雾结束距离
+}
+
+local nightSettings = {
+    ClockTime = 2, -- 黑夜时间（02:00）
+    GeographicLatitude = 41.73, -- 纬度
+    -- Ambient = Color3.new(0.1, 0.1, 0.1), -- 环境光
+    -- OutdoorAmbient = Color3.new(0.1, 0.1, 0.1), -- 室外环境光
+    -- Brightness = 0.2, -- 亮度
+    -- FogColor = Color3.new(0.1, 0.1, 0.1), -- 雾颜色
+    -- FogEnd = 500 -- 雾结束距离
+}
+
+-- 切换为白天
+local function setDay()
+    for property, value in pairs(daySettings) do
+        local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local tween = TweenService:Create(Lighting, tweenInfo, { [property] = value })
+        tween:Play()
+    end
+end
+
+-- 切换为黑夜
+local function setNight()
+    for property, value in pairs(nightSettings) do
+        local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local tween = TweenService:Create(Lighting, tweenInfo, { [property] = value })
+        tween:Play()
+    end
+end
 
 -- 创建 ScreenGui
 local screenGui = Instance.new("ScreenGui")
@@ -126,6 +171,26 @@ end
 
 game:GetService("RunService").Stepped:Connect(function()
     if CONFIG.lockSpeed then LocalPlayer.Character.Humanoid.WalkSpeed = CONFIG.Speed end
+    if CONFIG.NoClip then
+        for a, b in pairs(Workspace:GetChildren()) do
+            if b.Name == Players.LocalPlayer.Name then
+                for i, v in pairs(Workspace[Players.LocalPlayer.Name]:GetChildren()) do
+                    if v:IsA("BasePart") then
+                        v.CanCollide = true
+                    end end end end
+	end
+end)
+
+game:GetService("UserInputService").JumpRequest:Connect(function()
+    if CONFIG.InfJump then
+        local c = LocalPlayer.Character
+        if c and c.Parent then
+            local hum = c:FindFirstChildOfClass("Humanoid")
+            if hum then
+                hum:ChangeState("Jumping")
+            end
+        end
+    end
 end)
 
 -- 处理指令
@@ -222,6 +287,52 @@ local function handleCommand(commandParts)
         else
             log("无效的参数数量！", "error")
         end
+    elseif command == "noclip" then
+        if #commandParts == 2 then
+            if commandParts[2] == "true" then
+                CONFIG.NoClip = true
+                log("穿墙开启", "info")
+            elseif commandParts[2] == "false" then
+                CONFIG.NoClip = false
+                for a, b in pairs(Workspace:GetChildren()) do
+                    if b.Name == Players.LocalPlayer.Name then
+                        for i, v in pairs(Workspace[Players.LocalPlayer.Name]:GetChildren()) do
+                            if v:IsA("BasePart") then
+                                v.CanCollide = false
+                end end end end
+                log("穿墙关闭", "info")
+            end
+        else
+            log("无效的参数数量！", "error")
+        end
+    elseif command == "infjump" then
+        if #commandParts == 2 then
+            if commandParts[2] == "true" then
+                CONFIG.InfJump = true
+                log("连跳开启", "info")
+            elseif commandParts[2] == "false" then
+                CONFIG.InfJump = false
+                log("连跳关闭", "info")
+            end
+        else
+            log("无效的参数数量！", "error")
+        end
+    elseif command == "time" then
+        if #commandParts == 3 then
+            if commandParts[2] == "set" then
+                if commandParts[3] == "day" then
+                    setDay()
+                    log("时间已切换为 白昼", "info")
+                elseif commandParts[3] == "night" then
+                    setNight()
+                    log("时间已切换为 黑夜", "info")
+                else
+                    log("无效的值", "warning")
+                end
+            end
+        else
+            log("无效的参数数量！", "error")
+        end
     elseif command == "gettptool" then
         mouse = game.Players.LocalPlayer:GetMouse() tool = Instance.new("Tool") tool.RequiresHandle = false tool.Name = "手持点击传送" tool.Activated:connect(function() local pos = mouse.Hit+Vector3.new(0,2.5,0) pos = CFrame.new(pos.X,pos.Y,pos.Z) game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos end) tool.Parent = game.Players.LocalPlayer.Backpack
         log("已添加点击传送工具", "info")
@@ -256,6 +367,9 @@ local function handleCommand(commandParts)
                 log("killme - 自杀.")
                 log("nightvision {true/false} - 开关夜视.")
                 log("gettptool - 获得点击传送工具.")
+                log("noclip {true/false} - 开关穿墙.")
+                log("infjump {true/false} - 开关连跳.")
+                log("time {set} {day/night}- 切换时间.")
                 log("------------------------------------------","info")
             else
                 log("错误的参数.", "error")
