@@ -12,7 +12,9 @@ local CONFIG = {
     Speed = LocalPlayer.Character.Humanoid.WalkSpeed,
     NoClip = false,
     InfJump = false,
-    ESP = false
+    ESP = false,
+    AirWalk = false,
+    floorY = nil
 }
 
 -- 定义白天和黑夜的光照属性
@@ -54,6 +56,63 @@ local function setNight()
     end
 end
 
+local floorPart = nil
+
+-- 创建地板
+local function createFloor()
+    if floorPart then return end -- 如果地板已存在，则不重复创建
+    
+    local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local Humanoid = Character:WaitForChild("Humanoid")
+    local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+
+    -- 创建地板
+    floorPart = Instance.new("Part")
+    floorPart.Size = Vector3.new(10, 1, 10) -- 地板大小
+    floorPart.Transparency = 1 -- 完全透明
+    floorPart.Anchored = true -- 固定位置
+    floorPart.CanCollide = true -- 允许碰撞
+    floorPart.Parent = workspace
+
+    -- 添加发光特效
+    local glow = Instance.new("SurfaceGui", floorPart)
+    glow.Face = Enum.NormalId.Top
+    local frame = Instance.new("Frame", glow)
+    frame.Size = UDim2.new(1, 0, 1, 0)
+    frame.BackgroundColor3 = Color3.new(0, 1, 0) -- 白色发光
+    frame.BackgroundTransparency = 0.4 -- 半透明
+    frame.BorderSizePixel = 0
+
+    -- 记录当前地板的 Y 轴高度
+    CONFIG.floorY = HumanoidRootPart.Position.Y - HumanoidRootPart.Size.Y / 2 - floorPart.Size.Y / 2 - 1.8
+    floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, CONFIG.floorY, HumanoidRootPart.Position.Z)
+end
+
+-- 删除地板
+local function destroyFloor()
+    if floorPart then
+        floorPart:Destroy()
+        floorPart = nil
+        CONFIG.floorY = nil
+    end
+end
+
+-- 切换空中行走状态
+local function toggleAirWalk()
+    if CONFIG.AirWalk then
+        createFloor() -- 启用时创建地板
+    else
+        destroyFloor() -- 禁用时删除地板
+    end
+end
+
+-- 更新地板位置
+RunService.Heartbeat:Connect(function()
+    if CONFIG.AirWalk and floorPart and CONFIG.floorY then
+        -- 将地板的 X 和 Z 轴与玩家对齐，Y 轴固定
+        floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, CONFIG.floorY, HumanoidRootPart.Position.Z)
+    end
+end)
 
 -- 存储高亮和用户名标签
 local highlights = {}
@@ -130,7 +189,7 @@ local function removePlayerEffects(player)
 end
 
 Players.PlayerAdded:Connect(function(player)
-    if _G.ChronixHubHLEnable then
+    if CONFIG.ESP then
         for _, player in ipairs(Players:GetPlayers()) do
             removePlayerEffects(player)
             addHighlight(player)
@@ -159,7 +218,7 @@ Players.PlayerAdded:Connect(function(player)
 end)
 
 Players.PlayerRemoving:Connect(function(player)
-    if _G.ChronixHubHLEnable then
+    if CONFIG.ESP then
         removePlayerEffects(player)
     end
 end)
@@ -424,6 +483,20 @@ local function handleCommand(commandParts)
             elseif commandParts[2] == "false" then
                 CONFIG.InfJump = false
                 log("连跳关闭", "info")
+            end
+        else
+            log("无效的参数数量！", "error")
+        end
+    elseif command == "airwalk" then
+        if #commandParts == 2 then
+            if commandParts[2] == "true" then
+                CONFIG.AirWalk = true
+                toggleAirWalk()
+                log("空中行走开启", "info")
+            elseif commandParts[2] == "false" then
+                CONFIG.AirWalk = false
+                toggleAirWalk()
+                log("空中行走关闭", "info")
             end
         else
             log("无效的参数数量！", "error")
