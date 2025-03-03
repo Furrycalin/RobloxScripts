@@ -11,7 +11,8 @@ local CONFIG = {
     lockSpeed = false,
     Speed = LocalPlayer.Character.Humanoid.WalkSpeed,
     NoClip = false,
-    InfJump = false
+    InfJump = false,
+    ESP = false
 }
 
 -- 定义白天和黑夜的光照属性
@@ -52,6 +53,116 @@ local function setNight()
         tween:Play()
     end
 end
+
+
+-- 存储高亮和用户名标签
+local highlights = {}
+local usernameLabels = {}
+
+-- 为玩家添加高亮
+local function addHighlight(player)
+    if player == LocalPlayer then return end -- 排除自己和未启用时
+
+    local character = player.Character
+    if character then
+        -- 创建 Highlight 对象
+        local highlight = Instance.new("Highlight")
+        highlight.Adornee = character
+        highlight.FillColor = Color3.new(1, 0, 0)
+        highlight.FillTransparency = 0.8
+        highlight.OutlineColor = Color3.new(1, 0, 0)
+        highlight.OutlineTransparency = 0
+        highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop -- 隔墙显示
+        highlight.Parent = character
+
+        -- 如果只描边，则隐藏整体覆盖颜色
+        if onlyOutline then
+            highlight.FillTransparency = 1
+        end
+
+        -- 存储高亮对象
+        highlights[player] = highlight
+    end
+end
+
+-- 为玩家添加用户名标签
+local function addUsernameLabel(player)
+    if player == LocalPlayer then return end -- 排除自己和未启用时
+
+    local character = player.Character
+    if character then
+        local head = character:FindFirstChild("Head")
+        if head then
+            -- 创建 BillboardGui
+            local billboard = Instance.new("BillboardGui")
+            billboard.Adornee = head
+            billboard.Size = UDim2.new(0, 200, 0, 50)
+            billboard.StudsOffset = Vector3.new(0, 3, 0) -- 在头顶上方显示
+            billboard.AlwaysOnTop = true
+            billboard.Parent = head
+
+            -- 创建 TextLabel
+            local label = Instance.new("TextLabel")
+            label.Size = UDim2.new(1, 0, 1, 0)
+            if player.DisplayName == player.Name then label.Text = player.DisplayName else label.Text = player.DisplayName .. " (@" .. player.Name .. ")" end -- 显示用户名
+            label.TextColor3 = Color3.new(1, 1, 1) -- 白色文字
+            label.BackgroundTransparency = 1 -- 透明背景
+            label.Font = Enum.Font.SourceSansBold
+            label.TextSize = 18
+            label.Parent = billboard
+
+            -- 存储用户名标签
+            usernameLabels[player] = billboard
+        end
+    end
+end
+
+-- 移除玩家的高亮和用户名标签
+local function removePlayerEffects(player)
+    if highlights[player] then
+        highlights[player]:Destroy()
+        highlights[player] = nil
+    end
+    if usernameLabels[player] then
+        usernameLabels[player]:Destroy()
+        usernameLabels[player] = nil
+    end
+end
+
+Players.PlayerAdded:Connect(function(player)
+    if _G.ChronixHubHLEnable then
+        for _, player in ipairs(Players:GetPlayers()) do
+            removePlayerEffects(player)
+            addHighlight(player)
+            addUsernameLabel(player)
+            if player.Character then
+                local humanoid = player.Character:FindFirstChild("Humanoid")
+                if humanoid then
+                    humanoid.Died:Connect(function()
+                        removePlayerEffects(player)
+                        addHighlight(player)
+                        addUsernameLabel(player)
+                    end)
+                end
+            end
+        end
+        -- 监听玩家角色加载
+        player.CharacterAdded:Connect(function(character)
+        local humanoid = character:WaitForChild("Humanoid")
+            humanoid.Died:Connect(function()
+                removePlayerEffects(player)
+                addHighlight(player)
+                addUsernameLabel(player)
+            end)
+        end)
+    end
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+    if _G.ChronixHubHLEnable then
+        removePlayerEffects(player)
+    end
+end)
 
 -- 创建 ScreenGui
 local screenGui = Instance.new("ScreenGui")
@@ -317,6 +428,33 @@ local function handleCommand(commandParts)
         else
             log("无效的参数数量！", "error")
         end
+    elseif command == "esp" then
+        if #commandParts == 2 then
+            if commandParts[2] == "true" then
+                CONFIG.ESP = true
+                log("透视开启", "info")
+                for _, player in ipairs(Players:GetPlayers()) do
+                    addHighlight(player)
+                    addUsernameLabel(player)
+                end
+            elseif commandParts[2] == "false" then
+                CONFIG.ESP = false
+                log("透视关闭", "info")
+                for _, player in ipairs(Players:GetPlayers()) do
+                    removePlayerEffects(player)
+                end
+                for player, highlight in pairs(highlights) do
+                    highlight:Destroy()
+                end
+                for player, label in pairs(usernameLabels) do
+                    billboard:Destroy()
+                end
+                highlights = {}
+                usernameLabels = {}
+            end
+        else
+            log("无效的参数数量！", "error")
+        end
     elseif command == "time" then
         if #commandParts == 3 then
             if commandParts[2] == "set" then
@@ -342,7 +480,7 @@ local function handleCommand(commandParts)
     elseif command == "help" then
         local function showhelp(page)
             if page == nil or page == 1 then
-                log("-----------帮助页面(第1页/共3页)-----------","info")
+                log("-----------帮助页面(第1页/共4页)-----------","info")
                 log("[]为可选参数, {}为必选参数.")
                 log("help - 进入帮助页面.")
                 log("log - 开启日志.")
@@ -352,7 +490,7 @@ local function handleCommand(commandParts)
                 log("tp {X} {Y} {Z} - 传送到指定坐标.")
                 log("------------------------------------------","info")
             elseif page == 2 then
-                log("-----------帮助页面(第2页/共3页)-----------","info")
+                log("-----------帮助页面(第2页/共4页)-----------","info")
                 log("speed {速度} - 更改移速.")
                 log("jump {跳跃高度} - 更改跳跃高度.")
                 log("maxhealth {最大血量} - 更改最大血量.")
@@ -362,7 +500,7 @@ local function handleCommand(commandParts)
                 log("antiafk - 开启反挂机被踢.")
                 log("------------------------------------------","info")
             elseif page == 3 then
-                log("-----------帮助页面(第3页/共3页)-----------","info")
+                log("-----------帮助页面(第3页/共4页)-----------","info")
                 log("healthme - 回满血.")
                 log("killme - 自杀.")
                 log("nightvision {true/false} - 开关夜视.")
@@ -370,6 +508,10 @@ local function handleCommand(commandParts)
                 log("noclip {true/false} - 开关穿墙.")
                 log("infjump {true/false} - 开关连跳.")
                 log("time {set} {day/night}- 切换时间.")
+                log("------------------------------------------","info")
+            elseif page == 4 then
+                log("-----------帮助页面(第4页/共4页)-----------","info")
+                log("esp {true/false} - 开关透视.")
                 log("------------------------------------------","info")
             else
                 log("错误的参数.", "error")
