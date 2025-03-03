@@ -700,6 +700,16 @@ local function handleCommand(commandParts)
     end
 end
 
+local ShowLabel = Instance.new("TextLabel")
+ShowLabel.Parent = screenGui
+ShowLabel.Text = "Admin Panel(管理员面板)"
+ShowLabel.Visible = false
+ShowLabel.BackgroundTransparency = 1
+ShowLabel.Size = UDim2.new(0.1, 0, 0.03, 0)
+ShowLabel.TextColor3 = Color3.new(1, 0, 0) -- 文字颜色
+ShowLabel.Position = UDim2.new(0.91, 0, 0.94, 0)
+ShowLabel.Font = Enum.Font.GothamBold -- 字体
+
 -- 创建聊天输入框
 local chatBox = Instance.new("TextBox")
 chatBox.Size = UDim2.new(0.99, 0, 0.03, 0) -- 设置大小
@@ -724,6 +734,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     -- 按下 T 键显示或隐藏输入框和日志框
     if input.KeyCode == Enum.KeyCode.T then
         chatBox.Visible = not chatBox.Visible -- 切换输入框的可见性
+        ShowLabel.Visible = chatBox.Visible
         if chatBox.Visible then
             chatBox:CaptureFocus() -- 聚焦输入框
         end
@@ -734,6 +745,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         local message = chatBox.Text -- 获取输入内容
         chatBox.Text = ""
         chatBox.Visible = false -- 隐藏输入框
+        ShowLabel.Visible = chatBox.Visible
         chatBox:ReleaseFocus() -- 释放焦点
 
         -- 处理输入内容
@@ -756,6 +768,7 @@ chatBox.FocusLost:Connect(function(enterPressed)
         local message = chatBox.Text -- 获取输入内容
         chatBox.Text = "" -- 清空输入框内容
         chatBox.Visible = false -- 隐藏输入框
+        ShowLabel.Visible = chatBox.Visible
         -- 处理输入内容
         if message ~= "" then
             -- 以空格为分隔符返回一个集合
