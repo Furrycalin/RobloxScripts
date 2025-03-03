@@ -580,20 +580,29 @@ local function handleCommand(commandParts)
                 music:Play()
                 CONFIG.Music_Play = true
                 log("正在播放:","info")
+                log("")
+                log("")
+                log("")
                 log(productInfo.Name,"warning")
                 log(productInfo.Description,"warning")
+                log("")
+                log("")
+                log("")
             elseif commandParts[2] == "pause" then
                 CONFIG.Music_Pause = true
                 CONFIG.Music_PlayLocation = music.TimePosition
                 music:Stop()
+                log("音乐已暂停", "info")
             elseif commandParts[2] == "resume" then
                 music.TimePosition = CONFIG.Music_PlayLocation
                 CONFIG.Music_Pause = false
                 music:Play()
+                log("音乐已恢复", "info")
             elseif commandParts[2] == "stop" then
                 music.TimePosition = nil
                 CONFIG.Music_Play = false
                 music:Stop()
+                log("音乐已停止", "info")
             end
         else
             log("无效的参数数量！", "error")
