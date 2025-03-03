@@ -7,9 +7,9 @@
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/ChronixHub.lua"))()  
 我的功能性菜单脚本，目前已实现部分实用功能，还在开发中。  
   
-①▶ ChronixHubCommandLine.lua  
-loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/ChronixHubCommandLine.lua"))()  
-我的功能性菜单脚本，但是轻量化，以指令控制内容，还在开发中。  
+①▶ AdminPanel.lua  
+loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/AdminPanel.lua"))()  
+指令式功能集合，使用各种指令实现功能，为ChronixHub的改版。
   
 ②▶ 移速控制.lua （ChronixHub已包含，不推荐使用这个）  
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/%E7%A7%BB%E9%80%9F%E6%9B%B4%E6%94%B9.lua"))()  
