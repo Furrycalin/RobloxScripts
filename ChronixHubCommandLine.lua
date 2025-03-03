@@ -586,15 +586,20 @@ local function handleCommand(commandParts)
             if commandParts[2] == "setrbxid" then
                 music.SoundId = "rbxassetid://" .. commandParts[3]
                 CONFIG.Music_ID = commandParts[3]
+                log("[音乐播放器] 音乐ID更改为" .. commandParts[3],"info")
             elseif commandParts[2] == "volume" then
                 music.Volume = commandParts[3]
+                log("[音乐播放器] 音量更改为" .. commandParts[3],"info")
             elseif commandParts[2] == "pitch" then
                 music.Pitch = commandParts[3]
+                log("[音乐播放器] 音速更改为" .. commandParts[3],"info")
             elseif commandParts[2] == "loop" then
                 if commandParts[3] == "true" then
                     music.Looped = true
+                    log("[音乐播放器] 循环已开启","info")
                 elseif commandParts[3] == "false" then
                     music.Looped = false
+                    log("[音乐播放器] 循环已关闭","info")
                 end
             end
         elseif #commandParts == 2 then
