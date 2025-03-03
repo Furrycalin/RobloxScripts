@@ -664,6 +664,8 @@ local function handleCommand(commandParts)
             showhelp()
         end
     elseif command == "exit" then
+        music:Stop() -- 先停止播放
+        music:Destroy()
         screenGui:Destroy() -- 销毁 ScreenGui
         script:Destroy() -- 卸载脚本
     else
