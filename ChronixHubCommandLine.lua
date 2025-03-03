@@ -793,3 +793,10 @@ chatBox.FocusLost:Connect(function(enterPressed)
         end
     end
 end)
+
+game:GetService("StarterGui"):SetCore("SendNotification",{
+    Title = "Admin Panel",
+    Text = "管理员面板已启动\n按下T输入指令",
+    Icon = "rbxassetid://2553092087",
+    Duration = 10
+})
