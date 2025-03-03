@@ -9,6 +9,11 @@ local RunService = game:GetService("RunService")
 local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local Humanoid = Character:WaitForChild("Humanoid")
 local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+local SoundService = game:GetService("SoundService")
+
+local music = Instance.new("Sound")
+music.Parent = SoundService
+music.SoundId = "rbxassetid://1837879082"
 
 local CONFIG = {
     lockSpeed = false,
@@ -17,7 +22,11 @@ local CONFIG = {
     InfJump = false,
     ESP = false,
     AirWalk = false,
-    floorY = nil
+    floorY = nil,
+    Music_Play = false,
+    Music_Pause = false,
+    Music_PlayLocation = 0,
+    Music_ID = "1837879082"
 }
 
 -- 定义白天和黑夜的光照属性
@@ -547,6 +556,48 @@ local function handleCommand(commandParts)
         else
             log("无效的参数数量！", "error")
         end
+    elseif command == "playsound" then
+        if #commandParts == 3 then
+            if commandParts[2] == "setrbxid" then
+                music.SoundId = "rbxassetid://" .. commandParts[3]
+                CONFIG.Music_ID = commandParts[3]
+            elseif commandParts[2] == "volume" then
+                music.Volume = commandParts[3]
+            elseif commandParts[2] == "pitch" then
+                music.Pitch = commandParts[3]
+            elseif commandParts[2] == "loop" then
+                if commandParts[3] == "true" then
+                    music.Looped = true
+                elseif commandParts[3] == "false" then
+                    music.Looped = false
+                end
+            end
+        elseif #commandParts == 2 then
+            if commandParts[2] == "play" then
+                local success, productInfo = pcall(function()
+                    return MarketplaceService:GetProductInfo(CONFIG.Music_ID)
+                end)
+                music:Play()
+                CONFIG.Music_Play = true
+                log("正在播放:","info")
+                log(productInfo.Name,"warning")
+                log(productInfo.Description,"warning")
+            elseif commandParts[2] == "pause" then
+                CONFIG.Music_Pause = true
+                CONFIG.Music_PlayLocation = music.TimePosition
+                music:Stop()
+            elseif commandParts[2] == "resume" then
+                music.TimePosition = CONFIG.Music_PlayLocation
+                CONFIG.Music_Pause = false
+                music:Play()
+            elseif commandParts[2] == "stop" then
+                music.TimePosition = nil
+                CONFIG.Music_Play = false
+                music:Stop()
+            end
+        else
+            log("无效的参数数量！", "error")
+        end
     elseif command == "gettptool" then
         mouse = game.Players.LocalPlayer:GetMouse() tool = Instance.new("Tool") tool.RequiresHandle = false tool.Name = "手持点击传送" tool.Activated:connect(function() local pos = mouse.Hit+Vector3.new(0,2.5,0) pos = CFrame.new(pos.X,pos.Y,pos.Z) game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos end) tool.Parent = game.Players.LocalPlayer.Backpack
         log("已添加点击传送工具", "info")
@@ -588,6 +639,11 @@ local function handleCommand(commandParts)
             elseif page == 4 then
                 log("-----------帮助页面(第4页/共4页)-----------","info")
                 log("esp {true/false} - 开关透视.")
+                log("airwalk {true/false} - 开关空中行走.")
+                log("playsound setrbxid {ID} - 设置音乐ID.")
+                log("playsound volume {0-1} - 设置音量.")
+                log("playsound pitch {0-1} - 设置音速.")
+                log("playsound {play/pause/resume/stop} - 播放/暂停/恢复/停止音乐.")
                 log("------------------------------------------","info")
             else
                 log("错误的参数.", "error")
