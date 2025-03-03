@@ -706,9 +706,10 @@ ShowLabel.Text = "Admin Panel(管理员面板)"
 ShowLabel.Visible = false
 ShowLabel.BackgroundTransparency = 1
 ShowLabel.Size = UDim2.new(0.1, 0, 0.03, 0)
-ShowLabel.TextColor3 = Color3.new(1, 0, 0) -- 文字颜色
+ShowLabel.TextColor3 = Color3.new(1, 0, 0)
 ShowLabel.Position = UDim2.new(0.91, 0, 0.94, 0)
-ShowLabel.Font = Enum.Font.GothamBold -- 字体
+ShowLabel.Font = Enum.Font.GothamBold
+ShowLabel.TextSize = 18
 
 -- 创建聊天输入框
 local chatBox = Instance.new("TextBox")
