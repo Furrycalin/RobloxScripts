@@ -701,8 +701,6 @@ local function handleCommand(commandParts)
         for _, player in ipairs(Players:GetPlayers()) do
             removePlayerEffects(player)
         end
-        highlight:Destroy()
-        billboard:Destroy()
         screenGui:Destroy() -- 销毁 ScreenGui
         script:Destroy() -- 卸载脚本
     else
