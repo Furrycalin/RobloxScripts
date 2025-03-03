@@ -580,14 +580,17 @@ local function handleCommand(commandParts)
                 music:Play()
                 CONFIG.Music_Play = true
                 log("正在播放:","info")
+                log("-----------------------------------------------------")
                 log("")
                 log("")
                 log(productInfo.Name,"warning")
+                log("")
                 log("")
                 log(productInfo.Description,"warning")
                 log("")
                 log("")
                 log("")
+                log("-----------------------------------------------------")
             elseif commandParts[2] == "pause" then
                 CONFIG.Music_Pause = true
                 CONFIG.Music_PlayLocation = music.TimePosition
