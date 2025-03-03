@@ -10,6 +10,7 @@ local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local Humanoid = Character:WaitForChild("Humanoid")
 local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
 local SoundService = game:GetService("SoundService")
+local Workspace = game:GetService("Workspace")
 
 local music = Instance.new("Sound")
 music.Parent = SoundService
@@ -556,6 +557,30 @@ local function handleCommand(commandParts)
         else
             log("无效的参数数量！", "error")
         end
+    elseif command == "pt" then
+        if #commandParts == 3 then
+            if commandParts[2] == "delete" then
+                if commandParts[3] == "捕兽夹" then
+                    for _, model in ipairs(Workspace:GetDescendants()) do
+                        if model:IsA("Model") and model.Name == "__SnarePhysical" then
+                            model:Destroy()
+                        end
+                    end
+                    log("[Project Transfur] 已删除 捕兽夹", "info")
+                elseif commandParts[3] == "阔剑地雷" then
+                    for _, model in ipairs(Workspace:GetDescendants()) do
+                        if model:IsA("Model") and model.Name == "__ClaymorePhysical" then
+                            model:Destroy()
+                        end
+                    end
+                    log("[Project Transfur] 已删除 阔剑地雷", "info")
+                else
+                    log("无效的值", "warning")
+                end
+            end
+        else
+            log("无效的参数数量！", "error")
+        end
     elseif command == "playsound" then
         if #commandParts == 3 then
             if commandParts[2] == "setrbxid" then
@@ -654,6 +679,7 @@ local function handleCommand(commandParts)
                 log("playsound volume {0-1} - 设置音量.")
                 log("playsound pitch {0-1} - 设置音速.")
                 log("playsound {play/pause/resume/stop} - 播放/暂停/恢复/停止音乐.")
+                log("pt {delete} {捕兽夹/阔剑地雷} - 删除指定模型.")
                 log("------------------------------------------","info")
             else
                 log("错误的参数.", "error")
