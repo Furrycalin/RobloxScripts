@@ -561,19 +561,32 @@ local function handleCommand(commandParts)
         if #commandParts == 3 then
             if commandParts[2] == "delete" then
                 if commandParts[3] == "捕兽夹" then
+                    local deletedCount = 0
                     for _, model in ipairs(Workspace:GetDescendants()) do
                         if model:IsA("Model") and model.Name == "__SnarePhysical" then
                             model:Destroy()
+                            deletedCount = deletedCount + 1
                         end
                     end
-                    log("[Project Transfur] 已删除 捕兽夹", "info")
+                    log("[Project Transfur] 已删除" .. deletedCount .. "个捕兽夹", "info")
                 elseif commandParts[3] == "阔剑地雷" then
+                    local deletedCount = 0
                     for _, model in ipairs(Workspace:GetDescendants()) do
                         if model:IsA("Model") and model.Name == "__ClaymorePhysical" then
                             model:Destroy()
+                            deletedCount = deletedCount + 1
                         end
                     end
-                    log("[Project Transfur] 已删除 阔剑地雷", "info")
+                    log("[Project Transfur] 已删除" .. deletedCount .. "个阔剑地雷", "info")
+                elseif commandParts[3] == "地雷" then
+                    local deletedCount = 0
+                    for _, model in ipairs(Workspace:GetDescendants()) do
+                        if model:IsA("Model") and model.Name == "Landmine" then
+                            model:Destroy()
+                            deletedCount = deletedCount + 1
+                        end
+                    end
+                    log("[Project Transfur] 已删除" .. deletedCount .. "个地雷", "info")
                 else
                     log("无效的值", "warning")
                 end
