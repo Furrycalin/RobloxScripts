@@ -599,6 +599,80 @@ local data = {
     }
 }
 
+-- 存储高亮和用户名标签
+local highlights = {}
+local usernameLabels = {}
+
+-- 为玩家添加高亮
+local function addHighlight(player)
+    if player == LocalPlayer then return end -- 排除自己和未启用时
+
+    local character = player.Character
+    if character then
+        -- 创建 Highlight 对象
+        local phighlight = Instance.new("Highlight")
+        phighlight.Adornee = character
+        phighlight.FillColor = Color3.new(1, 0, 0)
+        phighlight.FillTransparency = 0.8
+        phighlight.OutlineColor = Color3.new(1, 0, 0)
+        phighlight.OutlineTransparency = 0
+        phighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop -- 隔墙显示
+        phighlight.Parent = character
+
+        -- 如果只描边，则隐藏整体覆盖颜色
+        if onlyOutline then
+            phighlight.FillTransparency = 1
+        end
+
+        -- 存储高亮对象
+        highlights[player] = phighlight
+    end
+end
+
+-- 为玩家添加用户名标签
+local function addUsernameLabel(player)
+    if player == LocalPlayer then return end -- 排除自己和未启用时
+
+    local character = player.Character
+    if character then
+        local head = character:FindFirstChild("Head")
+        if head then
+            -- 创建 BillboardGui
+            local pbillboard = Instance.new("BillboardGui")
+            pbillboard.Adornee = head
+            pbillboard.Size = UDim2.new(0, 200, 0, 50)
+            pbillboard.StudsOffset = Vector3.new(0, 3, 0) -- 在头顶上方显示
+            pbillboard.AlwaysOnTop = true
+            pbillboard.Parent = head
+
+            -- 创建 TextLabel
+            local label = Instance.new("TextLabel")
+            label.Size = UDim2.new(1, 0, 1, 0)
+            if player.DisplayName == player.Name then label.Text = player.DisplayName else label.Text = player.DisplayName .. " (@" .. player.Name .. ")" end -- 显示用户名
+            label.TextColor3 = Color3.new(1, 1, 1) -- 白色文字
+            label.BackgroundTransparency = 1 -- 透明背景
+            label.Font = Enum.Font.SourceSansBold
+            label.TextSize = 18
+            label.Parent = pbillboard
+
+            -- 存储用户名标签
+            usernameLabels[player] = pbillboard
+        end
+    end
+end
+
+-- 移除玩家的高亮和用户名标签
+local function removePlayerEffects(player)
+    if highlights[player] then
+        highlights[player]:Destroy()
+        highlights[player] = nil
+    end
+    if usernameLabels[player] then
+        usernameLabels[player]:Destroy()
+        usernameLabels[player] = nil
+    end
+end
+
 -- 创建高亮和文字标签
 local function createHighlightAndLabel(model)
     -- 创建高亮
@@ -799,6 +873,69 @@ local function AddMenuContent(category)
             data.tools.nightvision = not data.tools.nightvision
             game.Lighting.Ambient = data.tools.nightvision and Color3.new(1, 1, 1) or Color3.new(0, 0, 0)
             button.Text = data.tools.nightvision and "夜视(开)" or "夜视(关)"
+        end)
+        toolList.add(data.tools.noclip and "穿墙(开)" or "穿墙(关)", function(button)
+            data.tools.noclip = not data.tools.noclip
+            button.Text = data.tools.noclip and "穿墙(开)" or "穿墙(关)"
+            Stepped = game:GetService("RunService").Stepped:Connect(function()
+	            if not data.tools.noclip == false then
+		            for a, b in pairs(Workspace:GetChildren()) do
+                        if b.Name == Players.LocalPlayer.Name then
+                            for i, v in pairs(Workspace[Players.LocalPlayer.Name]:GetChildren()) do
+                                if v:IsA("BasePart") then
+                                    v.CanCollide = false
+                                end end end end
+	            else
+                    for a, b in pairs(Workspace:GetChildren()) do
+                        if b.Name == Players.LocalPlayer.Name then
+                            for i, v in pairs(Workspace[Players.LocalPlayer.Name]:GetChildren()) do
+                                if v:IsA("BasePart") then
+                                    v.CanCollide = true
+                                end end end end
+		        Stepped:Disconnect()
+	            end
+            end)
+        end)
+        toolList.add(data.tools.infjump and "连跳(开)" or "连跳(关)", function(button)
+            data.tools.infjump = not data.tools.infjump
+            button.Text = data.tools.infjump and "连跳(开)" or "连跳(关)"
+            JR = game:GetService("UserInputService").JumpRequest:Connect(function()
+                if not data.tools.infjump then
+                    JR:Disconnect()
+                end
+                if data.tools.infjump then
+                    local c = LocalPlayer.Character
+                    if c and c.Parent then
+                        local hum = c:FindFirstChildOfClass("Humanoid")
+                        if hum then
+                            hum:ChangeState("Jumping")
+                        end
+                    end
+                end
+            end)
+        end)
+        toolList.add(data.tools.playeresp and "玩家透视(开)" or "玩家透视(关)", function(button)
+            data.tools.playeresp = not data.tools.playeresp
+            button.Text = data.tools.playeresp and "玩家透视(开)" or "玩家透视(关)"
+            if not data.tools.playeresp then
+                -- 关闭功能时移除所有高亮和用户名标签
+                for _, player in ipairs(Players:GetPlayers()) do
+                    removePlayerEffects(player)
+                end
+                for player, highlight in pairs(highlights) do
+                    phighlight:Destroy()
+                end
+                for player, label in pairs(usernameLabels) do
+                    pbillboard:Destroy()
+                end
+                highlights = {}
+                usernameLabels = {}
+            else
+                for _, player in ipairs(Players:GetPlayers()) do
+                    addHighlight(player)
+                    addUsernameLabel(player)
+                end
+            end
         end)
     elseif category == "基础" then
         CreateLabel("移速", 18, UDim2.new(0.10, 0, 0.05, 0), UDim2.new(0.01, 0, 0.05, 0))
@@ -1005,6 +1142,7 @@ local function addMenu(menutext)
     button.Parent = functionList
 
     button.MouseButton1Click:Connect(function()
+        uiclicker:Play()
         AddMenuContent(menutext) -- 切换菜单内容
     end)
 end
@@ -1028,6 +1166,8 @@ end
 
 local function unloadchronixhub()
     _G.ChronixHubisLoaded = false
+    data.tools.noclip = false
+    data.tools.infjump = false
     cc:Disconnect()
     gsr:Disconnect()
     toggleFeature(false)
