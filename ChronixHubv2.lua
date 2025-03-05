@@ -673,6 +673,39 @@ local function removePlayerEffects(player)
     end
 end
 
+-- 监听玩家加入
+Players.PlayerAdded:Connect(function(player)
+    Character = newCharacter
+    Humanoid = Character:WaitForChild("Humanoid")
+    HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+    if data.tools.playeresp then
+        for _, player in ipairs(Players:GetPlayers()) do
+            removePlayerEffects(player)
+            addHighlight(player)
+            addUsernameLabel(player)
+            if player.Character then
+                local humanoid = player.Character:FindFirstChild("Humanoid")
+                if humanoid then
+                    humanoid.Died:Connect(function()
+                        removePlayerEffects(player)
+                        addHighlight(player)
+                        addUsernameLabel(player)
+                    end)
+                end
+            end
+        end
+        -- 监听玩家角色加载
+        player.CharacterAdded:Connect(function(character)
+        local humanoid = character:WaitForChild("Humanoid")
+            humanoid.Died:Connect(function()
+                removePlayerEffects(player)
+                addHighlight(player)
+                addUsernameLabel(player)
+            end)
+        end)
+    end
+end)
+
 -- 创建高亮和文字标签
 local function createHighlightAndLabel(model)
     -- 创建高亮
