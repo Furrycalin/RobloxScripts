@@ -237,7 +237,7 @@ local function CreateNotification(title, text, duration, isAchievement)
 end
 
 local window = Instance.new("Frame")
-window.Size = UDim2.new(0, 190, 0, 337)
+window.Size = UDim2.new(0, 190, 0, 15)
 window.Position = UDim2.new(0.100320168, 0, 0.379746825, 0)
 window.BackgroundColor3 = Color3.new(1, 1, 1)
 window.BackgroundTransparency = 0.8
@@ -431,7 +431,7 @@ min.MouseButton1Click:Connect(function()
         Text2.Parent = window
         button.Parent = window
         button2.Parent = window
-        window.Size = UDim2.new(0, 190, 0, 337)
+        window.Size = UDim2.new(0, 190, 0, 157)
     end
 end)
 
