@@ -1591,6 +1591,8 @@ local function AddMenuContent(category)
         graceList.add("删除全部实体(无法关闭)", function(button)
             data.grace.deleteentite = true
         end)
+    elseif category == "Deathball" then
+        local deathballList = CreateList(UDim2.new(1, 0, 1, 0), UDim2.new(0.01, 0, 0.01, 0))
     end
 end
 
@@ -1618,6 +1620,7 @@ addMenu("工具")
 addMenu("脚本中心")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
 addMenu("Grace")
+if game.GameId == 5166944221 then addMenu("Deathball") end
 
 -- 默认显示内容
 AddMenuContent("")
