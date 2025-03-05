@@ -760,6 +760,10 @@ end
 
 local gsr = game:GetService("RunService").Stepped:Connect(function()
     if data.playercontrol.lockspeed then LocalPlayer.Character.Humanoid.WalkSpeed = data.playerattr.speed end
+    if data.playercontrol.lockjump then LocalPlayer.Character.Humanoid.JumpPower = data.playerattr.jump end
+    if data.playercontrol.lockmaxhealth then LocalPlayer.Character.Humanoid.MaxHealth = data.playerattr.maxhealth end
+    if data.playercontrol.lockhealth then LocalPlayer.Character.Humanoid.Health = data.playerattr.health end
+    if data.playercontrol.lockgravity then game.Workspace.Gravity = data.playerattr.gravity end
 end)
 
 -- 添加菜单内容
@@ -982,6 +986,7 @@ end
 
 -- 添加功能列表
 addMenu("基础")
+addMenu("工具")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
 
 -- 默认显示内容
