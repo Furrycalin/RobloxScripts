@@ -311,7 +311,7 @@ local function CreateButton(text, size, position, callback)
     button.MouseButton1Click:Connect(function()
         uiclicker:Play()
         if callback then
-            callback()
+            callback(button)
         end
     end)
     return button
@@ -319,9 +319,97 @@ end
 
 local data = {
     pt = {
-        esp = false
+        esp = false,
+        modelsToHighlight = {
+            {
+                name = "Bot",
+                text = "人机",
+                color = Color3.new(1, 1, 1) -- 白色
+            }
+        },
+        highlights = {},
+        labels = {}
     }
 }
+
+-- 创建高亮和文字标签
+local function createHighlightAndLabel(model)
+    -- 创建高亮
+    local highlight = Instance.new("Highlight")
+    highlight.FillTransparency = 0.5 -- 透视效果
+    highlight.OutlineTransparency = 0
+    highlight.Parent = model
+
+    -- 创建文字标签
+    local billboard = Instance.new("BillboardGui")
+    billboard.Adornee = model
+    billboard.Size = UDim2.new(0, 200, 0, 50)
+    billboard.StudsOffset = Vector3.new(0, 2, 0) -- 文字在模型上方
+    billboard.AlwaysOnTop = true
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Text = ""
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.TextColor3 = Color3.new(1, 1, 1)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Font = Enum.Font.SourceSansBold
+    textLabel.TextSize = 18
+    textLabel.Parent = billboard
+
+    billboard.Parent = model
+
+    -- 存储高亮和标签
+    data.pt.highlights[model] = highlight
+    data.pt.labels[model] = textLabel
+end
+
+-- 更新高亮和文字标签
+local function updateHighlightAndLabel(model)
+    for _, modelInfo in ipairs(data.pt.modelsToHighlight) do
+        if model.Name == modelInfo.name then
+            data.pt.highlights[model].FillColor = modelInfo.color
+            data.pt.labels[model].Text = modelInfo.text
+            break
+        end
+    end
+end
+
+-- 删除高亮和文字标签
+local function removeHighlightAndLabel(model)
+    if data.pt.highlights[model] then
+        data.pt.highlights[model]:Destroy()
+        data.pt.highlights[model] = nil
+    end
+    if data.pt.labels[model] then
+        data.pt.labels[model].Parent:Destroy()
+        data.pt.labels[model] = nil
+    end
+end
+
+-- 开关功能
+local function toggleFeature(offon)
+    if offon then
+        data.pt.esp = true
+        -- 遍历 Workspace，查找需要高亮的模型
+        for _, model in ipairs(Workspace:GetDescendants()) do
+            if model:IsA("Model") then
+                for _, modelInfo in ipairs(data.pt.modelsToHighlight) do
+                    if model.Name == modelInfo.name then
+                        createHighlightAndLabel(model)
+                        updateHighlightAndLabel(model)
+                        break
+                    end
+                end
+            end
+        end
+    else
+        data.pt.esp = false
+        -- 删除所有高亮和文字标签
+        for model in pairs(data.pt.highlights) do
+            removeHighlightAndLabel(model)
+        end
+    end
+end
 
 -- 添加菜单内容
 local function AddMenuContent(category)
@@ -365,9 +453,9 @@ local function AddMenuContent(category)
             CreateNotification("Project Transfur", "已删除" .. deletedCount .. "个阔剑地雷", 10, true)
         end)
         CreateLabel("透视功能", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.31, 0, 0.03, 0))
-        CreateButton("透视(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.31, 0, 0.1, 0), function()
-            data.pt.esp = not data.pt.esp
-            
+        CreateButton(data.pt.esp and "透视(开)" or "透视(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.31, 0, 0.1, 0), function(button)
+            toggleFeature(not data.pt.esp)
+            button.Text = data.pt.esp and "透视(开)" or "透视(关)"
         end)
     end
 end
@@ -406,6 +494,7 @@ end
 
 local function unloadchronixhub()
     _G.ChronixHubisLoaded = false
+    toggleFeature(false)
     mainFrame:Destroy()
 end
 
