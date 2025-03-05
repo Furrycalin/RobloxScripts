@@ -1377,7 +1377,7 @@ local function AddMenuContent(category)
         end)
         toolList.add(data.tools.airwalk and "空中移动(开)" or "空中移动(关)", function(button)
             toggleAirWalk()
-            button.Text = data.tools.airwalkn and "空中移动(开)" or "空中移动(关)"
+            button.Text = data.tools.airwalk and "空中移动(开)" or "空中移动(关)"
         end)
         toolList.add(data.tools.antifall and "防击倒(开)" or "防击倒(关)", function(button)
             data.tools.antifall = not data.tools.antifall
