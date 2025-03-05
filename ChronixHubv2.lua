@@ -325,7 +325,7 @@ local function CreateList(size, position)
         button.Text = text
         button.Size = UDim2.new(1, -10, 0, 30) -- 宽度减去 10 以留出边距
         button.Position = UDim2.new(0, 5, 0, 0) -- 左边距 5
-        button.BackgroundColor3 = Color3.fromRGB(50, 50, 70) -- 按钮背景色
+        button.BackgroundColor3 = Color3.fromRGB(40, 40, 56)
         button.BorderSizePixel = 0
         button.TextColor3 = Color3.new(1, 1, 1) -- 白色文字
         button.Font = Enum.Font.SourceSans
@@ -553,6 +553,8 @@ local function toggleModelHighlight(name)
                 break
             end
         end
+        toggleFeature(false)
+        toggleFeature(true)
     end
 end
 
@@ -561,7 +563,6 @@ local function getModelHighlight(name)
     for _, modelInfo in ipairs(data.pt.modelsToHighlight) do
         if modelInfo.name == name then
             return modelInfo.enabled
-            break
         end
     end
 end
