@@ -411,7 +411,7 @@ local data = {
                 name = "Bot",
                 text = "人机",
                 color = Color3.new(1, 1, 1), -- 白色
-                enabled = true
+                enabled = false
             }
         },
         highlights = {},
@@ -536,6 +536,36 @@ local function addModelToHighlight(name, text, color, enabled)
     end
 end
 
+-- 切换某个模型的高亮状态
+local function toggleModelHighlight(name)
+    for _, modelInfo in ipairs(data.pt.modelsToHighlight) do
+        if modelInfo.name == name then
+            modelInfo.enabled = not modelInfo.enabled -- 切换高亮状态
+            break
+        end
+    end
+
+    -- 如果功能已开启，立即更新高亮
+    if data.pt.esp then
+        for model in pairs(data.pt.highlights) do
+            if model.Name == name then
+                updateHighlightAndLabel(model)
+                break
+            end
+        end
+    end
+end
+
+-- 读取某个模型的高亮状态
+local function getModelHighlight(name)
+    for _, modelInfo in ipairs(data.pt.modelsToHighlight) do
+        if modelInfo.name == name then
+            return modelInfo.enabled
+            break
+        end
+    end
+end
+
 -- 动态修改模型的高亮状态
 local function setModelHighlightEnabled(name, enabled)
     for _, modelInfo in ipairs(data.pt.modelsToHighlight) do
@@ -604,10 +634,31 @@ local function AddMenuContent(category)
         end)
         CreateLabel("透视列表", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.31, 0, 0.23, 0))
         local espList = CreateList(UDim2.new(0, 100, 0.645, 0), UDim2.new(0.30, 0, 0.3, 0))
-        espList.add(data.pt.esplist.bot and "Bot兽(开)" or "Bot兽(关)", function(button)
-            if data.pt.modelsToHighlight.
-            button.Text = data.pt.esplist.bot and "Bot兽(开)" or "Bot兽(关)"
-        end)        
+        espList.add(getModelHighlight("Bot") and "Bot兽(开)" or "Bot兽(关)", function(button)
+            toggleModelHighlight("Bot")
+            button.Text = getModelHighlight("Bot") and "Bot兽(开)" or "Bot兽(关)"
+        end)
+        espList.add(getModelHighlight("__BasicSmallSafe") and "小保险箱(开)" or "小保险箱(关)", function(button)
+            toggleModelHighlight("__BasicSmallSafe")
+            button.Text = getModelHighlight("__BasicSmallSafe") and "小保险箱(开)" or "小保险箱(关)"
+        end)
+        espList.add(getModelHighlight("__BasicLargeSafe") and "大保险箱(开)" or "大保险箱(关)", function(button)
+            toggleModelHighlight("__BasicLargeSafe")
+            button.Text = getModelHighlight("__BasicLargeSafe") and "大保险箱(开)" or "大保险箱(关)"
+        end)
+        espList.add(getModelHighlight("__LargeGoldenSafe") and "金保险箱(开)" or "金保险箱(关)", function(button)
+            toggleModelHighlight("__LargeGoldenSafe")
+            button.Text = getModelHighlight("__LargeGoldenSafe") and "金保险箱(开)" or "金保险箱(关)"
+        end)
+        espList.add(getModelHighlight("Surplus Crate") and "武器盒(开)" or "武器盒(关)", function(button)
+            toggleModelHighlight("Surplus Crate")
+            toggleModelHighlight("Military Crate")
+            button.Text = getModelHighlight("Military Crate") and "武器盒(开)" or "武器盒(关)"
+        end)
+        espList.add(getModelHighlight("SupplyDrop") and "空投(开)" or "空投(关)", function(button)
+            toggleModelHighlight("SupplyDrop")
+            button.Text = getModelHighlight("SupplyDrop") and "空投(开)" or "空投(关)"
+        end)
     end
 end
 
