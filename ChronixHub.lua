@@ -21,6 +21,7 @@ local UserInputService = game:GetService("UserInputService")
 local Lighting = game:GetService("Lighting")
 local MarketplaceService = game:GetService("MarketplaceService")
 local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
 
 local LocalPlayer = Players.LocalPlayer
 local Gui = Instance.new("ScreenGui")
@@ -817,6 +818,7 @@ local function AddMenuContent(category)
         local button10 = CreateButton(contentFrame, _G.ChronixHubisAirWalking and "空中移动(开)" or "空中移动(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 293, 0, 105), 14)
         local button11 = CreateButton(contentFrame, _G.ChronixhubAntiFallDown and "防击倒(开)" or "防击倒(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 163, 0, 145), 14)
         local button12 = CreateButton(contentFrame, _G.ChronixHubAntiDead and "阻止死亡(开)" or "阻止死亡(关)", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 163, 0, 185), 14)
+        local button13 = CreateButton(contentFrame, "删除PT陷阱", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 33, 0, 145), 14)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
@@ -942,6 +944,53 @@ local function AddMenuContent(category)
 		            Stepped6:Disconnect()
 	            end
             end)
+        end)
+
+        button13.MouseButton1Click:Connect(function()
+            -- 定义需要删除的模型名称和对应的通知信息
+            local modelsToDelete = {
+                {
+                    name = "__SnarePhysical",
+                    notification = "已删除 %d 个捕兽夹"
+                },
+                {
+                    name = "__ClaymorePhysical",
+                    notification = "已删除 %d 个阔剑地雷"
+                },
+                {
+                    name = "Landmine",
+                    notification = "已删除 %d 个地雷"
+                }
+            }
+            -- 删除模型并发送通知
+            local function deleteModelsAndNotify()
+                local deletedCounts = {} -- 存储每种模型的删除数量
+                -- 初始化计数器
+                for _, modelInfo in ipairs(modelsToDelete) do
+                    deletedCounts[modelInfo.name] = 0
+                end
+                -- 遍历 Workspace 一次
+                for _, model in ipairs(Workspace:GetDescendants()) do
+                    if model:IsA("Model") then
+                        for _, modelInfo in ipairs(modelsToDelete) do
+                            if model.Name == modelInfo.name then
+                                model:Destroy()
+                                deletedCounts[modelInfo.name] = deletedCounts[modelInfo.name] + 1
+                                break -- 找到匹配后跳出内层循环
+                            end
+                        end
+                    end
+                end
+                -- 发送通知
+                for _, modelInfo in ipairs(modelsToDelete) do
+                    local count = deletedCounts[modelInfo.name]
+                    if count > 0 then
+                        CreateNotification("Project Transfur", string.format(modelInfo.notification, count), 10, true)
+                    end
+                end
+            end
+            -- 调用函数
+            deleteModelsAndNotify()
         end)
     elseif category == "脚本中心" then
         -- 添加按钮
