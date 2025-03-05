@@ -297,6 +297,56 @@ local function CreateLabel(text, textsize, size, position)
     return label
 end
 
+local function CreateList(size, position)
+    -- 创建滚动列表
+    local list = Instance.new("ScrollingFrame")
+    list.Size = size
+    list.Position = position
+    list.BackgroundColor3 = Color3.fromRGB(30, 30, 46) -- 墨蓝色
+    list.BorderSizePixel = 0
+    list.ScrollBarThickness = 5
+    list.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 170) -- 浅墨蓝色
+    list.Parent = contentArea
+
+    -- 创建 UIListLayout 用于自动排列按钮
+    local uiListLayout = Instance.new("UIListLayout")
+    uiListLayout.Padding = UDim.new(0, 5) -- 按钮间距
+    uiListLayout.Parent = list
+
+    -- 更新滚动区域大小
+    uiListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        list.CanvasSize = UDim2.new(0, 0, 0, uiListLayout.AbsoluteContentSize.Y)
+    end)
+
+    -- 定义 add 方法
+    local function addButton(text, callback)
+        -- 创建按钮
+        local button = Instance.new("TextButton")
+        button.Text = text
+        button.Size = UDim2.new(1, -10, 0, 30) -- 宽度减去 10 以留出边距
+        button.Position = UDim2.new(0, 5, 0, 0) -- 左边距 5
+        button.BackgroundColor3 = Color3.fromRGB(50, 50, 70) -- 按钮背景色
+        button.BorderSizePixel = 0
+        button.TextColor3 = Color3.new(1, 1, 1) -- 白色文字
+        button.Font = Enum.Font.SourceSans
+        button.TextSize = 16
+        button.Parent = list
+
+        -- 绑定点击事件
+        if callback then
+            button.MouseButton1Click:Connect(function()
+                uiclicker:Play()
+                callback(button)
+            end)
+        end
+    end
+
+    -- 返回包含 add 方法的表
+    return {
+        add = addButton
+    }
+end
+
 local function CreateButton(text, size, position, callback)
     local button = Instance.new("TextButton")
     button.Size = size
@@ -322,9 +372,46 @@ local data = {
         esp = false,
         modelsToHighlight = {
             {
+                name = "__BasicSmallSafe",
+                text = "小保险箱",
+                color = Color3.new(1, 1, 1), -- 白色
+                enabled = false
+            },
+            {
+                name = "__BasicLargeSafe",
+                text = "大保险箱",
+                color = Color3.new(1, 1, 1), -- 白色
+                enabled = false
+            },
+            {
+                name = "__LargeGoldenSafe",
+                text = "金保险箱",
+                color = Color3.fromRGB(255, 215, 0), -- 金色
+                enabled = false
+            },
+            {
+                name = "Surplus Crate",
+                text = "武器盒",
+                color = Color3.new(1, 1, 1), -- 白色
+                enabled = false
+            },
+            {
+                name = "Military Crate",
+                text = "武器盒",
+                color = Color3.new(1, 1, 1), -- 白色
+                enabled = false
+            },
+            {
+                name = "SupplyDrop",
+                text = "空投",
+                color = Color3.new(1, 1, 1), -- 白色
+                enabled = false -- 默认不高亮
+            },
+            {
                 name = "Bot",
                 text = "人机",
-                color = Color3.new(1, 1, 1) -- 白色
+                color = Color3.new(1, 1, 1), -- 白色
+                enabled = true
             }
         },
         highlights = {},
@@ -367,8 +454,14 @@ end
 local function updateHighlightAndLabel(model)
     for _, modelInfo in ipairs(data.pt.modelsToHighlight) do
         if model.Name == modelInfo.name then
-            data.pt.highlights[model].FillColor = modelInfo.color
-            data.pt.labels[model].Text = modelInfo.text
+            if modelInfo.enabled then
+                data.pt.highlights[model].FillColor = modelInfo.color
+                data.pt.labels[model].Text = modelInfo.text
+                data.pt.highlights[model].Enabled = true -- 启用高亮
+            else
+                data.pt.highlights[model].Enabled = false -- 禁用高亮
+                data.pt.labels[model].Text = "" -- 清空文字
+            end
             break
         end
     end
@@ -386,6 +479,13 @@ local function removeHighlightAndLabel(model)
     end
 end
 
+-- 动态更新高亮状态
+local function updateHighlights()
+    for model in pairs(data.pt.highlights) do
+        updateHighlightAndLabel(model)
+    end
+end
+
 -- 开关功能
 local function toggleFeature(offon)
     if offon then
@@ -395,7 +495,9 @@ local function toggleFeature(offon)
             if model:IsA("Model") then
                 for _, modelInfo in ipairs(data.pt.modelsToHighlight) do
                     if model.Name == modelInfo.name then
-                        createHighlightAndLabel(model)
+                        if not data.pt.highlights[model] then
+                            createHighlightAndLabel(model)
+                        end
                         updateHighlightAndLabel(model)
                         break
                     end
@@ -407,6 +509,49 @@ local function toggleFeature(offon)
         -- 删除所有高亮和文字标签
         for model in pairs(data.pt.highlights) do
             removeHighlightAndLabel(model)
+        end
+    end
+end
+
+-- 动态添加新模型到高亮列表
+local function addModelToHighlight(name, text, color, enabled)
+    table.insert(data.pt.modelsToHighlight, {
+        name = name,
+        text = text,
+        color = color,
+        enabled = enabled
+    })
+
+    -- 如果功能已开启，立即应用高亮
+    if data.pt.esp then
+        for _, model in ipairs(Workspace:GetDescendants()) do
+            if model:IsA("Model") and model.Name == name then
+                if not data.pt.highlights[model] then
+                    createHighlightAndLabel(model)
+                end
+                updateHighlightAndLabel(model)
+                break
+            end
+        end
+    end
+end
+
+-- 动态修改模型的高亮状态
+local function setModelHighlightEnabled(name, enabled)
+    for _, modelInfo in ipairs(data.pt.modelsToHighlight) do
+        if modelInfo.name == name then
+            modelInfo.enabled = enabled
+            break
+        end
+    end
+
+    -- 如果功能已开启，立即更新高亮
+    if data.pt.esp then
+        for model in pairs(data.pt.highlights) do
+            if model.Name == name then
+                updateHighlightAndLabel(model)
+                break
+            end
         end
     end
 end
@@ -457,6 +602,12 @@ local function AddMenuContent(category)
             toggleFeature(not data.pt.esp)
             button.Text = data.pt.esp and "透视(开)" or "透视(关)"
         end)
+        CreateLabel("透视列表", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.31, 0, 0.23, 0))
+        local espList = CreateList(UDim2.new(0, 100, 0.645, 0), UDim2.new(0.30, 0, 0.3, 0))
+        espList.add(data.pt.esplist.bot and "Bot兽(开)" or "Bot兽(关)", function(button)
+            if data.pt.modelsToHighlight.
+            button.Text = data.pt.esplist.bot and "Bot兽(开)" or "Bot兽(关)"
+        end)        
     end
 end
 
