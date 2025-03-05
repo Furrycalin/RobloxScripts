@@ -525,6 +525,15 @@ local function createCheckbox(size, position, defaultState, callback)
 end
 
 local data = {
+    tools = {
+        nightvision = false,
+        noclip = false,
+        infjump = false,
+        airwalk = false,
+        playeresp = false,
+        antifall = false,
+        antidead = false
+    },
     playercontrol = {
         lockspeed = false,
         lockjump = false,
@@ -775,7 +784,23 @@ local function AddMenuContent(category)
         end
     end
     -- 根据分类添加内容
-    if category == "基础" then
+    if category == "工具" then
+        local toolList = CreateList(UDim2.new(1, 0, 1, 0), UDim2.new(0.01, 0, 0.01, 0))
+        toolList.add("回满血", function(button)
+            LocalPlayer.Character.Humanoid.Health = LocalPlayer.Character.Humanoid.MaxHealth
+        end)
+        toolList.add("自杀", function(button)
+            LocalPlayer.Character.Humanoid.Health = 0
+        end)
+        toolList.add("获得点击传送工具", function(button)
+            mouse = game.Players.LocalPlayer:GetMouse() tool = Instance.new("Tool") tool.RequiresHandle = false tool.Name = "手持点击传送" tool.Activated:connect(function() local pos = mouse.Hit+Vector3.new(0,2.5,0) pos = CFrame.new(pos.X,pos.Y,pos.Z) game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos end) tool.Parent = game.Players.LocalPlayer.Backpack
+        end)
+        toolList.add(data.tools.nightvision and "夜视(开)" or "夜视(关)", function(button)
+            data.tools.nightvision = not data.tools.nightvision
+            game.Lighting.Ambient = data.tools.nightvision and Color3.new(1, 1, 1) or Color3.new(0, 0, 0)
+            button.Text = data.tools.nightvision and "夜视(开)" or "夜视(关)"
+        end)
+    elseif category == "基础" then
         CreateLabel("移速", 18, UDim2.new(0.10, 0, 0.05, 0), UDim2.new(0.01, 0, 0.05, 0))
         local speedtb = CreateTextBox(string.format("%.2f", LocalPlayer.Character.Humanoid.WalkSpeed), 18, UDim2.new(0.15, 0, 0.08, 0), UDim2.new(0.11, 0, 0.04, 0))
         local slider1 = createSlider(
