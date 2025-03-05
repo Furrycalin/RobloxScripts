@@ -420,13 +420,17 @@ min.MouseButton1Click:Connect(function()
     _G.ChronixGraceMenuisMin = not _G.ChronixGraceMenuisMin
     if _G.ChronixGraceMenuisMin then
         min.Text = "↓"
+        Text.Parent = nil
+        Text2.Parent = nil
         button.Parent = nil
-
+        button2.Parent = nil
         window.Size = UDim2.new(0, 190, 0, 20)
     else
         min.Text = "↑"
+        Text.Parent = window
+        Text2.Parent = window
         button.Parent = window
-
+        button2.Parent = window
         window.Size = UDim2.new(0, 190, 0, 337)
     end
 end)
