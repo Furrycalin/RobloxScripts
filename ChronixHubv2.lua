@@ -9,8 +9,8 @@ end
 
 _G.ChronixHubisLoaded = true
 
-local bb=game:service'VirtualUser'
-game:service'Players'.LocalPlayer.Idled:connect(function()bb:CaptureController()bb:ClickButton2(Vector2.new())end)
+local bb = game:service'VirtualUser'
+local cc = game:service'Players'.LocalPlayer.Idled:connect(function()bb:CaptureController()bb:ClickButton2(Vector2.new())end)
 
 local CoreGui = game:GetService("CoreGui")
 local UserInputService = game:GetService("UserInputService")
@@ -297,6 +297,20 @@ local function CreateLabel(text, textsize, size, position)
     return label
 end
 
+
+local function CreateTextBox(text, textSize, size, position)
+    local textBox = Instance.new("TextBox")
+    textBox.Size = size -- 输入框大小
+    textBox.Position = position -- 输入框位置
+    textBox.BackgroundColor3 = Color3.fromRGB(100, 100, 170)
+    textBox.TextColor3 = Color3.new(1, 1, 1)
+    textBox.TextSize = textSize
+    textBox.Font = Enum.Font.SourceSans
+    textBox.Text = text
+    textBox.Parent = contentArea
+    return textBox
+end
+
 local function CreateList(size, position)
     -- 创建滚动列表
     local list = Instance.new("ScrollingFrame")
@@ -367,7 +381,164 @@ local function CreateButton(text, size, position, callback)
     return button
 end
 
+-- 创建滑块的函数
+local function createSlider(size, position, minValue, maxValue, defaultValue, callback)
+    -- 创建滑块容器
+    local sliderContainer = Instance.new("Frame")
+    sliderContainer.Size = size
+    sliderContainer.Position = position
+    sliderContainer.BackgroundColor3 = Color3.fromRGB(50, 50, 70) -- 滑块背景色
+    sliderContainer.BorderSizePixel = 0
+    sliderContainer.Parent = contentArea
+
+    -- 创建滑块的滑动条
+    local sliderTrack = Instance.new("Frame")
+    sliderTrack.Size = UDim2.new(1, 0, 1, 0) -- 滑动条高度为 5
+    sliderTrack.Position = UDim2.new(0, 0, 0, 0) -- 垂直居中
+    sliderTrack.BackgroundColor3 = Color3.fromRGB(30, 30, 46) -- 滑动条颜色
+    sliderTrack.BorderSizePixel = 0
+    sliderTrack.Parent = sliderContainer
+
+    local sliderTrack2 = Instance.new("Frame")
+    sliderTrack2.Size = UDim2.new(1.1, 0, 1, 0) -- 滑动条高度为 5
+    sliderTrack2.Position = UDim2.new(0, 0, 0, 0) -- 垂直居中
+    sliderTrack2.BackgroundColor3 = Color3.fromRGB(30, 30, 46) -- 滑动条颜色
+    sliderTrack2.BorderSizePixel = 0
+    sliderTrack2.Parent = sliderContainer
+
+    -- 创建滑块的滑动按钮
+    local sliderButton = Instance.new("TextButton")
+    sliderButton.Size = UDim2.new(0.1, 0, 1, 0)
+    sliderButton.Position = UDim2.new(0, 0, 0, 0) -- 初始位置在左侧
+    sliderButton.BackgroundColor3 = Color3.fromRGB(100, 100, 170) -- 按钮颜色
+    sliderButton.BorderSizePixel = 0
+    sliderButton.Text = ""
+    sliderButton.Parent = sliderContainer
+
+    -- 滑块的当前值
+    local currentValue = defaultValue or minValue
+
+    -- 更新滑块按钮的位置和值显示
+    local function updateSlider(value)
+        -- 限制值在 minValue 和 maxValue 之间
+        value = math.clamp(value, minValue, maxValue)
+
+        -- 计算滑块按钮的位置
+        local sliderWidth = sliderTrack.AbsoluteSize.X
+        local normalizedValue = (value - minValue) / (maxValue - minValue)
+        local buttonOffset = normalizedValue * sliderWidth
+
+        -- 更新按钮位置
+        sliderButton.Position = UDim2.new(0, buttonOffset, 0.5, -10)
+
+        -- 更新值
+        currentValue = value
+
+        -- 调用回调函数
+        if callback then
+            callback(value)
+        end
+    end
+
+    -- 绑定滑块按钮的拖动事件
+    local isDragging = false
+    sliderButton.MouseButton1Down:Connect(function()
+        isDragging = true
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            isDragging = false
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            -- 计算滑块的值
+            local mousePos = input.Position.X
+            local sliderPos = sliderTrack.AbsolutePosition.X
+            local sliderWidth = sliderTrack.AbsoluteSize.X
+            local normalizedValue = (mousePos - sliderPos) / sliderWidth
+            local value = minValue + normalizedValue * (maxValue - minValue)
+
+            -- 更新滑块
+            updateSlider(value)
+        end
+    end)
+
+    -- 初始化滑块
+    updateSlider(currentValue)
+
+    -- 返回滑块对象
+    return {
+        getValue = function()
+            return currentValue
+        end,
+        setValue = function(value)
+            updateSlider(value)
+        end
+    }
+end
+
+local function createCheckbox(size, position, defaultState, callback)
+    local checkboxContainer = Instance.new("TextButton")
+    checkboxContainer.Size = size
+    checkboxContainer.Position = position
+    checkboxContainer.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+    checkboxContainer.BorderSizePixel = 0
+    checkboxContainer.Text = ""
+    checkboxContainer.AutoButtonColor = false
+    checkboxContainer.Parent = contentArea
+
+    local checkIcon = Instance.new("ImageLabel")
+    checkIcon.Size = UDim2.new(0.8, 0, 0.8, 0)
+    checkIcon.Position = UDim2.new(0.1, 0, 0.1, 0)
+    checkIcon.BackgroundTransparency = 1
+    checkIcon.Image = "rbxassetid://11772672161"
+    checkIcon.Parent = checkboxContainer
+
+    local isChecked = defaultState or false
+
+    local function updateCheckbox()
+        checkIcon.Image = isChecked and "rbxassetid://11772695039" or "rbxassetid://11772672161"
+        if callback then
+            callback(isChecked)
+        end
+    end
+
+    checkboxContainer.MouseButton1Click:Connect(function()
+        isChecked = not isChecked
+        updateCheckbox()
+    end)
+
+    updateCheckbox()
+
+    return {
+        getState = function()
+            return isChecked
+        end,
+        setState = function(state)
+            isChecked = state
+            updateCheckbox()
+        end
+    }
+end
+
 local data = {
+    playercontrol = {
+        lockspeed = false,
+        lockjump = false,
+        lockmaxhealth = false,
+        lockhealth = false,
+        lockgravity = false
+    },
+    playerattr = {
+        speed = LocalPlayer.Character.Humanoid.WalkSpeed,
+        jump = LocalPlayer.Character.Humanoid.JumpPower,
+        maxhealth = LocalPlayer.Character.Humanoid.MaxHealth,
+        health = LocalPlayer.Character.Humanoid.Health,
+        gravity = game.Workspace.Gravity
+    },
     pt = {
         esp = false,
         modelsToHighlight = {
@@ -587,6 +758,10 @@ local function setModelHighlightEnabled(name, enabled)
     end
 end
 
+local gsr = game:GetService("RunService").Stepped:Connect(function()
+    if data.playercontrol.lockspeed then LocalPlayer.Character.Humanoid.WalkSpeed = data.playerattr.speed end
+end)
+
 -- 添加菜单内容
 local function AddMenuContent(category)
     -- 清空内容区域
@@ -596,7 +771,132 @@ local function AddMenuContent(category)
         end
     end
     -- 根据分类添加内容
-    if category == "Project Transfur" then
+    if category == "基础" then
+        CreateLabel("移速", 18, UDim2.new(0.10, 0, 0.05, 0), UDim2.new(0.01, 0, 0.05, 0))
+        local speedtb = CreateTextBox(string.format("%.2f", LocalPlayer.Character.Humanoid.WalkSpeed), 18, UDim2.new(0.15, 0, 0.08, 0), UDim2.new(0.11, 0, 0.04, 0))
+        local slider1 = createSlider(
+            UDim2.new(0.43, 0, 0.08, 0),
+            UDim2.new(0.29, 0, 0.04, 0),
+            0, -- minValue
+            100, -- maxValue
+            LocalPlayer.Character.Humanoid.WalkSpeed, -- defaultValue
+            function(value) -- callback
+                speedtb.Text = string.format("%.2f", value)
+                LocalPlayer.Character.Humanoid.WalkSpeed = value
+                data.playerattr.speed = value
+            end
+        )
+        CreateButton("设置", UDim2.new(0.13, 0, 0.08, 0), UDim2.new(0.78, 0, 0.04, 0), function()
+            s = tonumber(speedtb.Text)
+            LocalPlayer.Character.Humanoid.WalkSpeed = s and speedtb.Text or "18"
+            slider1.setValue(s and speedtb.Text or 18)
+            data.playerattr.speed = s and speedtb.Text or 18
+        end)
+        
+        createCheckbox(UDim2.new(0.06, 0, 0.09, 0), UDim2.new(0.92, 0, 0.031, 0), data.playercontrol.lockspeed, function(isChecked)
+            data.playercontrol.lockspeed = isChecked
+        end)
+
+        CreateLabel("跳跃", 18, UDim2.new(0.10, 0, 0.05, 0), UDim2.new(0.01, 0, 0.15, 0))
+        local jumptb = CreateTextBox(string.format("%.2f", LocalPlayer.Character.Humanoid.JumpPower), 18, UDim2.new(0.15, 0, 0.08, 0), UDim2.new(0.11, 0, 0.14, 0))
+        local slider2 = createSlider(
+            UDim2.new(0.43, 0, 0.08, 0),
+            UDim2.new(0.29, 0, 0.14, 0),
+            0, -- minValue
+            100, -- maxValue
+            LocalPlayer.Character.Humanoid.JumpPower, -- defaultValue
+            function(value) -- callback
+                jumptb.Text = string.format("%.2f", value)
+                LocalPlayer.Character.Humanoid.JumpPower = value
+                data.playerattr.jump = value
+            end
+        )
+        CreateButton("设置", UDim2.new(0.13, 0, 0.08, 0), UDim2.new(0.78, 0, 0.14, 0), function()
+            m = tonumber(jumptb.Text)
+            LocalPlayer.Character.Humanoid.JumpPower = m and jumptb.Text or 50
+            slider2.setValue(m and jumptb.Text or 50)
+            data.playerattr.jump = m and jumptb.Text or 50
+        end)
+        
+        createCheckbox(UDim2.new(0.06, 0, 0.09, 0), UDim2.new(0.92, 0, 0.131, 0), data.playercontrol.lockjump, function(isChecked)
+            data.playercontrol.lockjump = isChecked
+        end)
+
+        CreateLabel("最大血量", 18, UDim2.new(0.10, 0, 0.05, 0), UDim2.new(0.01, 0, 0.25, 0))
+        local mhtb = CreateTextBox(string.format("%.2f", LocalPlayer.Character.Humanoid.MaxHealth), 18, UDim2.new(0.15, 0, 0.08, 0), UDim2.new(0.11, 0, 0.24, 0))
+        local slider3 = createSlider(
+            UDim2.new(0.43, 0, 0.08, 0),
+            UDim2.new(0.29, 0, 0.24, 0),
+            1, -- minValue
+            1000, -- maxValue
+            LocalPlayer.Character.Humanoid.MaxHealth, -- defaultValue
+            function(value) -- callback
+                mhtb.Text = string.format("%.2f", value)
+                LocalPlayer.Character.Humanoid.MaxHealth = value
+                data.playerattr.maxhealth = value
+            end
+        )
+        CreateButton("设置", UDim2.new(0.13, 0, 0.08, 0), UDim2.new(0.78, 0, 0.24, 0), function()
+            k = tonumber(mhtb.Text)
+            LocalPlayer.Character.Humanoid.MaxHealth = k and mhtb.Text or 100
+            slider3.setValue(k and mhtb.Text or 100)
+            data.playerattr.maxhealth = k and mhtb.Text or 100
+        end)
+        
+        createCheckbox(UDim2.new(0.06, 0, 0.09, 0), UDim2.new(0.92, 0, 0.231, 0), data.playercontrol.lockmaxhealth, function(isChecked)
+            data.playercontrol.lockmaxhealth = isChecked
+        end)
+
+        CreateLabel("血量", 18, UDim2.new(0.10, 0, 0.05, 0), UDim2.new(0.01, 0, 0.35, 0))
+        local htb = CreateTextBox(string.format("%.2f", LocalPlayer.Character.Humanoid.Health), 18, UDim2.new(0.15, 0, 0.08, 0), UDim2.new(0.11, 0, 0.34, 0))
+        local slider4 = createSlider(
+            UDim2.new(0.43, 0, 0.08, 0),
+            UDim2.new(0.29, 0, 0.34, 0),
+            0, -- minValue
+            tonumber(mhtb.Text), -- maxValue
+            LocalPlayer.Character.Humanoid.Health, -- defaultValue
+            function(value) -- callback
+                htb.Text = string.format("%.2f", value)
+                LocalPlayer.Character.Humanoid.Health = value
+                data.playerattr.health = value
+            end
+        )
+        CreateButton("设置", UDim2.new(0.13, 0, 0.08, 0), UDim2.new(0.78, 0, 0.34, 0), function()
+            p = tonumber(htb.Text)
+            LocalPlayer.Character.Humanoid.Health = p and htb.Text or 100
+            slider4.setValue(p and htb.Text or 100)
+            data.playerattr.health = p and htb.Text or 100
+        end)
+        
+        createCheckbox(UDim2.new(0.06, 0, 0.09, 0), UDim2.new(0.92, 0, 0.331, 0), data.playercontrol.lockhealth, function(isChecked)
+            data.playercontrol.lockhealth = isChecked
+        end)
+
+        CreateLabel("重力", 18, UDim2.new(0.10, 0, 0.05, 0), UDim2.new(0.01, 0, 0.45, 0))
+        local gtb = CreateTextBox(string.format("%.2f", game.Workspace.Gravity), 18, UDim2.new(0.15, 0, 0.08, 0), UDim2.new(0.11, 0, 0.44, 0))
+        local slider5 = createSlider(
+            UDim2.new(0.43, 0, 0.08, 0),
+            UDim2.new(0.29, 0, 0.44, 0),
+            0, -- minValue
+            500, -- maxValue
+            game.Workspace.Gravity, -- defaultValue
+            function(value) -- callback
+                gtb.Text = string.format("%.2f", value)
+                game.Workspace.Gravity = value
+                data.playerattr.gravity = value
+            end
+        )
+        CreateButton("设置", UDim2.new(0.13, 0, 0.08, 0), UDim2.new(0.78, 0, 0.44, 0), function()
+            z = tonumber(gtb.Text)
+            game.Workspace.Gravity = z and gtb.Text or 196.2
+            slider5.setValue(z and gtb.Text or 196.2)
+            data.playerattr.gravity = z and gtb.Text or 196.2
+        end)
+        
+        createCheckbox(UDim2.new(0.06, 0, 0.09, 0), UDim2.new(0.92, 0, 0.431, 0), data.playercontrol.lockgravity, function(isChecked)
+            data.playercontrol.lockgravity = isChecked
+        end)
+    elseif category == "Project Transfur" then
         CreateLabel("基础操作", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.03, 0))
         CreateButton("删除捕兽夹", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.1, 0), function()
             local deletedCount = 0
@@ -681,7 +981,8 @@ local function addMenu(menutext)
 end
 
 -- 添加功能列表
-addMenu("Project Transfur")
+addMenu("基础")
+if game.GameId == 2162087722 then addMenu("Project Transfur") end
 
 -- 默认显示内容
 AddMenuContent("")
@@ -697,6 +998,8 @@ end
 
 local function unloadchronixhub()
     _G.ChronixHubisLoaded = false
+    cc:Disconnect()
+    gsr:Disconnect()
     toggleFeature(false)
     mainFrame:Destroy()
 end
