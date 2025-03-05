@@ -532,7 +532,8 @@ local data = {
         airwalk = false,
         playeresp = false,
         antifall = false,
-        antidead = false
+        antidead = false,
+        floorY = nil
     },
     playercontrol = {
         lockspeed = false,
@@ -598,6 +599,135 @@ local data = {
         labels = {}
     }
 }
+
+-- 定义白天和黑夜的光照属性
+local daySettings = {
+    ClockTime = 14, -- 白天时间（14:00）
+    GeographicLatitude = 41.73, -- 纬度（影响太阳高度）
+    -- Ambient = Color3.new(0.5, 0.5, 0.5), -- 环境光
+    -- OutdoorAmbient = Color3.new(0.5, 0.5, 0.5), -- 室外环境光
+    -- Brightness = 2, -- 亮度
+    -- FogColor = Color3.new(0.8, 0.8, 0.8), -- 雾颜色
+    -- FogEnd = 1000 -- 雾结束距离
+}
+
+local nightSettings = {
+    ClockTime = 2, -- 黑夜时间（02:00）
+    GeographicLatitude = 41.73, -- 纬度
+    -- Ambient = Color3.new(0.1, 0.1, 0.1), -- 环境光
+    -- OutdoorAmbient = Color3.new(0.1, 0.1, 0.1), -- 室外环境光
+    -- Brightness = 0.2, -- 亮度
+    -- FogColor = Color3.new(0.1, 0.1, 0.1), -- 雾颜色
+    -- FogEnd = 500 -- 雾结束距离
+}
+
+-- 切换为白天
+local function setDay()
+    for property, value in pairs(daySettings) do
+        local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local tween = TweenService:Create(Lighting, tweenInfo, { [property] = value })
+        tween:Play()
+    end
+end
+
+-- 切换为黑夜
+local function setNight()
+    for property, value in pairs(nightSettings) do
+        local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local tween = TweenService:Create(Lighting, tweenInfo, { [property] = value })
+        tween:Play()
+    end
+end
+
+local floorPart = nil
+
+-- 创建地板
+local function createFloor()
+    if floorPart then return end -- 如果地板已存在，则不重复创建
+    
+    local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local Humanoid = Character:WaitForChild("Humanoid")
+    local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+
+    -- 创建地板
+    floorPart = Instance.new("Part")
+    floorPart.Size = Vector3.new(10, 1, 10) -- 地板大小
+    floorPart.Transparency = 1 -- 完全透明
+    floorPart.Anchored = true -- 固定位置
+    floorPart.CanCollide = true -- 允许碰撞
+    floorPart.Parent = workspace
+
+    -- 添加发光特效
+    local glow = Instance.new("SurfaceGui", floorPart)
+    glow.Face = Enum.NormalId.Top
+    local frame = Instance.new("Frame", glow)
+    frame.Size = UDim2.new(1, 0, 1, 0)
+    frame.BackgroundColor3 = Color3.new(0, 1, 0) -- 白色发光
+    frame.BackgroundTransparency = 0.4 -- 半透明
+    frame.BorderSizePixel = 0
+
+    -- 记录当前地板的 Y 轴高度
+    data.tools.floorY = HumanoidRootPart.Position.Y - HumanoidRootPart.Size.Y / 2 - floorPart.Size.Y / 2 - 1.8
+    floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, data.tools.floorY, HumanoidRootPart.Position.Z)
+end
+
+-- 删除地板
+local function destroyFloor()
+    if floorPart then
+        floorPart:Destroy()
+        floorPart = nil
+        data.tools.floorY = nil
+    end
+end
+
+-- 切换空中行走状态
+local function toggleAirWalk()
+    data.tools.airwalk = not data.tools.airwalk
+    if data.tools.airwalk then
+        createFloor() -- 启用时创建地板
+    else
+        destroyFloor() -- 禁用时删除地板
+    end
+end
+
+-- 更新地板位置
+RunService.Heartbeat:Connect(function()
+    if data.tools.airwalk and floorPart and data.tools.floorY then
+        -- 将地板的 X 和 Z 轴与玩家对齐，Y 轴固定
+        floorPart.Position = Vector3.new(HumanoidRootPart.Position.X, data.tools.floorY, HumanoidRootPart.Position.Z)
+    end
+end)
+
+-- 监听状态变化
+Humanoid.StateChanged:Connect(function(oldState, newState)
+    if data.tools.antifall then
+        if newState == Enum.HumanoidStateType.FallingDown or newState == Enum.HumanoidStateType.Ragdoll then
+            Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp) -- 强制恢复站立状态
+            CreateNotification("提示", "检测到被击倒，已恢复站立状态", 5, true)
+        end
+    end
+end)
+
+-- 监听玩家死亡事件
+local function onCharacterDied()
+    if data.tools.airwalk then
+        data.tools.airwalk = false
+        destroyFloor()
+    end
+end
+
+-- 监听角色变化
+LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+    Character = newCharacter
+    Humanoid = Character:WaitForChild("Humanoid")
+    HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+
+    -- 重新绑定死亡事件
+    Humanoid.Died:Connect(onCharacterDied)
+end)
+
+-- 初始绑定死亡事件
+Humanoid.Died:Connect(onCharacterDied)
 
 -- 存储高亮和用户名标签
 local highlights = {}
@@ -880,6 +1010,7 @@ local gsr = game:GetService("RunService").Stepped:Connect(function()
     if data.playercontrol.lockmaxhealth then LocalPlayer.Character.Humanoid.MaxHealth = data.playerattr.maxhealth end
     if data.playercontrol.lockhealth then LocalPlayer.Character.Humanoid.Health = data.playerattr.health end
     if data.playercontrol.lockgravity then game.Workspace.Gravity = data.playerattr.gravity end
+    if data.tools.antidead then Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false) end
 end)
 
 -- 添加菜单内容
@@ -969,6 +1100,24 @@ local function AddMenuContent(category)
                     addUsernameLabel(player)
                 end
             end
+        end)
+        toolList.add(data.tools.airwalk and "空中移动(开)" or "空中移动(关)", function(button)
+            toggleAirWalk()
+            button.Text = data.tools.airwalkn and "空中移动(开)" or "空中移动(关)"
+        end)
+        toolList.add(data.tools.antifall and "防击倒(开)" or "防击倒(关)", function(button)
+            data.tools.antifall = not data.tools.antifall
+            button.Text = data.tools.antifall and "防击倒(开)" or "防击倒(关)"
+        end)
+        toolList.add(data.tools.antidead and "防死亡(开)" or "防死亡(关)", function(button)
+            data.tools.antidead = not data.tools.antidead
+            button.Text = data.tools.antidead and "防死亡(开)" or "防死亡(关)"
+        end)
+        toolList.add("切换时间为白天", function(button)
+            setDay()
+        end)
+        toolList.add("切换时间为黑夜", function(button)
+            setNight()
         end)
     elseif category == "基础" then
         CreateLabel("移速", 18, UDim2.new(0.10, 0, 0.05, 0), UDim2.new(0.01, 0, 0.05, 0))
