@@ -1022,7 +1022,49 @@ local function AddMenuContent(category)
         end
     end
     -- 根据分类添加内容
-    if category == "工具" then
+    if category == "脚本中心" then
+        local scriptList = CreateList(UDim2.new(1, 0, 1, 0), UDim2.new(0.01, 0, 0.01, 0))
+        scriptList.add("通用自瞄", function(button)
+            CreateNotification("提示", "正在启动 通用自瞄 脚本，请耐心等待.", 10, true)
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/Zimiao.lua"))()
+            CreateNotification("提示", "通用自瞄 已经成功启动!", 10, true)
+        end)
+        scriptList.add("Doors扫描器", function(button)
+            CreateNotification("提示", "正在启动 Doors扫描器 脚本，请耐心等待.", 10, true)
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/DoorsNVC3000.lua"))()
+            CreateNotification("提示", "Doors扫描器 已经成功启动!", 10, true)
+        end)
+        scriptList.add("通用ESP", function(button)
+            CreateNotification("提示", "正在启动 通用ESP 脚本，请耐心等待.", 10, true)
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/ESP.lua"))()
+            CreateNotification("提示", "通用ESP 已经成功启动!", 10, true)
+        end)
+        scriptList.add("冬凌中心", function(button)
+            CreateNotification("提示", "正在启动 冬凌中心 脚本，请耐心等待.", 10, true)
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/DongLingLobby.lua"))()
+            CreateNotification("提示", "冬凌中心 已经成功启动!", 10, true)
+        end)
+        scriptList.add("OldMSPaint", function(button)
+            CreateNotification("提示", "正在启动 OldMSPaint 脚本，请耐心等待.", 10, true)
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/notpoiu/mspaint/main/main.lua"))()
+            CreateNotification("提示", "OldMSPaint 已经成功启动!", 10, true)
+        end)
+        scriptList.add("玩家控制", function(button)
+            CreateNotification("提示", "正在启动 玩家控制 脚本，请耐心等待.", 10, true)
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/PlayerControl.lua"))()
+            CreateNotification("提示", "玩家控制 已经成功启动!", 10, true)
+        end)
+        scriptList.add("情云中心", function(button)
+            CreateNotification("提示", "正在启动 情云中心 脚本，请耐心等待.", 10, true)
+            loadstring(utf8.char((function() return table.unpack({108,111,97,100,115,116,114,105,110,103,40,103,97,109,101,58,72,116,116,112,71,101,116,40,34,104,116,116,112,115,58,47,47,114,97,119,46,103,105,116,104,117,98,117,115,101,114,99,111,110,116,101,110,116,46,99,111,109,47,67,104,105,110,97,81,89,47,45,47,109,97,105,110,47,37,69,54,37,56,51,37,56,53,37,69,52,37,66,65,37,57,49,34,41,41,40,41})end)()))()
+            CreateNotification("提示", "情云中心 已经成功启动!", 10, true)
+        end)
+        scriptList.add("Dex", function(button)
+            CreateNotification("提示", "正在启动 DEX 脚本，请耐心等待.", 10, true)
+            loadstring(game:HttpGet("https://cdn.wearedevs.net/scripts/Dex%20Explorer.txt"))()
+            CreateNotification("提示", "DEX 已经成功启动!", 10, true)
+        end)
+    elseif category == "工具" then
         local toolList = CreateList(UDim2.new(1, 0, 1, 0), UDim2.new(0.01, 0, 0.01, 0))
         toolList.add("回满血", function(button)
             LocalPlayer.Character.Humanoid.Health = LocalPlayer.Character.Humanoid.MaxHealth
@@ -1332,6 +1374,7 @@ end
 -- 添加功能列表
 addMenu("基础")
 addMenu("工具")
+addMenu("脚本中心")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
 
 -- 默认显示内容
