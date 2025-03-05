@@ -551,6 +551,10 @@ local data = {
         health = LocalPlayer.Character.Humanoid.Health,
         gravity = game.Workspace.Gravity
     },
+    grace = {
+        autolever = false,
+        deleteentite = false
+    },
     pt = {
         esp = false,
         modelsToHighlight = {
@@ -1169,6 +1173,60 @@ local function togglefly()
 	end
 end
 
+local GGcount = 0
+
+al = workspace.DescendantAdded:Connect(function(descendant)
+    if descendant.Name == "base" and descendant:IsA("BasePart") and data.grace.autolever then
+        local player = game.Players.LocalPlayer
+        if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            descendant.CFrame = player.Character.HumanoidRootPart.CFrame
+            GGcount = GGcount + 1
+            if GGcount >= 3 then
+                CreateNotification("Grace", "全部拉杆已被激活\n门已打开", 5, true)
+                GGcount = 0
+            end
+            task.wait(1)
+            descendant.CFrame = player.Character.HumanoidRootPart.CFrame
+        end
+    end
+end)
+
+ds = workspace.DescendantAdded:Connect(function(descendant)
+    if data.grace.deleteentite then
+    if descendant.Name == "eye" or descendant.Name == "elkman" or descendant.Name == "Rush" or descendant.Name == "Worm" or descendant.Name == "eyePrime" then
+        descendant:Destroy()
+    end
+    end
+end)
+
+Stepped6 = game:GetService("RunService").Stepped:Connect(function()
+    if data.grace.deleteentite then 
+    local RS = game:GetService("ReplicatedStorage")
+    RS.eyegui:Destroy()
+    RS.smilegui:Destroy()
+    RS.SendRush:Destroy()
+    RS.SendWorm:Destroy()
+    RS.SendSorrow:Destroy()
+    RS.SendGoatman:Destroy()
+    wait(0.1)
+    RS.Worm:Destroy()
+    RS.elkman:Destroy()
+    wait(0.1)
+    RS.QuickNotes.Eye:Destroy()
+    RS.QuickNotes.Rush:Destroy()
+    RS.QuickNotes.Sorrow:Destroy()
+    RS.QuickNotes.elkman:Destroy()  
+    RS.QuickNotes.EyePrime:Destroy()
+    RS.QuickNotes.SlugFish:Destroy()
+    RS.QuickNotes.FakeDoor:Destroy()
+    RS.QuickNotes.SleepyHead:Destroy()
+    local SmileGui = player:FindFirstChild("PlayerGui"):FindFirstChild("smilegui")
+    if SmileGui then
+        SmileGui:Destroy()
+    end
+    end
+end)
+
 local gsr = game:GetService("RunService").Stepped:Connect(function()
     if data.playercontrol.lockspeed then LocalPlayer.Character.Humanoid.WalkSpeed = data.playerattr.speed end
     if data.playercontrol.lockjump then LocalPlayer.Character.Humanoid.JumpPower = data.playerattr.jump end
@@ -1524,6 +1582,15 @@ local function AddMenuContent(category)
             toggleModelHighlight("SupplyDrop")
             button.Text = getModelHighlight("SupplyDrop") and "空投(开)" or "空投(关)"
         end)
+    elseif category == "Grace" then
+        local graceList = CreateList(UDim2.new(1, 0, 1, 0), UDim2.new(0.01, 0, 0.01, 0))
+        graceList.add(data.grace.autolever and "自动拉杆(开)" or "自动拉杆(关)", function(button)
+            data.grace.autolever = not data.grace.autolever
+            button.Text = data.grace.autolever and "自动拉杆(开)" or "自动拉杆(关)"
+        end)
+        graceList.add("删除全部实体(无法关闭)", function(button)
+            data.grace.deleteentite = true
+        end)
     end
 end
 
@@ -1550,6 +1617,7 @@ addMenu("基础")
 addMenu("工具")
 addMenu("脚本中心")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
+addMenu("Grace")
 
 -- 默认显示内容
 AddMenuContent("")
@@ -1567,6 +1635,9 @@ local function unloadchronixhub()
     _G.ChronixHubisLoaded = false
     data.tools.noclip = false
     data.tools.infjump = false
+    al:Disconnect()
+    ds:Disconnect()
+    Stepped6:Disconnect()
     cc:Disconnect()
     gsr:Disconnect()
     toggleFeature(false)
