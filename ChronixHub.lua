@@ -957,6 +957,7 @@ local function AddMenuContent(category)
         local button9 = CreateButton(contentFrame, "格蕾丝", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 33, 0, 105), 14)
         local button10 = CreateButton(contentFrame, "情云中心", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 163, 0, 65), 14)
         local button11 = CreateButton(contentFrame, "DEX", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 163, 0, 105), 14)
+        local button12 = CreateButton(contentFrame, "ProjectTransfur", UDim2.new(0.2, 0, 0.1, 0), UDim2.new(0, 163, 0, 105), 14)
 
         -- 按钮点击逻辑
         button.MouseButton1Click:Connect(function()
@@ -1023,6 +1024,12 @@ local function AddMenuContent(category)
             CreateNotification("提示", "正在启动 DEX 脚本，请耐心等待.", 10, true)
             loadstring(game:HttpGet("https://cdn.wearedevs.net/scripts/Dex%20Explorer.txt"))()
             CreateNotification("提示", "DEX 已经成功启动!", 10, true)
+        end)
+
+        button12.MouseButton1Click:Connect(function()
+            CreateNotification("提示", "正在启动 ProjectTransfur 脚本，请耐心等待.", 10, true)
+            loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/ProjectTransfur.lua"))()
+            CreateNotification("提示", "ProjectTransfur 已经成功启动!", 10, true)
         end)
     elseif category == "设置" then
         -- 添加“卸载菜单”按钮
