@@ -2102,7 +2102,7 @@ if game.GameId == 6508759464 then addMenu("Grace") end
 if game.GameId == 5166944221 then addMenu("Deathball") end
 
 -- 默认显示内容
-AddMenuContent("")
+AddMenuContent("关于")
 
 -- 更新功能栏的滚动区域
 functionList.CanvasSize = UDim2.new(0, 0, 0, #functionList:GetChildren() * 30)
