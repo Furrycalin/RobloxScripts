@@ -296,6 +296,11 @@ functionList.ScrollBarThickness = 5
 functionList.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 170) -- 浅墨蓝色
 functionList.Parent = contentFrame
 
+-- 创建 UIListLayout 自动排列项目
+local uiListLayout = Instance.new("UIListLayout")
+uiListLayout.Parent = functionList
+uiListLayout.Padding = UDim.new(0, 3) -- 设置项目间距
+
 -- 右侧内容区域
 local contentArea = Instance.new("Frame")
 contentArea.Size = UDim2.new(1, -100, 1, 0)
@@ -597,6 +602,7 @@ local function createDropdown(options, size, position, defaultText, callback)
 
             -- 点击选项后填充到 TextBox
             optionButton.MouseButton1Click:Connect(function()
+                uiclicker:Play()
                 textBox.Text = option
                 dropdownFrame.Visible = false -- 隐藏下拉菜单
                 if callback then
@@ -730,6 +736,7 @@ local function createTeleportPointList(size, position)
 
         -- 点击传送按钮的逻辑
         teleportButton.MouseButton1Click:Connect(function()
+            uiclicker:Play()
             local character = game.Players.LocalPlayer.Character
             if character and character.PrimaryPart then
                 character:SetPrimaryPartCFrame(CFrame.new(position))
@@ -738,6 +745,7 @@ local function createTeleportPointList(size, position)
 
         -- 点击删除按钮的逻辑
         deleteButton.MouseButton1Click:Connect(function()
+            uiclicker:Play()
             -- 从 pointsData 中移除当前路径点
             for i, point in ipairs(pointsData) do
                 if point.position == position then
@@ -773,6 +781,7 @@ local function createTeleportPointList(size, position)
 
     -- 点击添加按钮的逻辑
     addButton.MouseButton1Click:Connect(function()
+        uiclicker:Play()
         -- 获取玩家当前位置
         local character = game.Players.LocalPlayer.Character
         if character and character.PrimaryPart then
@@ -838,6 +847,7 @@ local function createTeleportList(size, position)
 
     -- 点击传送按钮的逻辑
     teleportButton.MouseButton1Click:Connect(function()
+        uiclicker:Play()
         if selectedPlayer then
             local character = game.Players.LocalPlayer.Character
             if character and character.PrimaryPart then
@@ -867,6 +877,7 @@ local function createTeleportList(size, position)
 
         -- 点击玩家名字的逻辑
         playerFrame.MouseButton1Click:Connect(function()
+            uiclicker:Play()
             selectedPlayer = player
             updateTeleportButton()
         end)
@@ -903,6 +914,9 @@ local function createTeleportList(size, position)
 end
 
 local data = {
+    setting = {
+        BindKey = "RightShift"
+    },
     musicbox = {
         id = "1837879082",
         isPlay = false,
@@ -1530,6 +1544,8 @@ local gsr = game:GetService("RunService").Stepped:Connect(function()
     if data.tools.antidead then Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false) end
 end)
 
+local isProcessing = false
+
 -- 添加菜单内容
 local function AddMenuContent(category)
     -- 清空内容区域
@@ -1539,7 +1555,21 @@ local function AddMenuContent(category)
         end
     end
     -- 根据分类添加内容
-    if category == "传送器" then
+    if category == "设置" then
+        CreateLabel("绑定按键", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.1, 0))
+        CreateButton(data.setting.BindKey, UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.1, 0), function(button)
+            isProcessing = true
+            button.Text = "按下任意键..."
+            -- 监听按键按下事件
+            aa = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                local keyName = tostring(input.KeyCode):gsub("Enum.KeyCode.", "")
+                button.Text = keyName -- 将按键名称设置为文本框内容
+                data.setting.BindKey = keyName
+                achievementSound:Stop()
+                aa:Disconnect()
+            end)
+        end)
+    elseif category == "传送器" then
         createTeleportPointList(
             UDim2.new(0.48, 0, 0.98, 0), -- 大小
             UDim2.new(0.01, 0, 0.01, 0) -- 位置
@@ -2065,6 +2095,8 @@ addMenu("脚本中心")
 addMenu("传送器")
 addMenu("执行器")
 addMenu("音乐播放器")
+addMenu("设置")
+addMenu("关于")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
 if game.GameId == 6508759464 then addMenu("Grace") end
 if game.GameId == 5166944221 then addMenu("Deathball") end
@@ -2099,6 +2131,22 @@ local function unloadchronixhub()
     DeathballGui:Destroy()
     script:Destroy()
 end
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if input.KeyCode == Enum.KeyCode[data.setting.BindKey] then
+        if mainFrame.Visible then
+            if not isProcessing then
+                mainFrame.Visible = false
+                CreateNotification("ChronixHub已隐藏", "按下" .. data.setting.BindKey .. "重新打开界面", 10, false)
+                achievementSound:Stop()
+            else
+                isProcessing = false
+            end
+        else
+            mainFrame.Visible = true
+        end
+    end
+end)
 
 -- 关闭功能
 closeButton.MouseButton1Click:Connect(function()
