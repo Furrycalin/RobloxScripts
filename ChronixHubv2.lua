@@ -1451,7 +1451,7 @@ addMenu("基础")
 addMenu("工具")
 addMenu("脚本中心")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
-addMenu("Grace")
+if game.GameId == 6508759464 then addMenu("Grace") end
 if game.GameId == 5166944221 then addMenu("Deathball") end
 
 -- 默认显示内容
