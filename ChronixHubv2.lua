@@ -649,6 +649,144 @@ local function createDropdown(options, size, position, defaultText, callback)
     }
 end
 
+local pointsData = {}
+
+-- 创建路径点列表的函数
+local function createTeleportPointList(size, position)
+    -- 创建主容器
+    local container = Instance.new("Frame")
+    container.Size = size
+    container.Position = position
+    container.BackgroundColor3 = Color3.fromRGB(30, 30, 46)
+    container.Parent = contentArea
+
+    -- 创建 ScrollingFrame 支持滚动
+    local scrollingFrame = Instance.new("ScrollingFrame")
+    scrollingFrame.Size = UDim2.new(1, 0, 1, 0)
+    scrollingFrame.Position = UDim2.new(0, 0, 0, 0)
+    scrollingFrame.BackgroundTransparency = 1
+    scrollingFrame.ScrollBarThickness = 5
+    scrollingFrame.Parent = container
+
+    -- 创建 UIListLayout 自动排列项目
+    local uiListLayout = Instance.new("UIListLayout")
+    uiListLayout.Parent = scrollingFrame
+    uiListLayout.Padding = UDim.new(0, 5) -- 设置项目间距
+
+    -- 动态调整 ScrollingFrame 的 CanvasSize
+    uiListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, uiListLayout.AbsoluteContentSize.Y)
+    end)
+
+    -- 创建添加路径点的按钮
+    local addButton = Instance.new("TextButton")
+    addButton.Size = UDim2.new(1, 0, 0, 30)
+    addButton.BackgroundColor3 = Color3.fromRGB(40, 40, 56)
+    addButton.TextColor3 = Color3.new(1, 1, 1)
+    addButton.Text = "添加路径点"
+    addButton.Parent = container
+    addButton.TextSize = 14
+
+    -- 添加路径点的函数
+    local isInitializing = true
+    local function addPoint(position, note)
+
+        -- 创建路径点项目
+        local pointFrame = Instance.new("Frame")
+        pointFrame.Size = UDim2.new(1, 0, 0, 30)
+        pointFrame.BackgroundTransparency = 1 -- 透明背景
+        pointFrame.Parent = scrollingFrame
+
+        -- 创建备注文本框
+        local noteBox = Instance.new("TextBox")
+        noteBox.Size = UDim2.new(0.5, 0, 1, 0)
+        noteBox.Position = UDim2.new(0, 0, 0, 0)
+        noteBox.BackgroundColor3 = Color3.fromRGB(100, 100, 170)
+        noteBox.TextColor3 = Color3.new(1, 1, 1)
+        noteBox.PlaceholderText = "输入备注"
+        noteBox.Text = note or "" -- 设置备注文本
+        noteBox.Parent = pointFrame
+        noteBox.TextSize = 14
+
+        -- 创建传送按钮
+        local teleportButton = Instance.new("TextButton")
+        teleportButton.Size = UDim2.new(0.35, 0, 1, 0)
+        teleportButton.Position = UDim2.new(0.5, 0, 0, 0)
+        teleportButton.BackgroundColor3 = Color3.fromRGB(40, 40, 56)
+        teleportButton.TextColor3 = Color3.new(1, 1, 1)
+        teleportButton.Text = "传送"
+        teleportButton.Parent = pointFrame
+        teleportButton.TextSize = 14
+
+        -- 创建删除按钮
+        local deleteButton = Instance.new("TextButton")
+        deleteButton.Size = UDim2.new(0.15, 0, 1, 0)
+        deleteButton.Position = UDim2.new(0.85, 0, 0, 0)
+        deleteButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50) -- 红色背景
+        deleteButton.TextColor3 = Color3.new(1, 1, 1)
+        deleteButton.Text = "×"
+        deleteButton.Parent = pointFrame
+        deleteButton.TextSize = 14
+
+        -- 点击传送按钮的逻辑
+        teleportButton.MouseButton1Click:Connect(function()
+            local character = game.Players.LocalPlayer.Character
+            if character and character.PrimaryPart then
+                character:SetPrimaryPartCFrame(CFrame.new(position))
+            end
+        end)
+
+        -- 点击删除按钮的逻辑
+        deleteButton.MouseButton1Click:Connect(function()
+            -- 从 pointsData 中移除当前路径点
+            for i, point in ipairs(pointsData) do
+                if point.position == position then
+                    table.remove(pointsData, i)
+                    break
+                end
+            end
+
+            -- 销毁路径点项目
+            pointFrame:Destroy()
+        end)
+
+        -- 如果不是初始化阶段，则将路径点信息存储到外部变量中
+        if not isInitializing then
+            local pointData = {
+                position = position,
+                note = noteBox.Text
+            }
+            table.insert(pointsData, pointData)
+
+            -- 监听备注文本框的内容变化
+            noteBox.FocusLost:Connect(function()
+                pointData.note = noteBox.Text -- 更新备注内容
+            end)
+        end
+    end
+
+    -- 初始化时重新读取所有记录的数据
+    for _, point in ipairs(pointsData) do
+        addPoint(point.position, point.note)
+    end
+    isInitializing = false -- 初始化完成后，关闭标志变量
+
+    -- 点击添加按钮的逻辑
+    addButton.MouseButton1Click:Connect(function()
+        -- 获取玩家当前位置
+        local character = game.Players.LocalPlayer.Character
+        if character and character.PrimaryPart then
+            local position = character.PrimaryPart.Position
+            addPoint(position)
+        end
+    end)
+
+    -- 返回路径点列表对象
+    return {
+        addPoint = addPoint
+    }
+end
+
 local data = {
     musicbox = {
         id = "1837879082",
@@ -1286,7 +1424,12 @@ local function AddMenuContent(category)
         end
     end
     -- 根据分类添加内容
-    if category == "音乐播放器" then
+    if category == "传送器" then
+        createTeleportPointList(
+            UDim2.new(0.48, 0, 0.98, 0), -- 大小
+            UDim2.new(0.01, 0, 0.01, 0) -- 位置
+        )
+    elseif category == "音乐播放器" then
         CreateLabel("请输入rbxassetid", 18, UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.1, 0))
         local musicidtb = createDropdown(
             {
@@ -1800,6 +1943,7 @@ end
 addMenu("基础")
 addMenu("工具")
 addMenu("脚本中心")
+addMenu("传送器")
 addMenu("执行器")
 addMenu("音乐播放器")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
