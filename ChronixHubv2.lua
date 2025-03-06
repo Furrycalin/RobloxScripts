@@ -662,8 +662,8 @@ local function createTeleportPointList(size, position)
 
     -- 创建 ScrollingFrame 支持滚动
     local scrollingFrame = Instance.new("ScrollingFrame")
-    scrollingFrame.Size = UDim2.new(1, 0, 1, 0)
-    scrollingFrame.Position = UDim2.new(0, 0, 0, 0)
+    scrollingFrame.Size = UDim2.new(1, 0, 0.87, 0)
+    scrollingFrame.Position = UDim2.new(0, 0, 0.13, 0)
     scrollingFrame.BackgroundTransparency = 1
     scrollingFrame.ScrollBarThickness = 5
     scrollingFrame.Parent = container
@@ -784,6 +784,121 @@ local function createTeleportPointList(size, position)
     -- 返回路径点列表对象
     return {
         addPoint = addPoint
+    }
+end
+
+-- 创建传送列表的函数
+local function createTeleportList(size, position)
+    -- 创建主容器
+    local container = Instance.new("Frame")
+    container.Size = size
+    container.Position = position
+    container.BackgroundColor3 = Color3.fromRGB(40, 40, 56)
+    container.Parent = contentArea
+
+    -- 创建 ScrollingFrame 支持滚动
+    local scrollingFrame = Instance.new("ScrollingFrame")
+    scrollingFrame.Size = UDim2.new(1, 0, 0.87, 0) -- 留出底部按钮的空间
+    scrollingFrame.Position = UDim2.new(0, 0, 0.13, 0)
+    scrollingFrame.BackgroundTransparency = 1
+    scrollingFrame.ScrollBarThickness = 5
+    scrollingFrame.Parent = container
+
+    -- 创建 UIListLayout 自动排列项目
+    local uiListLayout = Instance.new("UIListLayout")
+    uiListLayout.Parent = scrollingFrame
+    uiListLayout.Padding = UDim.new(0, 5) -- 设置项目间距
+
+    -- 动态调整 ScrollingFrame 的 CanvasSize
+    uiListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, uiListLayout.AbsoluteContentSize.Y)
+    end)
+
+    -- 创建传送按钮
+    local teleportButton = Instance.new("TextButton")
+    teleportButton.Size = UDim2.new(1, 0, 0, 30)
+    teleportButton.Position = UDim2.new(0, 0, 0, 0)
+    teleportButton.BackgroundColor3 = Color3.fromRGB(40, 40, 56)
+    teleportButton.TextColor3 = Color3.new(1, 1, 1)
+    teleportButton.Text = "未选择玩家"
+    teleportButton.Parent = container
+    teleportButton.TextSize = 12
+
+    -- 存储选中的玩家
+    local selectedPlayer = nil
+
+    -- 更新传送按钮的文本
+    local function updateTeleportButton()
+        if selectedPlayer then
+            teleportButton.Text = "传送到" .. selectedPlayer.Name
+        else
+            teleportButton.Text = "未选择玩家"
+        end
+    end
+
+    -- 点击传送按钮的逻辑
+    teleportButton.MouseButton1Click:Connect(function()
+        if selectedPlayer then
+            local character = game.Players.LocalPlayer.Character
+            if character and character.PrimaryPart then
+                local targetCharacter = selectedPlayer.Character
+                if targetCharacter and targetCharacter.PrimaryPart then
+                    character:SetPrimaryPartCFrame(CFrame.new(targetCharacter.PrimaryPart.Position))
+                else
+                    warn("目标玩家角色不存在")
+                end
+            else
+                warn("本地玩家角色不存在")
+            end
+        else
+            warn("未选择玩家")
+        end
+    end)
+
+    -- 创建玩家列表项的函数
+    local function createPlayerListItem(player)
+        local playerFrame = Instance.new("TextButton")
+        playerFrame.Size = UDim2.new(1, 0, 0, 30)
+        playerFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 56)
+        playerFrame.TextColor3 = Color3.new(1, 1, 1)
+        playerFrame.Text = player.Name
+        playerFrame.Parent = scrollingFrame
+        playerFrame.TextSize = 12
+
+        -- 点击玩家名字的逻辑
+        playerFrame.MouseButton1Click:Connect(function()
+            selectedPlayer = player
+            updateTeleportButton()
+        end)
+    end
+
+    -- 初始化玩家列表
+    local function updatePlayerList()
+        -- 清空现有玩家列表
+        for _, child in ipairs(scrollingFrame:GetChildren()) do
+            if child:IsA("TextButton") then
+                child:Destroy()
+            end
+        end
+
+        -- 添加所有玩家到列表
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            if player ~= game.Players.LocalPlayer then
+                createPlayerListItem(player)
+            end
+        end
+    end
+
+    -- 监听玩家加入和离开事件
+    game.Players.PlayerAdded:Connect(updatePlayerList)
+    game.Players.PlayerRemoving:Connect(updatePlayerList)
+
+    -- 初始化玩家列表
+    updatePlayerList()
+
+    -- 返回传送列表对象
+    return {
+        updatePlayerList = updatePlayerList
     }
 end
 
@@ -1428,6 +1543,10 @@ local function AddMenuContent(category)
         createTeleportPointList(
             UDim2.new(0.48, 0, 0.98, 0), -- 大小
             UDim2.new(0.01, 0, 0.01, 0) -- 位置
+        )
+        createTeleportList(
+            UDim2.new(0.48, 0, 0.98, 0), -- 大小
+            UDim2.new(0.5, 0, 0.01, 0) -- 位置
         )
     elseif category == "音乐播放器" then
         CreateLabel("请输入rbxassetid", 18, UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.1, 0))
