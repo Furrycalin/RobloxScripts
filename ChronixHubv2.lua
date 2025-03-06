@@ -59,6 +59,9 @@ end
 
 local notifications = {}
 
+local musicbox = Instance.new("Sound")
+musicbox.Parent = SoundService
+
 local uiclicker = Instance.new("Sound")
 uiclicker.SoundId = "rbxassetid://535716488"
 uiclicker.Volume = 0.3
@@ -316,7 +319,7 @@ local function CreateLabel(text, textsize, size, position)
 end
 
 
-local function CreateTextBox(text, textSize, size, position)
+local function CreateTextBox(text, textSize, size, position, callback)
     local textBox = Instance.new("TextBox")
     textBox.Size = size -- 输入框大小
     textBox.Position = position -- 输入框位置
@@ -326,6 +329,11 @@ local function CreateTextBox(text, textSize, size, position)
     textBox.Font = Enum.Font.SourceSans
     textBox.Text = text
     textBox.Parent = contentArea
+    textBox.FocusLost:Connect(function(enterPressed)
+        if callback then
+            callback(textBox)
+        end
+    end)
     return textBox
 end
 
@@ -544,6 +552,15 @@ local function createCheckbox(size, position, defaultState, callback)
 end
 
 local data = {
+    musicbox = {
+        id = "1837879082",
+        isPlay = false,
+        isPause = false,
+        PlayLocation = nil
+    },
+    executer = {
+        scripts = "print(\"Hello World\")"
+    },
     tools = {
         nightvision = false,
         noclip = false,
@@ -1171,7 +1188,100 @@ local function AddMenuContent(category)
         end
     end
     -- 根据分类添加内容
-    if category == "脚本中心" then
+    if category == "音乐播放器" then
+        CreateLabel("请输入rbxassetid", 18, UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.1, 0))
+        local musicidtb = CreateTextBox(data.musicbox.id, 18, UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.2, 0), function(textBox)
+            musicbox.SoundId = "rbxassetid://" .. textBox.Text
+        end)
+        CreateButton(data.musicbox.isPlay and "停止" or "播放", UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.07, 0, 0.7, 0), function(button)
+            musicbox.SoundId = "rbxassetid://" .. musicidtb.Text
+            data.musicbox.isPlay = not data.musicbox.isPlay
+            button.Text = data.musicbox.isPlay and "停止" or "播放"
+            if data.musicbox.isPlay then
+                local success, productInfo = pcall(function()
+                    return MarketplaceService:GetProductInfo(musicidtb.Text)
+                end)
+                if success then
+                    data.musicbox.id = musicidtb.Text
+                    CreateNotification("正在播放...", productInfo.Name .. "\n" .. productInfo.Description, 20, true)
+                    wait(1)
+                    musicbox:play()
+                else
+                    data.musicbox.isPlay = false
+                    button.Text = "播放"
+                    pausebutton.Text = "暂停"
+                    CreateNotification("播放失败", musicidtb.Text .. "\n不是一个有效的rbxassetid", 20, true)
+                end
+            else
+                musicbox:Stop()
+                pausebutton.Text = "暂停"
+                data.musicbox.isPause = false
+            end
+        end)
+        CreateButton(musicbox.Looped and "不循环播放" or "循环播放", UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.67, 0, 0.7, 0), function(button)
+            musicbox.Looped = not musicbox.Looped
+            button.Text = musicbox.Looped and "不循环播放" or "循环播放"
+        end)
+        CreateLabel("音量", 18, UDim2.new(0.3, 0, 0.1, 0), UDim2.new(0.1, 0, 0.35, 0))
+        local volumetb = CreateLabel(string.format("%.0f", musicbox.Volume*100) .. "%", 18, UDim2.new(0.15, 0, 0.1, 0), UDim2.new(0.28, 0, 0.355, 0))
+        CreateButton("+", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.55, 0, 0.355, 0), function()
+            musicbox.Volume = musicbox.Volume + 0.1
+            volumetb.Text = string.format("%.0f", musicbox.Volume*100) .. "%"
+        end)
+        CreateButton("-", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.67, 0, 0.355, 0), function()
+            if musicbox.Volume ~= 0 then musicbox.Volume = musicbox.Volume - 0.1 end
+            volumetb.Text = string.format("%.0f", musicbox.Volume*100) .. "%"
+        end)
+        local pausebutton = CreateButton(data.musicbox.isPause and "继续" or "暂停", UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.37, 0, 0.7, 0), function(button)
+            if data.musicbox.isPlay then
+                data.musicbox.isPause = not data.musicbox.isPause
+                button.Text = data.musicbox.isPause and "继续" or "暂停"
+                if data.musicbox.isPause == true then
+                    data.musicbox.PlayLocation = musicbox.TimePosition
+                    musicbox:Stop()
+                elseif data.musicbox.isPause == false then
+                    musicbox.TimePosition = data.musicbox.PlayLocation
+                    musicbox:Play()
+                end
+            end
+        end)
+        CreateLabel("音高", 18, UDim2.new(0.3, 0, 0.1, 0), UDim2.new(0.1, 0, 0.45, 0))
+        local pitchtb = CreateLabel(string.format("%.1f", musicbox.Pitch), 18, UDim2.new(0.15, 0, 0.1, 0), UDim2.new(0.28, 0, 0.455, 0))
+        CreateButton("+", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.55, 0, 0.455, 0), function()
+            musicbox.Pitch = musicbox.Pitch + 0.1
+            pitchtb.Text = string.format("%.1f", musicbox.Pitch)
+        end)
+        CreateButton("-", UDim2.new(0.1, 0, 0.1, 0), UDim2.new(0.67, 0, 0.455, 0), function()
+            if musicbox.Pitch ~= 0 then musicbox.Pitch = musicbox.Pitch - 0.1 end
+            pitchtb.Text = string.format("%.1f", musicbox.Pitch)
+        end)
+    elseif category == "执行器" then
+        local executescripts = CreateTextBox(data.executer.scripts, 18, UDim2.new(0.98, 0, 0.9, 0), UDim2.new(0.01, 0, 0.01, 0))
+        executescripts.TextWrapped = true
+        executescripts.MultiLine = true
+        executescripts.ClearTextOnFocus = false
+        executescripts.TextXAlignment = Enum.TextXAlignment.Left
+        executescripts.TextYAlignment = Enum.TextYAlignment.Top
+        CreateButton("保存", UDim2.new(0.49, 0, 0.09, 0), UDim2.new(0.01, 0, 0.91, 0), function()
+            data.executer.scripts = executescripts.Text
+        end)
+        CreateButton("执行", UDim2.new(0.48, 0, 0.09, 0), UDim2.new(0.51, 0, 0.91, 0), function()
+            local script = executescripts.Text
+            if script and script ~= "" then
+                -- 尝试执行脚本
+                local success, errorMessage = pcall(function()
+                    loadstring(script)()
+                end)
+                if not success then
+                    CreateNotification("错误", "脚本执行失败: " .. errorMessage, 5, true)
+                else
+                    CreateNotification("提示", "脚本执行成功!", 5, true)
+                end
+            else
+                CreateNotification("错误", "请输入有效的脚本!", 5, true)
+            end
+        end)
+    elseif category == "脚本中心" then
         local scriptList = CreateList(UDim2.new(1, 0, 1, 0), UDim2.new(0.01, 0, 0.01, 0))
         scriptList.add("飞行V4", function(button)
             CreateNotification("提示", "正在启动 飞行 V4 脚本，请耐心等待.", 10, true)
@@ -1584,6 +1694,8 @@ end
 addMenu("基础")
 addMenu("工具")
 addMenu("脚本中心")
+addMenu("执行器")
+addMenu("音乐播放器")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
 if game.GameId == 6508759464 then addMenu("Grace") end
 if game.GameId == 5166944221 then addMenu("Deathball") end
@@ -1604,6 +1716,8 @@ local function unloadchronixhub()
     _G.ChronixHubisLoaded = false
     data.tools.noclip = false
     data.tools.infjump = false
+    musicbox:Stop()
+    musicbox:Destroy()
     al:Disconnect()
     ds:Disconnect()
     Stepped6:Disconnect()
