@@ -672,10 +672,10 @@ local function UpdateUI()
         DBT1.Text = "观战中"
         DBT2.Text = ""
     else
-        local secolor = RB
-        if ball.Highlight and ball.Highlight.FillColor == RB then
-            if diyline then ball.Highlight.OutlineColor = Color3.fromRGB(data.deathball.diylinecolor.r, data.deathball.diylinecolor.g, data.deathball.diylinecolor.b) end
-            if diyfill then ball.Highlight.FillColor = Color3.fromRGB(data.deathball.diyfillcolor.r, data.deathball.diyfillcolor.g, data.deathball.diyfillcolor.b) secolor = Color3.fromRGB(data.deathball.diyfillcolor.r, data.deathball.diyfillcolor.g, data.deathball.diyfillcolor.b) end
+        local secolor = data.deathball.RB
+        if ball.Highlight and ball.Highlight.FillColor == data.deathball.RB then
+            if data.deathball.diyline then ball.Highlight.OutlineColor = Color3.fromRGB(data.deathball.diylinecolor.r, data.deathball.diylinecolor.g, data.deathball.diylinecolor.b) end
+            if data.deathball.diyfill then ball.Highlight.FillColor = Color3.fromRGB(data.deathball.diyfillcolor.r, data.deathball.diyfillcolor.g, data.deathball.diyfillcolor.b) secolor = Color3.fromRGB(data.deathball.diyfillcolor.r, data.deathball.diyfillcolor.g, data.deathball.diyfillcolor.b) end
         end
         local isLocked = ball.Highlight and ball.Highlight.FillColor == secolor
         DBT1.Text = isLocked and "已被球锁定" or "未被球锁定"
