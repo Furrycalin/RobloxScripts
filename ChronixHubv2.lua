@@ -191,12 +191,19 @@ mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 46) -- 墨蓝色
 mainFrame.BorderSizePixel = 0
 mainFrame.Parent = Gui
 
+-- 创建 UICorner 并设置圆角
+local uiCorner = Instance.new("UICorner", mainFrame)
+uiCorner.CornerRadius = UDim.new(0, 5)
+
 -- 创建标题栏
 local titleBar = Instance.new("Frame")
 titleBar.Size = UDim2.new(1, 0, 0, 30)
 titleBar.BackgroundColor3 = Color3.fromRGB(20, 20, 36) -- 深墨蓝色
 titleBar.BorderSizePixel = 0
 titleBar.Parent = mainFrame
+
+local uiCorner2 = Instance.new("UICorner", titleBar)
+uiCorner2.CornerRadius = UDim.new(0, 5)
 
 -- 标题栏拖动功能
 local isDragging = false
@@ -244,8 +251,7 @@ titleText.Parent = titleBar
 -- 缩小按钮
 local minimizeButton = Instance.new("TextButton")
 minimizeButton.Size = UDim2.new(0, 20, 0, 20)
-minimizeButton.Position = UDim2.new(0.98, -25, 0.5, 0)
-minimizeButton.AnchorPoint = Vector2.new(1, 0.5)
+minimizeButton.Position = UDim2.new(0.9, -10, 0.2, 0)
 minimizeButton.BackgroundColor3 = Color3.fromRGB(50, 50, 70) -- 浅墨蓝色
 minimizeButton.BorderSizePixel = 0
 minimizeButton.Text = "_"
@@ -254,11 +260,13 @@ minimizeButton.Font = Enum.Font.SourceSansBold
 minimizeButton.TextSize = 18
 minimizeButton.Parent = titleBar
 
+local uiCorner3 = Instance.new("UICorner", minimizeButton)
+uiCorner3.CornerRadius = UDim.new(0, 5)
+
 -- 关闭按钮
 local closeButton = Instance.new("TextButton")
 closeButton.Size = UDim2.new(0, 20, 0, 20)
-closeButton.Position = UDim2.new(1, -5, 0.5, 0)
-closeButton.AnchorPoint = Vector2.new(1, 0.5)
+closeButton.Position = UDim2.new(0.94, 0, 0.2, 0)
 closeButton.BackgroundColor3 = Color3.fromRGB(50, 50, 70) -- 浅墨蓝色
 closeButton.BorderSizePixel = 0
 closeButton.Text = "×"
@@ -267,16 +275,8 @@ closeButton.Font = Enum.Font.SourceSansBold
 closeButton.TextSize = 18
 closeButton.Parent = titleBar
 
--- 缩小功能
-local isMinimized = false
-minimizeButton.MouseButton1Click:Connect(function()
-    isMinimized = not isMinimized
-    if isMinimized then
-        TweenService:Create(mainFrame, TweenInfo.new(0.2), {Size = UDim2.new(0, 200, 0, 30)}):Play()
-    else
-        TweenService:Create(mainFrame, TweenInfo.new(0.2), {Size = UDim2.new(0, 500, 0, 300)}):Play()
-    end
-end)
+local uiCorner4 = Instance.new("UICorner", closeButton)
+uiCorner4.CornerRadius = UDim.new(0, 5)
 
 -- 创建内容区域
 local contentFrame = Instance.new("Frame")
@@ -285,6 +285,22 @@ contentFrame.Position = UDim2.new(0, 0, 0, 30)
 contentFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 56) -- 中墨蓝色
 contentFrame.BorderSizePixel = 0
 contentFrame.Parent = mainFrame
+
+local uiCorner5 = Instance.new("UICorner", contentFrame)
+uiCorner5.CornerRadius = UDim.new(0, 5)
+
+-- 缩小功能
+local isMinimized = false
+minimizeButton.MouseButton1Click:Connect(function()
+    isMinimized = not isMinimized
+    if isMinimized then
+        TweenService:Create(mainFrame, TweenInfo.new(0.2), {Size = UDim2.new(0, 200, 0, 30)}):Play()
+        contentFrame.Visible = false
+    else
+        TweenService:Create(mainFrame, TweenInfo.new(0.2), {Size = UDim2.new(0, 500, 0, 300)}):Play()
+        contentFrame.Visible = true
+    end
+end)
 
 -- 左侧功能栏
 local functionList = Instance.new("ScrollingFrame")
@@ -295,6 +311,9 @@ functionList.BorderSizePixel = 0
 functionList.ScrollBarThickness = 5
 functionList.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 170) -- 浅墨蓝色
 functionList.Parent = contentFrame
+
+local uiCorner5 = Instance.new("UICorner", functionList)
+uiCorner5.CornerRadius = UDim.new(0, 5)
 
 -- 创建 UIListLayout 自动排列项目
 local uiListLayout = Instance.new("UIListLayout")
@@ -308,6 +327,9 @@ contentArea.Position = UDim2.new(0, 100, 0, 0)
 contentArea.BackgroundColor3 = Color3.fromRGB(50, 50, 70) -- 浅墨蓝色
 contentArea.BorderSizePixel = 0
 contentArea.Parent = contentFrame
+
+local uiCorner5 = Instance.new("UICorner", contentArea)
+uiCorner5.CornerRadius = UDim.new(0, 5)
 
 local function CreateLabel(text, textsize, size, position)
     local label = Instance.new("TextLabel")
@@ -402,6 +424,8 @@ local function CreateButton(text, size, position, callback)
     button.Font = Enum.Font.SourceSans
     button.TextSize = 18
     button.Parent = contentArea
+    local uiCorner = Instance.new("UICorner", button)
+    uiCorner.CornerRadius = UDim.new(0, 5)
     button.MouseButton1Click:Connect(function()
         uiclicker:Play()
         if callback then
@@ -1545,9 +1569,12 @@ local gsr = game:GetService("RunService").Stepped:Connect(function()
 end)
 
 local isProcessing = false
+local selectcontent = "关于"
 
 -- 添加菜单内容
 local function AddMenuContent(category)
+    if category == selectcontent then return end
+    selectcontent = category
     -- 清空内容区域
     for _, child in ipairs(contentArea:GetChildren()) do
         if child:IsA("GuiObject") then
@@ -1555,7 +1582,11 @@ local function AddMenuContent(category)
         end
     end
     -- 根据分类添加内容
-    if category == "设置" then
+    if category == "关于" then
+        CreateLabel("欢迎使用", 18, UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.1, 0))
+        CreateLabel("作者: Chronix", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.2, 0))
+        CreateLabel("所有代码均由Chronix编写，允许参考学习，严禁照搬盗用", 16, UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.9, 0))
+    elseif category == "设置" then
         CreateLabel("绑定按键", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.1, 0))
         CreateButton(data.setting.BindKey, UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.1, 0), function(button)
             isProcessing = true
@@ -2081,6 +2112,8 @@ local function addMenu(menutext)
     button.Font = Enum.Font.SourceSans
     button.TextSize = 18
     button.Parent = functionList
+    local uiCorner = Instance.new("UICorner", button)
+    uiCorner.CornerRadius = UDim.new(0, 5)
 
     button.MouseButton1Click:Connect(function()
         uiclicker:Play()
