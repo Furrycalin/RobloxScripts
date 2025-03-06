@@ -268,7 +268,7 @@ local dragStartPos
 local windowStartPos
 
 titleBar.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         isDragging = true
         dragStartPos = Vector2.new(input.Position.X, input.Position.Y)
         windowStartPos = window.Position
@@ -276,13 +276,13 @@ titleBar.InputBegan:Connect(function(input)
 end)
 
 titleBar.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         isDragging = false
     end
 end)
 
 UserInputService.InputChanged:Connect(function(input)
-    if isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+    if isDragging and input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
         local delta = Vector2.new(input.Position.X, input.Position.Y) - dragStartPos
         window.Position = UDim2.new(
             windowStartPos.X.Scale,
