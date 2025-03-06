@@ -189,7 +189,6 @@ mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0) -- 屏幕中央
 mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 46) -- 墨蓝色
 mainFrame.BorderSizePixel = 0
-mainFrame.ClipsDescendants = true -- 裁剪超出部分
 mainFrame.Parent = Gui
 
 -- 创建标题栏
@@ -547,6 +546,105 @@ local function createCheckbox(size, position, defaultState, callback)
         setState = function(state)
             isChecked = state
             updateCheckbox()
+        end
+    }
+end
+
+local function createDropdown(options, size, position, defaultText, callback)
+    -- 创建 TextBox 作为输入框
+    local textBox = CreateTextBox(defaultText, 18, size, position)
+    textBox.PlaceholderText = defaultText
+
+    -- 创建下拉菜单容器
+    local dropdownFrame = Instance.new("Frame")
+    dropdownFrame.Size = UDim2.new(1, 0, 0, 200) -- 高度根据内容动态调整
+    dropdownFrame.Position = UDim2.new(0, 0, size.Y.Scale, 20)
+    dropdownFrame.BackgroundColor3 = Color3.new(0.9, 0.9, 0.9)
+    dropdownFrame.Visible = false -- 初始隐藏
+    dropdownFrame.Parent = textBox
+
+    -- 创建 ScrollingFrame 支持滚动
+    local scrollingFrame = Instance.new("ScrollingFrame")
+    scrollingFrame.Size = UDim2.new(1, 0, 1, 0)
+    scrollingFrame.Position = UDim2.new(0, 0, 0, 0)
+    scrollingFrame.BackgroundTransparency = 1
+    scrollingFrame.ScrollBarThickness = 5
+    scrollingFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 46) -- 墨蓝色
+    scrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 170) -- 浅墨蓝色
+    scrollingFrame.Parent = dropdownFrame
+
+    -- 创建 UIListLayout 自动排列选项按钮
+    local uiListLayout = Instance.new("UIListLayout")
+    uiListLayout.Parent = scrollingFrame
+
+    -- 更新下拉菜单选项
+    local function updateDropdownOptions(newOptions)
+        -- 清空现有选项
+        for _, child in ipairs(scrollingFrame:GetChildren()) do
+            if child:IsA("TextButton") then
+                child:Destroy()
+            end
+        end
+
+        -- 创建新的选项按钮
+        for _, option in ipairs(newOptions) do
+            local optionButton = Instance.new("TextButton")
+            optionButton.Size = UDim2.new(1, 0, 0, 30)
+            optionButton.BackgroundColor3 = Color3.fromRGB(40, 40, 56)
+            optionButton.TextColor3 = Color3.new(1, 1, 1)
+            optionButton.Text = option
+            optionButton.Parent = scrollingFrame
+
+            -- 点击选项后填充到 TextBox
+            optionButton.MouseButton1Click:Connect(function()
+                textBox.Text = option
+                dropdownFrame.Visible = false -- 隐藏下拉菜单
+                if callback then
+                    callback(option) -- 调用回调函数
+                end
+            end)
+        end
+
+        -- 动态调整下拉菜单高度
+        local totalHeight = #newOptions * 30
+        dropdownFrame.Size = UDim2.new(1, 0, 0, math.min(totalHeight, 550)) -- 最大高度为 150
+    end
+
+    -- 初始化下拉菜单选项
+    updateDropdownOptions(options)
+
+    -- 监听 TextBox 的点击事件
+    textBox.Focused:Connect(function()
+        dropdownFrame.Visible = true -- 显示下拉菜单
+    end)
+
+    textBox.FocusLost:Connect(function()
+        task.wait(0.1) -- 延迟隐藏，避免点击选项时菜单立即消失
+        dropdownFrame.Visible = false
+    end)
+
+    -- 监听 TextBox 的输入事件
+    textBox:GetPropertyChangedSignal("Text"):Connect(function()
+        local input = textBox.Text:lower() -- 获取输入内容并转换为小写
+
+        -- 过滤下拉菜单选项
+        local filteredOptions = {}
+        for _, option in ipairs(options) do
+            if input == "" or option:lower():find(input) then
+                table.insert(filteredOptions, option)
+            end
+        end
+
+        -- 更新下拉菜单
+        updateDropdownOptions(filteredOptions)
+    end)
+
+    -- 返回 TextBox 和更新选项的函数
+    return {
+        TextBox = textBox,
+        UpdateOptions = function(newOptions)
+            options = newOptions
+            updateDropdownOptions(newOptions)
         end
     }
 end
@@ -1190,19 +1288,28 @@ local function AddMenuContent(category)
     -- 根据分类添加内容
     if category == "音乐播放器" then
         CreateLabel("请输入rbxassetid", 18, UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.1, 0))
-        local musicidtb = CreateTextBox(data.musicbox.id, 18, UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.2, 0), function(textBox)
-            musicbox.SoundId = "rbxassetid://" .. textBox.Text
-        end)
+        local musicidtb = createDropdown(
+            {
+                "142376088", "1846368080", "5409360995", "1848354536", "1841647093", "1837879082", "1837768517", "9041745502", "9048375035", "1840684208", "118939739460633", "1846999567", "1840434670", "9046863253", "1848028342", "1843404009", "1845756489", "1846862303", "1841998846", "122600689240179", "1837101327", "125793633964645", "1846088038", "1845554017", "1838635121", "16190757458", "1846442964", "1839703786", "1839444520", "1838028467", "7028518546", "121336636707861", "87540733242308", "1838667168", "1838667680", "1845179120", "136598811626191", "79451196298919", "1837769001", "103086632976213", "120817494107898", "5410084188", "104483584177040", "7024220835", "1842976958", "7023635858", "1835782117", "7029024726", "7029017448", "5410085694", "1843471292", "7029005367", "131020134622685", "7024340270", "1836057733", "9047104336", "9047104411", "1843324336", "1845215540"
+            }, -- 初始选项
+            UDim2.new(0.4, 0, 0.08, 0), -- 大小
+            UDim2.new(0.3, 0, 0.2, 0), -- 位置
+            data.musicbox.id, -- 默认文本
+            function(selectedOption) -- 回调函数
+            end
+        )
+        musicidtb.TextBox.ClearTextOnFocus = false
+        musicidtb.TextBox.ZIndex = 10
         CreateButton(data.musicbox.isPlay and "停止" or "播放", UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.07, 0, 0.7, 0), function(button)
-            musicbox.SoundId = "rbxassetid://" .. musicidtb.Text
+            musicbox.SoundId = "rbxassetid://" .. musicidtb.TextBox.Text
             data.musicbox.isPlay = not data.musicbox.isPlay
             button.Text = data.musicbox.isPlay and "停止" or "播放"
             if data.musicbox.isPlay then
                 local success, productInfo = pcall(function()
-                    return MarketplaceService:GetProductInfo(musicidtb.Text)
+                    return MarketplaceService:GetProductInfo(musicidtb.TextBox.Text)
                 end)
                 if success then
-                    data.musicbox.id = musicidtb.Text
+                    data.musicbox.id = musicidtb.TextBox.Text
                     CreateNotification("正在播放...", productInfo.Name .. "\n" .. productInfo.Description, 20, true)
                     wait(1)
                     musicbox:play()
@@ -1210,11 +1317,10 @@ local function AddMenuContent(category)
                     data.musicbox.isPlay = false
                     button.Text = "播放"
                     pausebutton.Text = "暂停"
-                    CreateNotification("播放失败", musicidtb.Text .. "\n不是一个有效的rbxassetid", 20, true)
+                    CreateNotification("播放失败", musicidtb.TextBox.Text .. "\n不是一个有效的rbxassetid", 20, true)
                 end
             else
                 musicbox:Stop()
-                pausebutton.Text = "暂停"
                 data.musicbox.isPause = false
             end
         end)
@@ -1282,7 +1388,7 @@ local function AddMenuContent(category)
             end
         end)
     elseif category == "脚本中心" then
-        local scriptList = CreateList(UDim2.new(1, 0, 1, 0), UDim2.new(0.01, 0, 0.01, 0))
+        local scriptList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
         scriptList.add("飞行V4", function(button)
             CreateNotification("提示", "正在启动 飞行 V4 脚本，请耐心等待.", 10, true)
             loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/FlyV4.lua"))()
@@ -1329,7 +1435,7 @@ local function AddMenuContent(category)
             CreateNotification("提示", "DEX 已经成功启动!", 10, true)
         end)
     elseif category == "工具" then
-        local toolList = CreateList(UDim2.new(1, 0, 1, 0), UDim2.new(0.01, 0, 0.01, 0))
+        local toolList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
         toolList.add("回满血", function(button)
             LocalPlayer.Character.Humanoid.Health = LocalPlayer.Character.Humanoid.MaxHealth
         end)
