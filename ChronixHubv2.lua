@@ -1346,9 +1346,11 @@ local function playeraddfunction()
             local humanoid = character:WaitForChild("Humanoid")
             -- 监听 Humanoid 的 Died 事件
             humanoid.Died:Connect(function()
-                removePlayerEffects(player)
-                addHighlight(player)
-                addUsernameLabel(player)
+                if data.tools.playeresp then
+                    removePlayerEffects(player)
+                    addHighlight(player)
+                    addUsernameLabel(player)
+                end
             end)
         end)
     end
