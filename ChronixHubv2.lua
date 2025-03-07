@@ -1335,6 +1335,9 @@ end
 -- 监听玩家加入
 local function playeraddfunction()
     for _, player in ipairs(Players:GetPlayers()) do
+        removePlayerEffects(player)
+        addHighlight(player)
+        addUsernameLabel(player)
         player.CharacterAdded:Connect(function(character)
             removePlayerEffects(player)
             addHighlight(player)
@@ -1547,6 +1550,8 @@ al = workspace.DescendantAdded:Connect(function(descendant)
     end
 end)
 
+local processedCharacters = {}
+
 ds = workspace.DescendantAdded:Connect(function(descendant)
     if data.grace.deleteentite then
         if descendant.Name == "eye" or descendant.Name == "elkman" or descendant.Name == "Rush" or descendant.Name == "Worm" or descendant.Name == "eyePrime" then
@@ -1554,27 +1559,27 @@ ds = workspace.DescendantAdded:Connect(function(descendant)
         end
     end
     if data.pt.esp then
-        if getModelHighlight("Bot") and descendant.Name == "Bot" then setModelHighlightEnabled("Bot") end
-        if getModelHighlight("__BasicSmallSafe") and descendant.Name == "__BasicSmallSafe" then setModelHighlightEnabled("__BasicSmallSafe") end
-        if getModelHighlight("__BasicLargeSafe") and descendant.Name == "__BasicLargeSafe" then setModelHighlightEnabled("__BasicLargeSafe") end
-        if getModelHighlight("__LargeGoldenSafe") and descendant.Name == "__LargeGoldenSafe" then setModelHighlightEnabled("__LargeGoldenSafe") end
-        if getModelHighlight("Surplus Crate") and descendant.Name == "Surplus Crate" then setModelHighlightEnabled("Surplus Crate") end
-        if getModelHighlight("Military Crate") and descendant.Name == "Military Crate" then setModelHighlightEnabled("Military Crate") end
-        if getModelHighlight("SupplyDrop") and descendant.Name == "SupplyDrop" then setModelHighlightEnabled("SupplyDrop") end
+        if descendant:IsA("Model") and getModelHighlight("Bot") and descendant.Name == "Bot" then setModelHighlightEnabled("Bot") end
+        if descendant:IsA("Model") and getModelHighlight("__BasicSmallSafe") and descendant.Name == "__BasicSmallSafe" then setModelHighlightEnabled("__BasicSmallSafe") end
+        if descendant:IsA("Model") and getModelHighlight("__BasicLargeSafe") and descendant.Name == "__BasicLargeSafe" then setModelHighlightEnabled("__BasicLargeSafe") end
+        if descendant:IsA("Model") and getModelHighlight("__LargeGoldenSafe") and descendant.Name == "__LargeGoldenSafe" then setModelHighlightEnabled("__LargeGoldenSafe") end
+        if descendant:IsA("Model") and getModelHighlight("Surplus Crate") and descendant.Name == "Surplus Crate" then setModelHighlightEnabled("Surplus Crate") end
+        if descendant:IsA("Model") and getModelHighlight("Military Crate") and descendant.Name == "Military Crate" then setModelHighlightEnabled("Military Crate") end
+        if descendant:IsA("Model") and getModelHighlight("SupplyDrop") and descendant.Name == "SupplyDrop" then setModelHighlightEnabled("SupplyDrop") end
     end
     if data.tools.playeresp then
-        for _, player in ipairs(Players:GetPlayers()) do
-            removePlayerEffects(player)
-            addHighlight(player)
-            addUsernameLabel(player)
+        local player = Players:GetPlayerFromCharacter(descendant)
+        if player and not processedCharacters[player] then
+            processedCharacters[player] = true
+            player.CharacterAdded:Connect(function(character)
+                addHighlight(player)
+                addUsernameLabel(player)
+                -- 角色销毁时清理标记
+                player.CharacterRemoving:Connect(function()
+                    processedCharacters[player] = nil
+                end)
+            end)
         end
-    end
-    player = Players:GetPlayerFromCharacter(descendant)
-    if player then
-        player.CharacterAdded:Connect(function(character)
-            addHighlight(player)
-            addUsernameLabel(player)
-        end)
     end
 end)
 
