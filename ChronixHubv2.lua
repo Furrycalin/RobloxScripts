@@ -1569,6 +1569,13 @@ ds = workspace.DescendantAdded:Connect(function(descendant)
             addUsernameLabel(player)
         end
     end
+    player = Players:GetPlayerFromCharacter(descendant)
+    if player then
+        player.CharacterAdded:Connect(function(character)
+            addHighlight(player)
+            addUsernameLabel(player)
+        end)
+    end
 end)
 
 Stepped6 = game:GetService("RunService").Stepped:Connect(function()
