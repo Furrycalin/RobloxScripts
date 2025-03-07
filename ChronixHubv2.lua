@@ -1676,6 +1676,12 @@ local function AddMenuContent(category)
         local selectmsid = CreateLabel("当前选中", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.31, 0, 0.03, 0))
         local selectmusicida = nil
         local testmusicplay = false
+        CreateButton("★", UDim2.new(0.07, 0, 0.09, 0), UDim2.new(0.6, 0, 0.015, 0), function(button)
+            if selectmusicida ~= nil then
+                setclipboard(tostring(selectmusicida))
+                CreateNotification("复制到剪切板", "已将" .. tostring(selectmusicida) .. "复制到剪切板", 5, true)
+            end
+        end)
         CreateButton(testmusicplay and "结束播放" or "尝试播放", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.31, 0, 0.1, 0), function(button)
             testmusicplay = not testmusicplay
             button.Text = testmusicplay and "结束播放" or "尝试播放"
