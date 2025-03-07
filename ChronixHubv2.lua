@@ -1304,6 +1304,11 @@ local function removePlayerEffects(player)
     end
 end
 
+workspace.DescendantAdded:Connect(function(instance)
+    print("检测到新实例: " .. instance.Name)
+    -- 在这里添加对新实例的处理逻辑
+end)
+
 -- 监听玩家加入
 Players.PlayerAdded:Connect(function(player)
     Character = newCharacter
@@ -1525,9 +1530,25 @@ end)
 
 ds = workspace.DescendantAdded:Connect(function(descendant)
     if data.grace.deleteentite then
-    if descendant.Name == "eye" or descendant.Name == "elkman" or descendant.Name == "Rush" or descendant.Name == "Worm" or descendant.Name == "eyePrime" then
-        descendant:Destroy()
+        if descendant.Name == "eye" or descendant.Name == "elkman" or descendant.Name == "Rush" or descendant.Name == "Worm" or descendant.Name == "eyePrime" then
+            descendant:Destroy()
+        end
     end
+    if data.pt.esp then
+        if getModelHighlight("Bot") and descendant.Name == "Bot" then setModelHighlightEnabled("Bot") end
+        if getModelHighlight("__BasicSmallSafe") and descendant.Name == "__BasicSmallSafe" then setModelHighlightEnabled("__BasicSmallSafe") end
+        if getModelHighlight("__BasicLargeSafe") and descendant.Name == "__BasicLargeSafe" then setModelHighlightEnabled("__BasicLargeSafe") end
+        if getModelHighlight("__LargeGoldenSafe") and descendant.Name == "__LargeGoldenSafe" then setModelHighlightEnabled("__LargeGoldenSafe") end
+        if getModelHighlight("Surplus Crate") and descendant.Name == "Surplus Crate" then setModelHighlightEnabled("Surplus Crate") end
+        if getModelHighlight("Military Crate") and descendant.Name == "Military Crate" then setModelHighlightEnabled("Military Crate") end
+        if getModelHighlight("SupplyDrop") and descendant.Name == "SupplyDrop" then setModelHighlightEnabled("SupplyDrop") end
+    end
+    if data.tools.playeresp then
+        for _, player in ipairs(Players:GetPlayers()) do
+            removePlayerEffects(player)
+            addHighlight(player)
+            addUsernameLabel(player)
+        end
     end
 end)
 
@@ -1582,7 +1603,14 @@ local function AddMenuContent(category)
         end
     end
     -- 根据分类添加内容
-    if category == "关于" then
+    if category == "音乐获取器" then
+        CreateLabel("透视列表", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.31, 0, 0.23, 0))
+        local espList = CreateList(UDim2.new(0, 100, 0.645, 0), UDim2.new(0.30, 0, 0.3, 0))
+        espList.add(getModelHighlight("Bot") and "Bot兽(开)" or "Bot兽(关)", function(button)
+            toggleModelHighlight("Bot")
+            button.Text = getModelHighlight("Bot") and "Bot兽(开)" or "Bot兽(关)"
+        end)
+    elseif category == "关于" then
         CreateLabel("欢迎使用", 18, UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.1, 0))
         CreateLabel("作者: Chronix", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.2, 0))
         CreateLabel("所有代码均由Chronix编写，允许参考学习，严禁照搬盗用", 16, UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.9, 0))
@@ -2116,6 +2144,7 @@ addMenu("执行器")
 addMenu("音乐播放器")
 addMenu("设置")
 addMenu("关于")
+addMenu("音乐获取器")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
 if game.GameId == 6508759464 then addMenu("Grace") end
 if game.GameId == 5166944221 then addMenu("Deathball") end
