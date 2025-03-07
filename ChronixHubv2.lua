@@ -1559,13 +1559,13 @@ ds = workspace.DescendantAdded:Connect(function(descendant)
         end
     end
     if data.pt.esp then
-        if descendant:IsA("Model") and getModelHighlight("Bot") and descendant.Name == "Bot" then setModelHighlightEnabled("Bot") end
-        if descendant:IsA("Model") and getModelHighlight("__BasicSmallSafe") and descendant.Name == "__BasicSmallSafe" then setModelHighlightEnabled("__BasicSmallSafe") end
-        if descendant:IsA("Model") and getModelHighlight("__BasicLargeSafe") and descendant.Name == "__BasicLargeSafe" then setModelHighlightEnabled("__BasicLargeSafe") end
-        if descendant:IsA("Model") and getModelHighlight("__LargeGoldenSafe") and descendant.Name == "__LargeGoldenSafe" then setModelHighlightEnabled("__LargeGoldenSafe") end
-        if descendant:IsA("Model") and getModelHighlight("Surplus Crate") and descendant.Name == "Surplus Crate" then setModelHighlightEnabled("Surplus Crate") end
-        if descendant:IsA("Model") and getModelHighlight("Military Crate") and descendant.Name == "Military Crate" then setModelHighlightEnabled("Military Crate") end
-        if descendant:IsA("Model") and getModelHighlight("SupplyDrop") and descendant.Name == "SupplyDrop" then setModelHighlightEnabled("SupplyDrop") end
+        if descendant:IsA("Model") and getModelHighlight("Bot") and descendant.Name == "Bot" then setModelHighlightEnabled("Bot", true) end
+        if descendant:IsA("Model") and getModelHighlight("__BasicSmallSafe") and descendant.Name == "__BasicSmallSafe" then setModelHighlightEnabled("__BasicSmallSafe", true) end
+        if descendant:IsA("Model") and getModelHighlight("__BasicLargeSafe") and descendant.Name == "__BasicLargeSafe" then setModelHighlightEnabled("__BasicLargeSafe", true) end
+        if descendant:IsA("Model") and getModelHighlight("__LargeGoldenSafe") and descendant.Name == "__LargeGoldenSafe" then setModelHighlightEnabled("__LargeGoldenSafe", true) end
+        if descendant:IsA("Model") and getModelHighlight("Surplus Crate") and descendant.Name == "Surplus Crate" then setModelHighlightEnabled("Surplus Crate", true) end
+        if descendant:IsA("Model") and getModelHighlight("Military Crate") and descendant.Name == "Military Crate" then setModelHighlightEnabled("Military Crate", true) end
+        if descendant:IsA("Model") and getModelHighlight("SupplyDrop") and descendant.Name == "SupplyDrop" then setModelHighlightEnabled("SupplyDrop", true) end
     end
     if data.tools.playeresp then
         local player = Players:GetPlayerFromCharacter(descendant)
