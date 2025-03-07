@@ -7,10 +7,6 @@
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/ChronixHubv2.lua"))()  
 重新编写了我的菜单脚本，重新设计新的UI，重新编写代码，目前还在完善中。  
   
-▶ AdminPanel.lua  
-loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/AdminPanel.lua"))()  
-指令式功能集合，使用各种指令实现功能，为ChronixHub的分支改版。
-  
 ▶ FlyV4.lua  
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/FlyV4.lua"))()  
 我魔改的FlyV3脚本，重写了UI优化了代码，并允许使用快捷键Ctrl+F来切换飞行  
@@ -25,6 +21,10 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 实现聊天消息的发送的代码参考 
   
 # 停止更新或弃用  
+▶ AdminPanel.lua  
+loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/AdminPanel.lua"))()  
+指令式功能集合，使用各种指令实现功能，为ChronixHub的分支改版。
+  
 ▶ ChronixHub.lua  
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/ChronixHub.lua"))()  
 我的功能性菜单脚本，目前已实现部分实用功能，此脚本已停止更新。  
