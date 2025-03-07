@@ -62,6 +62,9 @@ local notifications = {}
 local musicbox = Instance.new("Sound")
 musicbox.Parent = SoundService
 
+local testbox = Instance.new("Sound")
+testbox.Parent = SoundService
+
 local uiclicker = Instance.new("Sound")
 uiclicker.SoundId = "rbxassetid://535716488"
 uiclicker.Volume = 0.3
@@ -407,9 +410,30 @@ local function CreateList(size, position)
         end
     end
 
-    -- 返回包含 add 方法的表
+    -- 定义 removeButton 方法
+    local function removeButton(text)
+        for _, child in ipairs(list:GetChildren()) do
+            if child:IsA("TextButton") and child.Text == text then
+                child:Destroy()
+                break
+            end
+        end
+    end
+
+    -- 定义 clearAll 方法
+    local function clearAll()
+        for _, child in ipairs(list:GetChildren()) do
+            if child:IsA("TextButton") then
+                child:Destroy()
+            end
+        end
+    end
+
+    -- 返回包含 add、removeButton 和 clearAll 方法的表
     return {
-        add = addButton
+        add = addButton,
+        removeButton = removeButton,
+        clearAll = clearAll
     }
 end
 
@@ -938,6 +962,10 @@ local function createTeleportList(size, position)
 end
 
 local data = {
+    musictest = {
+        enable = false,
+        threshold = 10
+    },
     setting = {
         BindKey = "RightShift"
     },
@@ -1304,11 +1332,6 @@ local function removePlayerEffects(player)
     end
 end
 
-workspace.DescendantAdded:Connect(function(instance)
-    print("检测到新实例: " .. instance.Name)
-    -- 在这里添加对新实例的处理逻辑
-end)
-
 -- 监听玩家加入
 Players.PlayerAdded:Connect(function(player)
     Character = newCharacter
@@ -1589,6 +1612,43 @@ local gsr = game:GetService("RunService").Stepped:Connect(function()
     if data.tools.antidead then Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false) end
 end)
 
+-- 获取当前游戏中所有的 Sound 实例
+local function getAllSounds(parent)
+    local sounds = {}
+    for _, child in ipairs(parent:GetDescendants()) do
+        if child:IsA("Sound") then
+            table.insert(sounds, child)
+        end
+    end
+    return sounds
+end
+
+-- 提取 SoundId 中的数字部分
+local function extractSoundIdNumber(soundId)
+    -- 使用正则表达式匹配数字部分
+    local number = string.match(soundId, "rbxassetid://(%d+)")
+    return number or soundId -- 如果没有匹配到数字，返回原 SoundId
+end
+
+
+-- 获取音量较大的音频列表
+local function getLoudSounds(threshold)
+    local loudSounds = {}
+    local sounds = getAllSounds(game) -- 获取游戏中所有的 Sound 实例
+
+    for _, sound in ipairs(sounds) do
+        if sound.IsPlaying and sound.PlaybackLoudness > threshold then
+            local cleanSoundId = extractSoundIdNumber(sound.SoundId)
+            table.insert(loudSounds, {
+                SoundId = cleanSoundId,
+                Loudness = sound.PlaybackLoudness
+            })
+        end
+    end
+
+    return loudSounds
+end
+
 local isProcessing = false
 local selectcontent = "关于"
 
@@ -1602,13 +1662,56 @@ local function AddMenuContent(category)
             child:Destroy()
         end
     end
+
+    -- 重置部分操作
+    data.musictest.enable = false
+
     -- 根据分类添加内容
-    if category == "音乐获取器" then
-        CreateLabel("透视列表", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.31, 0, 0.23, 0))
-        local espList = CreateList(UDim2.new(0, 100, 0.645, 0), UDim2.new(0.30, 0, 0.3, 0))
-        espList.add(getModelHighlight("Bot") and "Bot兽(开)" or "Bot兽(关)", function(button)
-            toggleModelHighlight("Bot")
-            button.Text = getModelHighlight("Bot") and "Bot兽(开)" or "Bot兽(关)"
+    if category == "音频检查器" then
+        CreateLabel("筛选音量分贝", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.23, 0))
+        CreateTextBox(data.musictest.threshold, 18, UDim2.new(0.15, 0, 0.08, 0), UDim2.new(0.05, 0, 0.3, 0), function(textBox)
+            data.musictest.threshold = tonumber(textBox.Text)
+        end)
+        local selectmsid = CreateLabel("当前选中", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.31, 0, 0.03, 0))
+        local selectmusicida = nil
+        local testmusicplay = false
+        CreateButton(testmusicplay and "结束播放" or "尝试播放", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.31, 0, 0.1, 0), function(button)
+            testmusicplay = not testmusicplay
+            button.Text = testmusicplay and "结束播放" or "尝试播放"
+            if testmusicplay then
+                testbox.SoundId = "rbxassetid://" .. selectmusicida
+                testbox.Play()
+            else
+                testbox.Stop()
+            end
+        end)
+        CreateLabel("音频ID", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.31, 0, 0.23, 0))
+        local musicidList = CreateList(UDim2.new(0, 100, 0.645, 0), UDim2.new(0.30, 0, 0.3, 0))
+        CreateLabel("操作面板", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.03, 0))
+        CreateButton(data.musictest.enable and "关闭检测" or "开始检测", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.1, 0), function(button)
+            data.musictest.enable = not data.musictest.enable
+            button.Text = data.musictest.enable and "关闭检测" or "开始检测"
+            local lastExecutionTime = tick()
+            llt = game:GetService("RunService").Stepped:Connect(function()
+                if not data.musictest.enable then
+                    llt:Disconnect()
+                else
+                    local currentTime = tick()
+                    if currentTime - lastExecutionTime >= 0.5 then
+                        lastExecutionTime = currentTime
+                        musicidList.clearAll()
+                        local loudSounds = getLoudSounds(data.musictest.threshold)
+                        if #loudSounds > 0 then
+                            for _, soundInfo in ipairs(loudSounds) do
+                                musicidList.add(soundInfo.SoundId, function(button)
+                                    selectmusicida = tonumber(button.Text)
+                                    selectmsid.Text = "当前选中:" .. button.Text
+                                end)
+                            end
+                        end
+                    end
+                end
+            end)
         end)
     elseif category == "关于" then
         CreateLabel("欢迎使用", 18, UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.1, 0))
@@ -2142,9 +2245,9 @@ addMenu("脚本中心")
 addMenu("传送器")
 addMenu("执行器")
 addMenu("音乐播放器")
+addMenu("音频检查器")
 addMenu("设置")
 addMenu("关于")
-addMenu("音乐获取器")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
 if game.GameId == 6508759464 then addMenu("Grace") end
 if game.GameId == 5166944221 then addMenu("Deathball") end
@@ -2163,6 +2266,7 @@ end
 
 local function unloadchronixhub()
     _G.ChronixHubisLoaded = false
+    data.musictest.enable = false
     data.tools.noclip = false
     data.tools.infjump = false
     musicbox:Stop()
