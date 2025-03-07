@@ -1333,29 +1333,15 @@ local function removePlayerEffects(player)
 end
 
 -- 监听玩家加入
-Players.PlayerAdded:Connect(function(player)
-    Character = newCharacter
-    Humanoid = Character:WaitForChild("Humanoid")
-    HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
-    if data.tools.playeresp then
-        for _, player in ipairs(Players:GetPlayers()) do
+local function playeraddfunction()
+    for _, player in ipairs(Players:GetPlayers()) do
+        player.CharacterAdded:Connect(function(character)
             removePlayerEffects(player)
             addHighlight(player)
             addUsernameLabel(player)
-            if player.Character then
-                local humanoid = player.Character:FindFirstChild("Humanoid")
-                if humanoid then
-                    humanoid.Died:Connect(function()
-                        removePlayerEffects(player)
-                        addHighlight(player)
-                        addUsernameLabel(player)
-                    end)
-                end
-            end
-        end
-        -- 监听玩家角色加载
-        player.CharacterAdded:Connect(function(character)
-        local humanoid = character:WaitForChild("Humanoid")
+            -- 获取角色的 Humanoid 对象
+            local humanoid = character:WaitForChild("Humanoid")
+            -- 监听 Humanoid 的 Died 事件
             humanoid.Died:Connect(function()
                 removePlayerEffects(player)
                 addHighlight(player)
@@ -1363,6 +1349,16 @@ Players.PlayerAdded:Connect(function(player)
             end)
         end)
     end
+end
+
+Players.PlayerAdded:Connect(function(player)
+    if data.tools.playeresp then
+        playeraddfunction()
+    end
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+    removePlayerEffects(player)
 end)
 
 -- 创建高亮和文字标签
@@ -1954,10 +1950,7 @@ local function AddMenuContent(category)
                 highlights = {}
                 usernameLabels = {}
             else
-                for _, player in ipairs(Players:GetPlayers()) do
-                    addHighlight(player)
-                    addUsernameLabel(player)
-                end
+                playeraddfunction()
             end
         end)
         toolList.add(data.tools.airwalk and "空中移动(开)" or "空中移动(关)", function(button)
