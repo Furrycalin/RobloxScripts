@@ -1665,6 +1665,7 @@ local function AddMenuContent(category)
 
     -- 重置部分操作
     data.musictest.enable = false
+    testbox:Stop()
 
     -- 根据分类添加内容
     if category == "音频检查器" then
