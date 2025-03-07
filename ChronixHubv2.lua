@@ -1680,9 +1680,9 @@ local function AddMenuContent(category)
             button.Text = testmusicplay and "结束播放" or "尝试播放"
             if testmusicplay then
                 testbox.SoundId = "rbxassetid://" .. selectmusicida
-                testbox.Play()
+                testbox:Play()
             else
-                testbox.Stop()
+                testbox:Stop()
             end
         end)
         CreateLabel("音频ID", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.31, 0, 0.23, 0))
