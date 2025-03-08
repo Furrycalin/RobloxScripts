@@ -2247,6 +2247,20 @@ local function AddMenuContent(category)
             button.BackgroundColor3 = Color3.fromRGB(data.deathball.diyfillcolor.r, data.deathball.diyfillcolor.g, data.deathball.diyfillcolor.b)
         end)
         fs.BackgroundColor3 = Color3.fromRGB(data.deathball.diyfillcolor.r, data.deathball.diyfillcolor.g, data.deathball.diyfillcolor.b)
+    elseif category == "CabinRolePlay" then
+        local CRPList = CreateList(UDim2.new(0, 100, 0.645, 0), UDim2.new(0.30, 0, 0.3, 0))
+        CRPList.add("变正常", function(button)
+            chatMessage("/re")
+        end)
+        CRPList.add("变小孩", function(button)
+            chatMessage("/kid")
+        end)
+        CRPList.add("鲨鱼服装", function(button)
+            chatMessage("/shark")
+        end)
+        CRPList.add("修狗服装", function(button)
+            chatMessage("/dog")
+        end)
     end
 end
 
@@ -2283,6 +2297,7 @@ addMenu("关于")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
 if game.GameId == 6508759464 then addMenu("Grace") end
 if game.GameId == 5166944221 then addMenu("Deathball") end
+if game.GameId == 3185346597 then addMenu("CabinRolePlay") end
 
 -- 默认显示内容
 AddMenuContent("关于")
