@@ -2261,6 +2261,9 @@ local function AddMenuContent(category)
         CRPList.add("修狗服装", function(button)
             chatMessage("/dog")
         end)
+        CRPList.add("修猫服装", function(button)
+            chatMessage("/cat")
+        end)
     end
 end
 
