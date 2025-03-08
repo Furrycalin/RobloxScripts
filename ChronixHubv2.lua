@@ -2248,7 +2248,7 @@ local function AddMenuContent(category)
         end)
         fs.BackgroundColor3 = Color3.fromRGB(data.deathball.diyfillcolor.r, data.deathball.diyfillcolor.g, data.deathball.diyfillcolor.b)
     elseif category == "CabinRolePlay" then
-        local CRPList = CreateList(UDim2.new(0, 100, 0.645, 0), UDim2.new(0.30, 0, 0.3, 0))
+        local CRPList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
         CRPList.add("变正常", function(button)
             chatMessage("/re")
         end)
