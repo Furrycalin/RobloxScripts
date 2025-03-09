@@ -88,11 +88,3 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 
 ## 许可证  
 本项目基于 [MIT License](https://opensource.org/licenses/MIT) 发布。
-
-@startuml
-Alice -> "Bob()" : Hello
-"Bob()" -> "This is very long" as Long
-' You can also declare:
-' "Bob()" -> Long as "This is very long"
-Long --> "Bob()" : ok
-@enduml
