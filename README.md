@@ -19,6 +19,8 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 - **ProjectTransfur**（项目Transfur）  
 - **CabinRolePlay**（小屋角色扮演）
 
+---
+
 ### **▶ FlyV4.lua**  
 **执行代码：**  
 ```lua
@@ -27,17 +29,25 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 **描述**  
 基于 FlyV3 脚本的魔改版本，重写了 UI 并优化了代码逻辑。新增快捷键 Ctrl + F 来快速切换飞行模式。
 
+---
+
 ### **▶ Notification.lua**  
 **描述**  
 轻量级的消息框提示脚本，适合开发者参考使用。 
+
+---
   
 ### **▶ DoorsNotification.lua**  
 **描述**  
 模仿《Doors》游戏中的成就框效果，适合开发者参考使用。
 
+---
+
 ### **▶ chat_test.lua**  
 **描述**  
 实现聊天消息发送的代码示例，适合开发者参考。
+
+---
 
 ## **停止更新或弃用**
 ### **▶ AdminPanel.lua**  
@@ -48,6 +58,8 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 **描述**  
 指令式功能集合脚本，通过输入指令实现各种功能。此脚本为 ChronixHub 的分支改版，目前已停止更新。
 
+---
+
 ### **▶ ChronixHub.lua**  
 **执行代码：**  
 ```lua
@@ -55,6 +67,8 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 ```
 **描述**  
 我的功能性菜单脚本，已实现部分实用功能。此脚本已停止更新，建议使用 ChronixHubV2。
+
+---
 
 ### **▶ 移速控制.lua（已集成到 ChronixHubV2）**  
 **执行代码：**  
@@ -64,6 +78,8 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 **描述**  
 可更改大部分小游戏的移动速度。**注意：** 请不要在有反作弊的服务器中使用，后果自负。
 
+---
+
 ### **▶ Deathball.lua（已集成到 ChronixHubV2）**  
 **执行代码：**  
 ```lua
@@ -71,6 +87,8 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 ```
 **描述**  
 死亡球脚本，目前无法使用自动格挡功能。开发已被暂停，欢迎有兴趣的开发者继续完善。
+
+---
 
 ### **▶ Grace.lua（已集成到 ChronixHubV2）**  
 **执行代码：**  
