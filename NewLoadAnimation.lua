@@ -64,11 +64,46 @@ local function LoadAnimation(duration, config)
     loadingText.TextSize = 20
     loadingText.Parent = frame
 
+    -- 创建进度条容器
+    local progressBarContainer = Instance.new("Frame")
+    progressBarContainer.Size = UDim2.new(0.8, 0, 0.05, 0)
+    progressBarContainer.Position = UDim2.new(0.1, 0, 1.5, 0) -- 初始位置在屏幕下方
+    progressBarContainer.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    progressBarContainer.BackgroundTransparency = 0
+    progressBarContainer.ClipsDescendants = true -- 确保子元素不会超出容器
+    progressBarContainer.Parent = frame
+
+    -- 添加圆角
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0.5, 0)
+    corner.Parent = progressBarContainer
+
+    -- 添加边框
+    local border = Instance.new("UIStroke")
+    border.Color = Color3.new(1, 1, 1)
+    border.Thickness = 2
+    border.Parent = progressBarContainer
+
+    -- 创建进度条
     local progressBar = Instance.new("Frame")
-    progressBar.Size = UDim2.new(0, 0, 0.05, 0)
-    progressBar.Position = UDim2.new(0.1, 0, 0.8, 0)
+    progressBar.Size = UDim2.new(0, 0, 1, 0)
+    progressBar.Position = UDim2.new(0, 0, 0, 0)
     progressBar.BackgroundColor3 = Color3.new(0, 1, 0)
-    progressBar.Parent = frame
+    progressBar.Parent = progressBarContainer
+
+    -- 添加圆角
+    local progressCorner = Instance.new("UICorner")
+    progressCorner.CornerRadius = UDim.new(0.5, 0)
+    progressCorner.Parent = progressBar
+
+    -- 添加渐变
+    local gradient = Instance.new("UIGradient")
+    gradient.Rotation = 45 -- 斜向渐变
+    gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.new(1, 1, 0)), -- 黄绿
+        ColorSequenceKeypoint.new(1, Color3.new(0, 1, 1))  -- 天蓝
+    })
+    gradient.Parent = progressBar
 
     local cancelButton
     if config.showCancelButton then
@@ -95,10 +130,15 @@ local function LoadAnimation(duration, config)
     local loadingSlideIn = game:GetService("TweenService"):Create(loadingText, TweenInfo.new(0.1, Enum.EasingStyle.Quad), {Position = UDim2.new(0.1, 0, 0.6, 0)})
     loadingSlideIn:Play()
 
+    -- 动画：进度条从下方弹上来
+    local progressBarSlideIn = game:GetService("TweenService"):Create(progressBarContainer, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0.1, 0, 0.8, 0)})
+    progressBarSlideIn:Play()
+
     -- 性能优化：使用 Completed 事件替代 wait
     fadeIn.Completed:Wait()
     titleSlideIn.Completed:Wait()
     loadingSlideIn.Completed:Wait()
+    progressBarSlideIn.Completed:Wait()
 
     -- 模拟加载进度
     local startTime = tick()
@@ -115,19 +155,23 @@ local function LoadAnimation(duration, config)
     while tick() - startTime < duration and not isCancelled do
         local progress = (tick() - startTime) / duration
         loadingText.Text = config.loadingText .. math.floor(progress * 100) .. "%"
-        progressBar.Size = UDim2.new(progress, 0, 0.05, 0)
+        progressBar.Size = UDim2.new(progress, 0, 1, 0)
         wait(0.01)
     end
 
     if not isCancelled then
         loadingText.Text = config.loadingText .. "100%"
-        progressBar.Size = UDim2.new(1, 0, 0.05, 0)
+        progressBar.Size = UDim2.new(1, 0, 1, 0)
 
         -- 动画：标题和加载文字反方向划出
         local titleSlideOut = game:GetService("TweenService"):Create(title, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {Position = UDim2.new(-1, 0, 0.1, 0)})
         local loadingSlideOut = game:GetService("TweenService"):Create(loadingText, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {Position = UDim2.new(2, 0, 0.6, 0)})
         titleSlideOut:Play()
         loadingSlideOut:Play()
+
+        -- 动画：进度条滑出屏幕外
+        local progressBarSlideOut = game:GetService("TweenService"):Create(progressBarContainer, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {Position = UDim2.new(0.1, 0, 1.5, 0)})
+        progressBarSlideOut:Play()
 
         -- 动画：框消失
         local fadeOut = game:GetService("TweenService"):Create(frame, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {BackgroundTransparency = 1})
