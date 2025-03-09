@@ -7,7 +7,7 @@
 ## **脚本列表**
 
 ### **▶ ChronixHubV2.lua**  
-**代码：**  
+**执行代码：**  
 ```lua
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/ChronixHubv2.lua"))()
 ```
@@ -20,7 +20,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 - **CabinRolePlay**（小屋角色扮演）
 
 ### **▶ FlyV4.lua**  
-**代码：**  
+**执行代码：**  
 ```lua
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/FlyV4.lua"))()
 ```
@@ -41,7 +41,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 
 ## **停止更新或弃用**
 ### **▶ AdminPanel.lua**  
-**代码：**  
+**执行代码：**  
 ```lua
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/AdminPanel.lua"))()
 ```
@@ -49,7 +49,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 指令式功能集合脚本，通过输入指令实现各种功能。此脚本为 ChronixHub 的分支改版，目前已停止更新。
 
 ### **▶ ChronixHub.lua**  
-**代码：**  
+**执行代码：**  
 ```lua
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/ChronixHub.lua"))()
 ```
@@ -57,7 +57,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 我的功能性菜单脚本，已实现部分实用功能。此脚本已停止更新，建议使用 ChronixHubV2。
 
 ### **▶ 移速控制.lua（已集成到 ChronixHubV2）**  
-**代码：**  
+**执行代码：**  
 ```lua
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/%E7%A7%BB%E9%80%9F%E6%9B%B4%E6%94%B9.lua"))()
 ```
@@ -65,7 +65,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 可更改大部分小游戏的移动速度。**注意：** 请不要在有反作弊的服务器中使用，后果自负。
 
 ### **▶ Deathball.lua（已集成到 ChronixHubV2）**  
-**代码：**  
+**执行代码：**  
 ```lua
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/Deathball.lua"))()
 ```
@@ -73,7 +73,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 死亡球脚本，目前无法使用自动格挡功能。开发已被暂停，欢迎有兴趣的开发者继续完善。
 
 ### **▶ Grace.lua（已集成到 ChronixHubV2）**  
-**代码：**  
+**执行代码：**  
 ```lua
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/Grace.lua"))()
 ```
