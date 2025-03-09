@@ -4,13 +4,13 @@
 
 # 脚本列表 均可三级执行
 ▶ ChronixHubV2.lua  
-loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/ChronixHubv2.lua"))()  
+**loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/ChronixHubv2.lua"))()  **
 重新编写了我的菜单脚本，重新设计新的UI，重新编写代码，目前还在完善中。  
 支持游戏:  
-Deathball  
-Grace  
-ProjectTransfur  
-CabinRolePlay
+- Deathball  死亡球
+- Grace  格蕾丝
+- ProjectTransfur  项目Transfur
+- CabinRolePlay  小屋角色扮演
   
 ▶ FlyV4.lua  
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/FlyV4.lua"))()  
