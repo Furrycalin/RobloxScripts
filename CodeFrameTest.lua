@@ -42,6 +42,7 @@ local function createCodeEditor(size, position)
     ScrollingFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     ScrollingFrame.BorderSizePixel = 0
     ScrollingFrame.ScrollBarThickness = 10
+    ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0) -- 初始 CanvasSize
     ScrollingFrame.Parent = ScreenGui
 
     local LineNumbers = Instance.new("TextLabel")
@@ -53,6 +54,8 @@ local function createCodeEditor(size, position)
     LineNumbers.TextXAlignment = Enum.TextXAlignment.Right
     LineNumbers.TextYAlignment = Enum.TextYAlignment.Top
     LineNumbers.Text = "1"
+    LineNumbers.Font = Enum.Font.Code -- 使用等宽字体
+    LineNumbers.TextSize = 14 -- 调整字体大小
     LineNumbers.Parent = ScrollingFrame
 
     local CodeBox = Instance.new("TextBox")
@@ -66,6 +69,8 @@ local function createCodeEditor(size, position)
     CodeBox.MultiLine = true
     CodeBox.ClearTextOnFocus = false
     CodeBox.Text = ""
+    CodeBox.Font = Enum.Font.Code -- 使用等宽字体
+    CodeBox.TextSize = 14 -- 调整字体大小
     CodeBox.Parent = ScrollingFrame
 
     -- 更新行号
@@ -76,6 +81,10 @@ local function createCodeEditor(size, position)
             lineNumbersText = lineNumbersText .. tostring(i) .. "\n"
         end
         LineNumbers.Text = lineNumbersText
+
+        -- 调整 CanvasSize
+        local lineHeight = CodeBox.TextSize + 4 -- 每行高度
+        ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, lines * lineHeight)
     end
 
     -- 监听输入
