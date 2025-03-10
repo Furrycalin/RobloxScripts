@@ -1,6 +1,9 @@
 local LoadAnimationModule = {}
 
 function LoadAnimationModule:LoadAnimation(duration, config)
+    local loadingSound = Instance.new("Sound", game:GetService("SoundService"))
+    loadingSound.SoundId = "rbxassetid://535716488"
+    loadingSound.Volume = 0.3
     -- 默认配置
     local defaultConfig = {
         titleText = "ChronixHub V2",
@@ -143,6 +146,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
         progressBarSlideIn.Completed:Wait()
 
         -- 模拟加载进度
+        loadingSound:Play()
         local startTime = tick()
         local isCancelled = false
 
@@ -179,12 +183,12 @@ function LoadAnimationModule:LoadAnimation(duration, config)
 
         loadingText.Text = "加载完毕!"
         if config.showCancelButton then cancelButton.Parent = nil end
+        loadingSound.TimePosition = 128
         wait(0.5)
 
         if not isCancelled then
             loadingText.Text = config.loadingText .. "100%"
             progressBar.Size = UDim2.new(1, 0, 1, 0)
-
             -- 动画：标题和加载文字反方向划出
             local titleSlideOut = game:GetService("TweenService"):Create(title, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {Position = UDim2.new(-1, 0, 0.1, 0)})
             local loadingSlideOut = game:GetService("TweenService"):Create(loadingText, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {Position = UDim2.new(2, 0, 0.5, 0)})
