@@ -4,6 +4,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     local loadingSound = Instance.new("Sound", game:GetService("SoundService"))
     loadingSound.SoundId = "rbxassetid://1837581587"
     loadingSound.Volume = 0.3
+    loadingSound:Play()
     -- 默认配置
     local defaultConfig = {
         titleText = "ChronixHub V2",
@@ -146,7 +147,6 @@ function LoadAnimationModule:LoadAnimation(duration, config)
         progressBarSlideIn.Completed:Wait()
 
         -- 模拟加载进度
-        loadingSound:Play()
         local startTime = tick()
         local isCancelled = false
 
