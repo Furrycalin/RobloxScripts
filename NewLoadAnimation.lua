@@ -5,7 +5,6 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     loadingSound.SoundId = "rbxassetid://1837581587"
     loadingSound.Volume = 0.3
     loadingSound:Play()
-
     -- 默认配置
     local defaultConfig = {
         titleText = "ChronixHub V2",
@@ -167,11 +166,6 @@ function LoadAnimationModule:LoadAnimation(duration, config)
                 return
             end
 
-            -- 随机卡顿逻辑
-            if math.random(1, 100) <= 99 then -- 10% 的概率卡顿
-                wait(math.random(0.1, 0.5)) -- 卡顿时间随机
-            end
-
             local progress = (tick() - startTime) / duration
             if progress >= 1 then
                 progress = 1
@@ -195,7 +189,6 @@ function LoadAnimationModule:LoadAnimation(duration, config)
         if not isCancelled then
             loadingText.Text = config.loadingText .. "100%"
             progressBar.Size = UDim2.new(1, 0, 1, 0)
-
             -- 动画：标题和加载文字反方向划出
             local titleSlideOut = game:GetService("TweenService"):Create(title, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {Position = UDim2.new(-1, 0, 0.1, 0)})
             local loadingSlideOut = game:GetService("TweenService"):Create(loadingText, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {Position = UDim2.new(2, 0, 0.5, 0)})
