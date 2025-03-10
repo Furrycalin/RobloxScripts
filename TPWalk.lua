@@ -16,29 +16,42 @@ local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
 local rootPart = character:WaitForChild("HumanoidRootPart")
 
--- 自定义移动函数
-local function CustomMovement()
-    if not isCustomMovementEnabled or not rootPart or not humanoid then
-        return
-    end
+-- 禁用所有与移动相关的状态
+local function DisableDefaultMovement()
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Flying, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.GettingUp, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Landed, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Physics, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.PlatformStanding, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.RunningNoPhysics, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.StrafingNoPhysics, false)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Swimming, false)
+end
 
-    -- 计算移动向量
-    local moveVector = moveDirection * moveSpeed * RunService.Heartbeat:Wait()
-
-    -- 碰撞检测
-    local raycastParams = RaycastParams.new()
-    raycastParams.FilterDescendantsInstances = {character}
-    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
-
-    local raycastResult = workspace:Raycast(rootPart.Position, moveVector, raycastParams)
-
-    if raycastResult then
-        -- 如果有碰撞，调整移动向量
-        moveVector = (raycastResult.Position - rootPart.Position).Unit * moveSpeed * RunService.Heartbeat:Wait()
-    end
-
-    -- 更新位置
-    rootPart.CFrame = rootPart.CFrame + moveVector
+-- 启用所有与移动相关的状态
+local function EnableDefaultMovement()
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, true)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, true)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Flying, true)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall, true)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.GettingUp, true)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Landed, true)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Physics, true)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.PlatformStanding, true)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, true)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, true)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.RunningNoPhysics, true)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.StrafingNoPhysics, true)
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Swimming, true)
 end
 
 -- 处理输入
@@ -57,50 +70,60 @@ local function HandleInput(input, gameProcessed)
     end
 end
 
--- 处理触摸屏输入（虚拟摇杆）
-local function HandleTouchInput(input, gameProcessed)
-    if gameProcessed then return end
-
-    -- 检测虚拟摇杆输入
-    if input.UserInputType == Enum.UserInputType.Touch then
-        local touchPosition = input.Position
-        -- 这里可以根据虚拟摇杆的逻辑计算移动方向
-        -- 例如：moveDirection = CalculateJoystickDirection(touchPosition)
-    end
-end
-
--- 处理游戏手柄输入
-local function HandleGamepadInput(input, gameProcessed)
-    if gameProcessed then return end
-
-    -- 检测游戏手柄摇杆输入
-    if input.UserInputType == Enum.UserInputType.Gamepad1 then
-        local thumbstick = input.Position
-        moveDirection = Vector3.new(thumbstick.X, 0, -thumbstick.Y) -- 根据摇杆输入计算方向
-    end
-end
-
 -- 绑定输入事件
 UserInputService.InputBegan:Connect(HandleInput)
-UserInputService.InputChanged:Connect(HandleTouchInput)
-UserInputService.InputChanged:Connect(HandleGamepadInput)
+
+-- 自定义移动函数
+local function CustomMovement()
+    if not isCustomMovementEnabled or not rootPart or not humanoid then
+        return
+    end
+
+    -- 计算移动向量
+    local moveVector = moveDirection * moveSpeed * RunService.Heartbeat:Wait()
+
+    -- 检测地面高度
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {character}
+    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+
+    local groundRaycastResult = workspace:Raycast(rootPart.Position, Vector3.new(0, -5, 0), raycastParams)
+
+    if groundRaycastResult then
+        -- 如果有地面，调整玩家高度
+        local groundHeight = groundRaycastResult.Position.Y
+        local currentHeight = rootPart.Position.Y
+        if currentHeight > groundHeight + 1 then
+            -- 如果玩家高于地面，应用重力
+            moveVector = moveVector + Vector3.new(0, -1, 0) * RunService.Heartbeat:Wait()
+        else
+            -- 如果玩家接近地面，保持在地面上
+            rootPart.Position = Vector3.new(rootPart.Position.X, groundHeight + 1, rootPart.Position.Z)
+        end
+    end
+
+    -- 检测前方是否有障碍物
+    local forwardRaycastResult = workspace:Raycast(rootPart.Position, moveVector, raycastParams)
+
+    if forwardRaycastResult then
+        -- 如果有障碍物，调整移动向量
+        moveVector = (forwardRaycastResult.Position - rootPart.Position).Unit * moveSpeed * RunService.Heartbeat:Wait()
+    end
+
+    -- 更新位置
+    rootPart.CFrame = rootPart.CFrame + moveVector
+end
 
 -- 每帧更新移动
-RunService.Heartbeat:Connect(function()
-    if moveDirection.Magnitude > 0 then
-        CustomMovement()
-    end
-end)
+RunService.Heartbeat:Connect(CustomMovement)
 
 -- 控制开关函数
 function CustomMovementModule:SetCustomMovementEnabled(enabled)
     isCustomMovementEnabled = enabled
     if enabled then
-        -- 禁用原版移动逻辑
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, false)
+        DisableDefaultMovement()
     else
-        -- 启用原版移动逻辑
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, true)
+        EnableDefaultMovement()
     end
 end
 
@@ -111,7 +134,6 @@ end
 
 -- 初始化函数（可选）
 function CustomMovementModule:Init()
-    -- 可以在这里添加初始化逻辑
     print("Custom Movement Module Initialized")
 end
 
