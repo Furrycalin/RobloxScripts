@@ -2,7 +2,7 @@ local LoadAnimationModule = {}
 
 function LoadAnimationModule:LoadAnimation(duration, config)
     local loadingSound = Instance.new("Sound", game:GetService("SoundService"))
-    loadingSound.SoundId = "rbxassetid://535716488"
+    loadingSound.SoundId = "rbxassetid://1837581587"
     loadingSound.Volume = 0.3
     -- 默认配置
     local defaultConfig = {
