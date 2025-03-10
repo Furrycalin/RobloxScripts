@@ -31,6 +31,34 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 
 ---
 
+### **▶ NewLoadAnimation.lua**  
+**使用方法：**  
+```lua
+-- 加载实例到脚本中
+local LoadAnimationModule = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/NewLoadAnimation.lua"))()
+
+-- 使用示例
+LoadAnimationModule:LoadAnimation(2, { -- 模拟加载时间的秒数
+    titleText = "ChronixHub V2", -- 标题文本
+    loadingText = "加载中... ", -- 加载文本
+    backgroundColor = Color3.new(0, 0, 0), -- 背景颜色
+    textColor = Color3.new(1, 1, 1), -- 文字颜色
+    language = "zh", -- 语言，此选项主要在源码里修改，无必要无需修改
+    onComplete = function(isCancelled)
+        if isCancelled then
+            -- 取消加载执行代码
+        else
+        	-- 加载完成执行代码
+        end
+    end,
+    showCancelButton = true -- 是否启用取消按钮
+})
+```
+**描述**  
+自己设计的全新加载动画，目前是假加载进度，你也完全可以自己魔改成真加载进度，使用方法在上面。
+
+---
+
 ### **▶ Notification.lua**  
 **描述**  
 轻量级的消息框提示脚本，适合开发者参考使用。 
