@@ -168,7 +168,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
             end
 
             -- 随机卡顿逻辑
-            if math.random(1, 100) <= 10 then -- 10% 的概率卡顿
+            if math.random(1, 100) <= 80 then -- 10% 的概率卡顿
                 wait(math.random(0.1, 0.5)) -- 卡顿时间随机
             end
 
