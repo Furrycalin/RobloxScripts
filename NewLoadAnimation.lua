@@ -176,6 +176,7 @@ local function LoadAnimation(duration, config)
         end
 
         loadingText.Text = "加载完毕!"
+        if config.showCancelButton then cancelButton.Parent = nil end
         wait(0.5)
 
         if not isCancelled then
