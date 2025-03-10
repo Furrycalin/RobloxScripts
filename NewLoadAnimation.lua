@@ -1,6 +1,6 @@
 local LoadAnimationModule = {}
 
-local function LoadAnimationModule.LoadAnimation(duration, config)
+local function LoadAnimationModule:LoadAnimation(duration, config)
     -- 默认配置
     local defaultConfig = {
         titleText = "ChronixHub V2",
