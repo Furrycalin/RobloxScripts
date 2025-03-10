@@ -1102,6 +1102,166 @@ local function createCodeEditor(size, position)
     }
 end
 
+local PlayerMessage = {}
+local pcrcreate = false
+
+local function createPlayerChatReceiver(size, position)
+    -- 创建主容器
+    local container = Instance.new("Frame")
+    container.Size = size
+    container.Position = position
+    container.BackgroundColor3 = Color3.fromRGB(30, 30, 46)
+    container.Parent = contentArea
+
+    -- 创建 ScrollingFrame 支持滚动
+    local scrollingFrame = Instance.new("ScrollingFrame")
+    scrollingFrame.Size = UDim2.new(1, 0, 0.87, 0)
+    scrollingFrame.Position = UDim2.new(0, 0, 0.13, 0)
+    scrollingFrame.BackgroundTransparency = 1
+    scrollingFrame.ScrollBarThickness = 5
+    scrollingFrame.Parent = container
+
+    -- 创建 UIListLayout 自动排列项目
+    local uiListLayout = Instance.new("UIListLayout")
+    uiListLayout.Parent = scrollingFrame
+    uiListLayout.Padding = UDim.new(0, 5) -- 设置项目间距
+
+    -- 动态调整 ScrollingFrame 的 CanvasSize
+    uiListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, uiListLayout.AbsoluteContentSize.Y)
+    end)
+
+    -- 创建搜索框
+    local searchBox = Instance.new("TextBox")
+    searchBox.Size = UDim2.new(1, 0, 0, 30)
+    searchBox.BackgroundColor3 = Color3.fromRGB(40, 40, 56)
+    searchBox.TextColor3 = Color3.new(1, 1, 1)
+    searchBox.Text = ""
+    searchBox.Parent = container
+    searchBox.TextSize = 14
+    searchBox.PlaceholderText = "搜索玩家名"
+
+    -- 存储所有聊天记录的容器
+    local chatLogs = {}
+
+    -- 添加聊天记录的函数
+    local isInitializing = true
+    local function addChatLog(playername, playermessage)
+        -- 创建聊天记录项目
+        local chatFrame = Instance.new("Frame")
+        chatFrame.Size = UDim2.new(1, 0, 0, 30)
+        chatFrame.BackgroundTransparency = 1 -- 透明背景
+        chatFrame.Parent = scrollingFrame
+
+        -- 玩家名显示
+        local nameBox = Instance.new("TextLabel")
+        nameBox.Size = UDim2.new(0.3, 0, 1, 0)
+        nameBox.Position = UDim2.new(0, 0, 0, 0)
+        nameBox.BackgroundColor3 = Color3.fromRGB(40, 40, 56)
+        nameBox.TextColor3 = Color3.new(1, 1, 1)
+        nameBox.Text = playername
+        nameBox.Parent = chatFrame
+        nameBox.TextSize = 10
+
+        -- 聊天内容显示
+        local msgBox = Instance.new("TextLabel")
+        msgBox.Size = UDim2.new(0.6, 0, 1, 0)
+        msgBox.Position = UDim2.new(0.3, 0, 0, 0)
+        msgBox.BackgroundColor3 = Color3.fromRGB(100, 100, 170)
+        msgBox.TextColor3 = Color3.new(1, 1, 1)
+        msgBox.Text = playermessage
+        msgBox.TextXAlignment = Enum.TextXAlignment.Left
+        msgBox.Parent = chatFrame
+        msgBox.TextSize = 10
+
+        -- 复制按钮
+        local copyButton = Instance.new("TextButton")
+        copyButton.Size = UDim2.new(0.1, 0, 1, 0)
+        copyButton.Position = UDim2.new(0.9, 0, 0, 0)
+        copyButton.BackgroundColor3 = Color3.fromRGB(0, 238, 118)
+        copyButton.TextColor3 = Color3.new(1, 1, 1)
+        copyButton.Text = "📋"
+        copyButton.Parent = chatFrame
+        copyButton.TextSize = 14
+
+        -- 点击复制按钮的逻辑
+        copyButton.MouseButton1Click:Connect(function()
+            uiclicker:Play()
+            setclipboard(msgBox.Text)
+            CreateNotification("复制到剪切板", "已将" .. msgBox.Text .. "复制到剪切板", 5, true)
+        end)
+
+        -- 如果不是初始化阶段，则将聊天记录存储到外部变量中
+        if not isInitializing then
+            local chatData = {
+                name = playername,
+                chat = playermessage,
+                frame = chatFrame -- 存储聊天记录的 UI 对象
+            }
+            table.insert(chatLogs, chatData) -- 添加到聊天记录容器中
+        else
+            -- 如果是初始化阶段，直接添加到聊天记录容器中
+            table.insert(chatLogs, {
+                name = playername,
+                chat = playermessage,
+                frame = chatFrame
+            })
+        end
+    end
+
+    -- 过滤聊天记录的函数
+    local function filterChatLogs(searchText)
+        for _, chatData in ipairs(chatLogs) do
+            -- 如果搜索文本为空或玩家名包含搜索文本，则显示聊天记录
+            if searchText == "" or string.find(string.lower(chatData.name), string.lower(searchText)) then
+                chatData.frame.Visible = true
+            else
+                chatData.frame.Visible = false
+            end
+        end
+    end
+
+    -- 监听搜索框输入
+    searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+        filterChatLogs(searchBox.Text)
+    end)
+
+    -- 初始化时重新读取所有记录的数据
+    for _, msg in ipairs(PlayerMessage) do
+        addChatLog(msg.name, msg.chat)
+    end
+    isInitializing = false -- 初始化完成后，关闭标志变量
+    pcrcreate = true
+
+    aaaa = TextChatService.MessageReceived:Connect(function(message)
+        if not pcrcreate then
+            aaaa:Disconnect()
+        else
+            if message.TextSource then
+                local player = Players:GetPlayerByUserId(message.TextSource.UserId)
+                if not player then return end
+                addChatLog(player.Name, message.Text)
+            end
+        end
+    end)
+
+    return {
+        addChatLog = addChatLog
+    }
+end
+
+chatcheck = TextChatService.MessageReceived:Connect(function(message)
+    if message.TextSource then
+        local player = Players:GetPlayerByUserId(message.TextSource.UserId)
+        if not player then return end
+        local chatData = {
+            name = player.Name,
+            chat = message.Text
+        }
+        table.insert(PlayerMessage, chatData)
+    end
+end)
+
 local data = {
     musictest = {
         enable = false,
@@ -1804,16 +1964,6 @@ local function getLoudSounds(threshold)
     return loudSounds
 end
 
-if not isLegacyChat then
-    chatcheck = TextChatService.MessageReceived:Connect(function(message)
-        if message.TextSource then
-            local player = Players:GetPlayerByUserId(message.TextSource.UserId)
-            if not player then return end
-
-        end
-    end)
-end
-
 local isProcessing = false
 local selectcontent = "关于"
 
@@ -1831,9 +1981,12 @@ local function AddMenuContent(category)
     -- 重置部分操作
     data.musictest.enable = false
     testbox:Stop()
+    pcrcreate = false
 
     -- 根据分类添加内容
-    if category == "音频检查器" then
+    if category == "聊天接收器" then
+        createPlayerChatReceiver(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
+    elseif category == "音频检查器" then
         CreateLabel("筛选音量分贝", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.23, 0))
         CreateTextBox(data.musictest.threshold, 18, UDim2.new(0.15, 0, 0.08, 0), UDim2.new(0.05, 0, 0.3, 0), function(textBox)
             data.musictest.threshold = tonumber(textBox.Text)
@@ -1841,7 +1994,7 @@ local function AddMenuContent(category)
         local selectmsid = CreateLabel("当前选中", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.31, 0, 0.03, 0))
         local selectmusicida = nil
         local testmusicplay = false
-        CreateButton("★", UDim2.new(0.07, 0, 0.09, 0), UDim2.new(0.6, 0, 0.015, 0), function(button)
+        CreateButton("📋", UDim2.new(0.07, 0, 0.09, 0), UDim2.new(0.6, 0, 0.015, 0), function(button)
             if selectmusicida ~= nil then
                 setclipboard(tostring(selectmusicida))
                 CreateNotification("复制到剪切板", "已将" .. tostring(selectmusicida) .. "复制到剪切板", 5, true)
@@ -2428,6 +2581,7 @@ addMenu("传送器")
 addMenu("执行器")
 addMenu("音乐播放器")
 addMenu("音频检查器")
+addMenu("聊天接收器")
 addMenu("设置")
 addMenu("关于")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
