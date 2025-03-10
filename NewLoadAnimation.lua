@@ -1,4 +1,6 @@
-local function LoadAnimation(duration, config)
+local LoadAnimationModule = {}
+
+local function LoadAnimationModule.LoadAnimation(duration, config)
     -- 默认配置
     local defaultConfig = {
         titleText = "ChronixHub V2",
@@ -212,19 +214,4 @@ local function LoadAnimation(duration, config)
     coroutine.wrap(playAnimationAsync)()
 end
 
--- 示例调用
-LoadAnimation(5, {
-    titleText = "ChronixHub V2",
-    loadingText = "加载中... ",
-    backgroundColor = Color3.new(0, 0, 0),
-    textColor = Color3.new(1, 1, 1),
-    language = "zh",
-    onComplete = function(isCancelled)
-        if isCancelled then
-            print("加载被取消")
-        else
-            print("加载完成")
-        end
-    end,
-    showCancelButton = true
-})
+return LoadAnimationModule
