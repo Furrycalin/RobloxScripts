@@ -174,7 +174,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
 
             -- 随机卡顿逻辑
             if math.random(1, 100) <= 40 then -- 10% 的概率卡顿
-                wait(math.random(0.1, 0.5)) -- 卡顿时间随机
+                wait(math.random(0.5, 3)) -- 卡顿时间随机
             end
 
             loadingText.Text = config.loadingText .. math.floor(progress * 100) .. "%"
