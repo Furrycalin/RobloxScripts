@@ -7,31 +7,7 @@ if _G.ChronixHubisLoaded then
     return
 end
 
-local LoadAnimationModule = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/NewLoadAnimation.lua"))()
-
-local iscancel = false
-
-LoadAnimationModule:LoadAnimation(2, {
-    titleText = "ChronixHub V2",
-    loadingText = "加载中... ",
-    backgroundColor = Color3.new(0, 0, 0),
-    textColor = Color3.new(1, 1, 1),
-    language = "zh",
-    onComplete = function(isCancelled)
-        if isCancelled then
-            iscancel = true
-        end
-    end,
-    showCancelButton = true
-})
-
-wait(5)
-if iscancel then return end
-
 _G.ChronixHubisLoaded = true
-
-local bb = game:service'VirtualUser'
-local cc = game:service'Players'.LocalPlayer.Idled:connect(function()bb:CaptureController()bb:ClickButton2(Vector2.new())end)
 
 local CoreGui = game:GetService("CoreGui")
 local UserInputService = game:GetService("UserInputService")
@@ -53,6 +29,32 @@ local StarterGui = game:GetService("StarterGui")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TextChatService = game:GetService("TextChatService")
 
+local LoadAnimationModule = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/NewLoadAnimation.lua"))()
+
+local iscancel = false
+
+LoadAnimationModule:LoadAnimation(2, {
+    titleText = "ChronixHub V2",
+    loadingText = "加载中... ",
+    backgroundColor = Color3.new(0, 0, 0),
+    textColor = Color3.new(1, 1, 1),
+    language = "zh",
+    onComplete = function(isCancelled)
+        if isCancelled then
+            iscancel = true
+        end
+    end,
+    showCancelButton = true
+})
+
+wait(5)
+if iscancel then
+    _G.ChronixHubisLoaded = false
+    return
+end
+
+local bb = game:service'VirtualUser'
+local cc = game:service'Players'.LocalPlayer.Idled:connect(function()bb:CaptureController()bb:ClickButton2(Vector2.new())end)
 
 local isLegacyChat = TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService
 
