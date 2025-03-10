@@ -1804,6 +1804,16 @@ local function getLoudSounds(threshold)
     return loudSounds
 end
 
+if not isLegacyChat then
+    chatcheck = TextChatService.MessageReceived:Connect(function(message)
+        if message.TextSource then
+            local player = Players:GetPlayerByUserId(message.TextSource.UserId)
+            if not player then return end
+
+        end
+    end)
+end
+
 local isProcessing = false
 local selectcontent = "关于"
 
@@ -2444,6 +2454,7 @@ local function unloadchronixhub()
     data.tools.infjump = false
     musicbox:Stop()
     musicbox:Destroy()
+    chatcheck:Disconnect()
     al:Disconnect()
     ds:Disconnect()
     Stepped6:Disconnect()
