@@ -86,14 +86,17 @@ local function CustomMovement()
         return
     end
 
-    -- 获取玩家的移动方向
-    local moveDirection = humanoid.MoveDirection
-    if moveDirection.Magnitude == 0 or not isMoving then
+    -- 获取玩家的局部移动方向
+    local localMoveDirection = humanoid.MoveDirection
+    if localMoveDirection.Magnitude == 0 or not isMoving then
         return -- 如果没有移动方向或未按下移动键，则停止移动
     end
 
+    -- 将局部移动方向转换为全局移动方向
+    local globalMoveDirection = rootPart.CFrame:VectorToWorldSpace(localMoveDirection)
+
     -- 计算移动向量
-    local moveVector = moveDirection * moveSpeed * RunService.Heartbeat:Wait()
+    local moveVector = globalMoveDirection * moveSpeed * RunService.Heartbeat:Wait()
 
     -- 检测地面高度
     local raycastParams = RaycastParams.new()
