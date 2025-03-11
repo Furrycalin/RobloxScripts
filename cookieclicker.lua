@@ -14,9 +14,58 @@ local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = playerGui
 
 -- 游戏数据
-local cookies = 0
+local baseValue = 0  -- 基础值
+local unitIndex = 0  -- 单位索引
 local clickMultiplier = 1  -- 初始点击倍数
-local currentLanguage = "zh"  -- 默认语言
+local currentLanguage = "en"  -- 默认语言
+
+-- 单位系统
+local units = {
+    ["en"] = {"", "Thousand", "Million", "Billion", "Trillion", "Quadrillion", "Quintillion", "Sextillion", "Septillion", "Octillion", "Nonillion", "Decillion", "Undecillion", "Duodecillion", "Tredecillion", "Quattuordecillion", "Quindecillion", "Sexdecillion", "Septendecillion", "Octodecillion", "Novemdecillion", "Vigintillion", "Unvigintillion", "Duovigintillion", "Trevigintillion", "Quattuorvigintillion", "Quinvigintillion", "Sexvigintillion", "Septenvigintillion", "Octovigintillion", "Novemvigintillion", "Trigintillion", "Untrigintillion", "Duotrigintillion", "Googol", "Centillion", "Infinity"},
+    ["zh"] = {"", "千", "万", "亿", "兆", "京", "垓", "秭", "穰", "沟", "涧", "正", "载", "极", "恒河沙", "阿僧祇", "那由他", "不可思议", "无量大数", "古戈尔", "不可说", "无限"}
+}
+
+-- 获取当前语言的单位
+local function getUnit(index)
+    return units[currentLanguage][index + 1] or units[currentLanguage][#units[currentLanguage]]
+end
+
+-- 将数值转换为带单位的字符串
+local function formatNumber(value, unitIdx)
+    local unit = getUnit(unitIdx)
+    if unitIdx == 0 then
+        return string.format("%d %s", value, unit)
+    else
+        return string.format("%.2f %s", value, unit)
+    end
+end
+
+-- 更新饼干数量显示
+local function updateCookieDisplay()
+    local displayValue = baseValue
+    local displayUnit = unitIndex
+
+    -- 如果数值超过当前单位，升级到更高单位
+    while displayValue >= 1000 and displayUnit < #units[currentLanguage] - 1 do
+        displayValue = displayValue / 1000
+        displayUnit = displayUnit + 1
+    end
+
+    ui.cookieCount.Text = getText("Cookies") .. ": " .. formatNumber(displayValue, displayUnit)
+end
+
+-- 增加饼干数量
+local function addCookies(amount)
+    baseValue = baseValue + amount
+
+    -- 如果数值超过当前单位，升级到更高单位
+    while baseValue >= 1000 and unitIndex < #units[currentLanguage] - 1 do
+        baseValue = baseValue / 1000
+        unitIndex = unitIndex + 1
+    end
+
+    updateCookieDisplay()
+end
 
 -- 多语言支持
 local language = {
@@ -61,7 +110,7 @@ local language = {
 -- 设置语言
 local function setLanguage(lang)
     currentLanguage = lang
-    updateUI()  -- 更新界面文本
+    updateCookieDisplay()  -- 更新显示
 end
 
 -- 获取当前语言的文本
@@ -169,8 +218,7 @@ local events = {
     ["Golden Cookie"] = {
         chance = 0.01,  -- 触发概率 1%
         callback = function()
-            cookies = cookies + 1000
-            updateCookieDisplay()
+            addCookies(1000)
             showEventPopup(getText("Golden Cookie") .. "! +1000 " .. getText("Cookies") .. "!")
             playSound("eventSound")
         end
@@ -262,11 +310,6 @@ end
 -- 创建 UI
 local ui = createGameUI()
 
--- 更新饼干数量显示
-local function updateCookieDisplay()
-    ui.cookieCount.Text = getText("Cookies") .. ": " .. cookies
-end
-
 -- 显示事件弹窗
 local function showEventPopup(message)
     local popup = Instance.new("TextLabel")
@@ -289,8 +332,7 @@ end
 
 -- 点击饼干按钮
 ui.cookieButton.MouseButton1Click:Connect(function()
-    cookies = cookies + clickMultiplier
-    updateCookieDisplay()
+    addCookies(clickMultiplier)
 
     -- 显示点击反馈文字
     ui.clickText.Text = "+" .. clickMultiplier
