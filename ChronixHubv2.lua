@@ -30,6 +30,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TextChatService = game:GetService("TextChatService")
 
 local LoadAnimationModule = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/NewLoadAnimation.lua"))()
+local tpWalk = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/tpWalk.lua"))()
 
 local iscancel = false
 
@@ -1984,7 +1985,16 @@ local function AddMenuContent(category)
     pcrcreate = false
 
     -- 根据分类添加内容
-    if category == "聊天接收器" then
+    if category == "TPWalk" then
+        CreateButton(tpWalk:GetEnabled() and "TPWalk(开)" or "TPWalk(关)", UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.1, 0), function(button)
+            tpWalk:Enabled(not tpWalk:GetEnabled())
+            button.Text = tpWalk:GetEnabled() and "TPWalk(开)" or "TPWalk(关)"
+        end)
+        CreateLabel("设置每秒移动距离", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.23, 0))
+        CreateTextBox(tpWalk:GetSpeed(), 18, UDim2.new(0.15, 0, 0.08, 0), UDim2.new(0.05, 0, 0.3, 0), function(textBox)
+            tpWalk:SetSpeed(tonumber(textBox.Text))
+        end)
+    elseif category == "聊天接收器" then
         createPlayerChatReceiver(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
     elseif category == "音频检查器" then
         CreateLabel("筛选音量分贝", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.23, 0))
@@ -2584,6 +2594,7 @@ addMenu("音频检查器")
 addMenu("聊天接收器")
 addMenu("设置")
 addMenu("关于")
+addMenu("TPWalk")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
 if game.GameId == 6508759464 then addMenu("Grace") end
 if game.GameId == 5166944221 then addMenu("Deathball") end
