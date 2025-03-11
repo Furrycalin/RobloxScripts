@@ -8,7 +8,7 @@ local UserInputService = game:GetService("UserInputService")
 -- 默认配置
 local moveSpeed = 16 -- 默认移动速度
 local isCustomMovementEnabled = false -- 控制开关
-local moveDirection = Vector3.zero -- 当前移动方向
+local isMoving = false -- 是否正在移动
 
 -- 玩家角色相关
 local player = Players.LocalPlayer
@@ -59,14 +59,9 @@ local function HandleInputBegan(input, gameProcessed)
     if gameProcessed then return end
 
     -- 键盘输入
-    if input.KeyCode == Enum.KeyCode.W then
-        moveDirection = Vector3.new(0, 0, -1) -- 向前移动
-    elseif input.KeyCode == Enum.KeyCode.S then
-        moveDirection = Vector3.new(0, 0, 1) -- 向后移动
-    elseif input.KeyCode == Enum.KeyCode.A then
-        moveDirection = Vector3.new(-1, 0, 0) -- 向左移动
-    elseif input.KeyCode == Enum.KeyCode.D then
-        moveDirection = Vector3.new(1, 0, 0) -- 向右移动
+    if input.KeyCode == Enum.KeyCode.W or input.KeyCode == Enum.KeyCode.S or
+       input.KeyCode == Enum.KeyCode.A or input.KeyCode == Enum.KeyCode.D then
+        isMoving = true -- 开始移动
     end
 end
 
@@ -77,7 +72,7 @@ local function HandleInputEnded(input, gameProcessed)
     -- 键盘输入
     if input.KeyCode == Enum.KeyCode.W or input.KeyCode == Enum.KeyCode.S or
        input.KeyCode == Enum.KeyCode.A or input.KeyCode == Enum.KeyCode.D then
-        moveDirection = Vector3.zero -- 停止移动
+        isMoving = false -- 停止移动
     end
 end
 
@@ -89,6 +84,12 @@ UserInputService.InputEnded:Connect(HandleInputEnded)
 local function CustomMovement()
     if not isCustomMovementEnabled or not rootPart or not humanoid then
         return
+    end
+
+    -- 获取玩家的移动方向
+    local moveDirection = humanoid.MoveDirection
+    if moveDirection.Magnitude == 0 or not isMoving then
+        return -- 如果没有移动方向或未按下移动键，则停止移动
     end
 
     -- 计算移动向量
