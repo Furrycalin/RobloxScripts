@@ -54,8 +54,8 @@ local function EnableDefaultMovement()
     humanoid:SetStateEnabled(Enum.HumanoidStateType.Swimming, true)
 end
 
--- 处理输入
-local function HandleInput(input, gameProcessed)
+-- 处理按键按下
+local function HandleInputBegan(input, gameProcessed)
     if gameProcessed then return end
 
     -- 键盘输入
@@ -70,8 +70,20 @@ local function HandleInput(input, gameProcessed)
     end
 end
 
+-- 处理按键松开
+local function HandleInputEnded(input, gameProcessed)
+    if gameProcessed then return end
+
+    -- 键盘输入
+    if input.KeyCode == Enum.KeyCode.W or input.KeyCode == Enum.KeyCode.S or
+       input.KeyCode == Enum.KeyCode.A or input.KeyCode == Enum.KeyCode.D then
+        moveDirection = Vector3.zero -- 停止移动
+    end
+end
+
 -- 绑定输入事件
-UserInputService.InputBegan:Connect(HandleInput)
+UserInputService.InputBegan:Connect(HandleInputBegan)
+UserInputService.InputEnded:Connect(HandleInputEnded)
 
 -- 自定义移动函数
 local function CustomMovement()
