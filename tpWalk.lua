@@ -58,3 +58,5 @@ RunService.Heartbeat:Connect(function()
         Teleport()
     end
 end)
+
+return tpWalk
