@@ -1990,7 +1990,7 @@ local function AddMenuContent(category)
             tpWalk:Enabled(not tpWalk:GetEnabled())
             button.Text = tpWalk:GetEnabled() and "TPWalk(开)" or "TPWalk(关)"
         end)
-        CreateLabel("设置每秒移动距离", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.23, 0))
+        CreateLabel("设置移动距离", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.23, 0))
         CreateTextBox(tpWalk:GetSpeed(), 18, UDim2.new(0.15, 0, 0.08, 0), UDim2.new(0.05, 0, 0.3, 0), function(textBox)
             tpWalk:SetSpeed(tonumber(textBox.Text))
         end)
