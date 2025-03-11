@@ -52,30 +52,6 @@ function tpWalk:SetSpeed(speed)
     teleportDistance = speed or 0.1
 end
 
--- 处理按键按下
-local function HandleInputBegan(input, gameProcessed)
-    if gameProcessed then return end
-
-    -- 键盘输入
-    if input.KeyCode == Enum.KeyCode.E then
-        SetTeleportEnabled(true)
-    end
-end
-
--- 处理按键松开
-local function HandleInputEnded(input, gameProcessed)
-    if gameProcessed then return end
-
-    -- 键盘输入
-    if input.KeyCode == Enum.KeyCode.E then
-        SetTeleportEnabled(false)
-    end
-end
-
--- 绑定输入事件
-UserInputService.InputBegan:Connect(HandleInputBegan)
-UserInputService.InputEnded:Connect(HandleInputEnded)
-
 -- 每帧更新传送
 RunService.Heartbeat:Connect(function()
     if isTeleporting then
