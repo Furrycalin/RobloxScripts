@@ -15,6 +15,7 @@ screenGui.Parent = playerGui
 
 -- 游戏数据
 local baseValue = 0  -- 基础值
+local cookies = 0
 local unitIndex = 0  -- 单位索引
 local clickMultiplier = 1  -- 初始点击倍数
 local currentLanguage = "en"  -- 默认语言
@@ -57,6 +58,20 @@ end
 -- 增加饼干数量
 local function addCookies(amount)
     baseValue = baseValue + amount
+    cookies = baseValue
+
+    -- 如果数值超过当前单位，升级到更高单位
+    while baseValue >= 1000 and unitIndex < #units[currentLanguage] - 1 do
+        baseValue = baseValue / 1000
+        unitIndex = unitIndex + 1
+    end
+
+    updateCookieDisplay()
+end
+
+local function removeCookies(amount)
+    baseValue = baseValue - amount
+    cookies = baseValue
 
     -- 如果数值超过当前单位，升级到更高单位
     while baseValue >= 1000 and unitIndex < #units[currentLanguage] - 1 do
@@ -403,7 +418,7 @@ local function createFacilityButton(facilityName, facilityData)
                 return
             end
 
-            cookies = cookies - facilityData.basePrice
+            removeCookies(facilityData.basePrice)
             facilityData.basePrice = facilityData.basePrice * facilityData.priceGrowth
             button.Text = getText(facilityName) .. " (" .. math.floor(facilityData.basePrice) .. " " .. getText("Cookies") .. ")"
             updateCookieDisplay()
@@ -424,7 +439,7 @@ local function autoClickerLoop()
     while true do
         for facilityName, facilityData in pairs(facilities) do
             if facilityData.index > 0 then
-                cookies = cookies + facilityData.cookiesPerSecond
+                addCookies(facilityData.cookiesPerSecond)
             end
         end
         updateCookieDisplay()
