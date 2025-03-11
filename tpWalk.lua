@@ -52,6 +52,10 @@ function tpWalk:SetSpeed(speed)
     teleportDistance = speed or 0.1
 end
 
+function tpWalk:GetSpeed()
+    return teleportDistance
+end
+
 -- 每帧更新传送
 RunService.Heartbeat:Connect(function()
     if isTeleporting then
