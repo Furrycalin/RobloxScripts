@@ -44,8 +44,12 @@ local function Teleport()
 end
 
 -- 控制开关函数
-function tpWalk:SetTeleportEnabled(enabled)
+function tpWalk:Enabled(enabled)
     isTeleporting = enabled
+end
+
+function tpWalk:GetEnabled()
+    return isTeleporting
 end
 
 function tpWalk:SetSpeed(speed)
