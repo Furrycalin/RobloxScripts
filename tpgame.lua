@@ -7,7 +7,7 @@ function tpgame:teleportSelfToGame(targetPlaceId)
     local player = game.Players.LocalPlayer  -- 获取本地玩家
     if player then
         local success, errorMessage = pcall(function()
-            TeleportService:TeleportAsync(targetPlaceId, player)
+            TeleportService:TeleportAsync(targetPlaceId, {player})  -- 将玩家包装在数组中
         end)
         
         if not success then
@@ -22,7 +22,7 @@ end
 function tpgame:teleportPlayerToGame(player, targetPlaceId)
     if player and player:IsA("Player") then
         local success, errorMessage = pcall(function()
-            TeleportService:TeleportAsync(targetPlaceId, player)
+            TeleportService:TeleportAsync(targetPlaceId, {player})  -- 将玩家包装在数组中
         end)
         
         if not success then
