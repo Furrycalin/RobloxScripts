@@ -59,6 +59,20 @@ LoadAnimationModule:LoadAnimation(2, { -- 模拟加载时间的秒数
 
 ---
 
+### **▶ chat_test.lua**  
+**使用方法：**  
+```lua
+-- 加载实例到脚本中
+local chatcontrol = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/chat_test.lua"))()
+
+-- 使用示例
+chatcontrol:chat("这是一段消息")
+```
+**描述**  
+可以控制玩家发送消息和接收玩家发送的消息。
+
+---
+
 ### **▶ Notification.lua**  
 **描述**  
 轻量级的消息框提示脚本，适合开发者参考使用。 
