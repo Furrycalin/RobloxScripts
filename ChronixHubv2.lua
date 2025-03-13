@@ -1978,11 +1978,13 @@ local entitys = {
     LateEntity = { name = "EN-004", tip = "稍后躲在柜子中！" },
     ReboundingEntity = { name = "EN-005", tip = "把握住进柜子的时间，他会来回冲！" },
     PeaceEntity = { name = "EN-006", tip = "千万不要躲在柜子中！" },
+    VisionEntity = { name = "EN-007", tip = "不要躲在墙壁后！" },
     FocusEntity = { name = "EN-008", tip = "躲在柜子中，记住钥匙的位置！" },
     ShadowEntity = { name = "EN-011", tip = "他在黑暗中，不要看他！" },
     GhostEntity = { name = "EN-012", tip = "注意他的规则！" },
     UnknownEntity = { name = "EN-013", tip = "快点输入 'staycalmstayfocused'"},
     ChaserEntity = { name = "EN-015", tip = "快跑！" },
+    DelmonEntity = { name = "EN-0??", tip = "暂未收录该数据" },
     DoorcamperEntity = { name = "EN-017", tip = "多注意门后！" }
 }
 
