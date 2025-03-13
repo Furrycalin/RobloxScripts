@@ -2036,11 +2036,11 @@ local function AddMenuContent(category)
             data.office.entitywarning = not data.office.entitywarning
             button.Text = data.office.entitywarning and "实体警告(开)" or "实体警告(关)"
         end)
-        CreateButton(data.office.tipotherplayer and "提醒他人(开)" or "提醒他人(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.2, 0), function()
+        CreateButton(data.office.tipotherplayer and "提醒他人(开)" or "提醒他人(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.2, 0), function(button)
             data.office.tipotherplayer = not data.office.tipotherplayer
             button.Text = data.office.tipotherplayer and "提醒他人(开)" or "提醒他人(关)"
         end)
-        CreateButton(data.office.auto013 and "自动EN-013(开)" or "自动EN-013(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.3, 0), function()
+        CreateButton(data.office.auto013 and "自动EN-013(开)" or "自动EN-013(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.3, 0), function(button)
             data.office.auto013 = not data.office.auto013
             button.Text = data.office.auto013 and "自动EN-013(开)" or "自动EN-013(关)"
         end)
@@ -2680,6 +2680,7 @@ local function unloadchronixhub()
     musicbox:Stop()
     musicbox:Destroy()
     chatcheck:Disconnect()
+    offce:Disconnect()
     al:Disconnect()
     ds:Disconnect()
     Stepped6:Disconnect()
