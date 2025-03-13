@@ -1264,6 +1264,11 @@ chatcheck = TextChatService.MessageReceived:Connect(function(message)
 end)
 
 local data = {
+    office = {
+        entitywarning = false,
+        tipotherplayer = false,
+        auto013 = false
+    },
     musictest = {
         enable = false,
         threshold = 10
@@ -1965,6 +1970,46 @@ local function getLoudSounds(threshold)
     return loudSounds
 end
 
+local entitys = {
+    NormalEntity = { name = "EN-001", tip = "立刻躲在柜子中！" },
+    SnakeEntity = { name = "EN-002", tip = "多待在柜子里一会！" },
+    TrainEntity = { name = "EN-003", tip = "不要犹豫，立刻躲起来！" },
+    LateEntity = { name = "EN-004", tip = "稍后躲在柜子中！" },
+    PeaceEntity = { name = "EN-006", tip = "千万不要躲在柜子中！" },
+    ShadowEntity = { name = "EN-011", tip = "他在黑暗中，不要看他！" },
+    UnknownEntity = { name = "EN-013", tip = "快点输入 'staycalmstayfocused'"},
+    DoorcamperEntity = { name = "EN-017", tip = "多注意门后！" }
+}
+
+-- 检测新实例并匹配预定义列表
+local function detectEntity(instance)
+    if instance:IsA("BasePart") then
+        for entityName, entityInfo in pairs(entitys) do
+            if instance.Name == entityName then
+                if data.office.entitywarning then
+                    CreateNotification("！！！警告！！！", "实体" .. entityInfo.name .. "已生成！\n" .. entityInfo.tip, 5, true)
+                    if data.office.tipotherplayer then chatMessage("警告！实体" .. entityInfo.name .. "已生成！" .. entityInfo.tip) end
+                end
+                if data.office.auto013 then
+                    if instance.Name == "UnknownEntity" then
+                        CreateNotification("自动EN-013", "正在自动键入'staycalmstayfocused'...", 5, true)
+                        wait(2)
+                        local str = "staycalmstayfocused"
+                        for i = 1, #str do
+                            local char = string.sub(str, i, i) -- 提取第 i 个字符
+                            VirtualInputManager:SendKeyEvent(true, char, false, game)
+                            wait(0.2)
+                        end
+                    end
+                end
+                break
+            end
+        end
+    end
+end
+
+local offce = Workspace.DescendantAdded:Connect(detectEntity)
+
 local isProcessing = false
 local selectcontent = "关于"
 
@@ -1985,7 +2030,21 @@ local function AddMenuContent(category)
     pcrcreate = false
 
     -- 根据分类添加内容
-    if category == "TPWalk" then
+    if category == "妄想办公室" then
+        CreateLabel("基础操作", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.03, 0))
+        CreateButton(data.office.entitywarning and "实体警告(开)" or "实体警告(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.1, 0), function(button)
+            data.office.entitywarning = not data.office.entitywarning
+            button.Text = data.office.entitywarning and "实体警告(开)" or "实体警告(关)"
+        end)
+        CreateButton(data.office.c and "提醒他人(开)" or "提醒他人(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.2, 0), function()
+            data.office.tipotherplayer = not data.office.tipotherplayer
+            button.Text = data.office.tipotherplayer and "提醒他人(开)" or "提醒他人(关)"
+        end)
+        CreateButton(dadta.office.auto013 and "自动EN-013(开)" or "自动EN-013(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.3, 0), function()
+            data.office.auto013 = not data.office.auto013
+            button.Text = data.office.auto013 and "自动EN-013(开)" or "自动EN-013(关)"
+        end)
+    elseif category == "TPWalk" then
         CreateButton(tpWalk:GetEnabled() and "TPWalk(开)" or "TPWalk(关)", UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.1, 0), function(button)
             tpWalk:Enabled(not tpWalk:GetEnabled())
             button.Text = tpWalk:GetEnabled() and "TPWalk(开)" or "TPWalk(关)"
@@ -2599,6 +2658,7 @@ if game.GameId == 2162087722 then addMenu("Project Transfur") end
 if game.GameId == 6508759464 then addMenu("Grace") end
 if game.GameId == 5166944221 then addMenu("Deathball") end
 if game.GameId == 3185346597 then addMenu("CabinRolePlay") end
+addMenu("妄想办公室")
 
 -- 默认显示内容
 AddMenuContent("关于")
