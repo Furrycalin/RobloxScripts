@@ -2658,7 +2658,7 @@ if game.GameId == 2162087722 then addMenu("Project Transfur") end
 if game.GameId == 6508759464 then addMenu("Grace") end
 if game.GameId == 5166944221 then addMenu("Deathball") end
 if game.GameId == 3185346597 then addMenu("CabinRolePlay") end
-addMenu("妄想办公室")
+if game.GameId == 6352299542 then addMenu("妄想办公室") ned
 
 -- 默认显示内容
 AddMenuContent("关于")
