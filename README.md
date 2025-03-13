@@ -67,6 +67,11 @@ local chatcontrol = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/
 
 -- 使用示例
 chatcontrol:chat("这是一段消息")
+
+chatControl:MessageReceiver(function(messageData)
+    print("发送者:", messageData.sender)
+    print("消息:", messageData.text)
+end)
 ```
 **描述**  
 可以控制玩家发送消息和接收玩家发送的消息。
