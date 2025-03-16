@@ -1,10 +1,10 @@
-# **Roblox Scripts**
+# 🎮 **Roblox Scripts**
 
 欢迎来到我的 Roblox 脚本仓库！这里集合了我开发的一些 Roblox 脚本，所有脚本均可直接执行。如果你有任何问题或建议，欢迎提交 Issue 或 Pull Request！
 
 ---
 
-## **脚本列表**
+## 📜 **脚本列表**
 
 ### **▶ ChronixHubV2.lua**  
 **执行代码：**  
@@ -96,7 +96,7 @@ end)
 
 ---
 
-## **停止更新或弃用**
+## 🚫 **停止更新或弃用**
 ### **▶ AdminPanel.lua**  
 **执行代码：**  
 ```lua
@@ -145,7 +145,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 **描述**  
 我制作的 Grace 脚本，可自动开门并删除所有怪物。
 
-## **贡献指南**
+## 🤝 **贡献指南**
 如果你有兴趣为这个项目贡献代码，请遵循以下步骤：
 1. Fork 本仓库。
 2. 创建一个新的分支（git checkout -b feature/YourFeatureName）。
@@ -153,5 +153,5 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 4. 推送分支（git push origin feature/YourFeatureName）。
 5. 提交 Pull Request。
 
-## 许可证  
+## 📄 许可证  
 本项目基于 [MIT License](https://opensource.org/licenses/MIT) 发布。
