@@ -1,6 +1,10 @@
 # 🎮 **Roblox Scripts**
 
 欢迎来到我的 Roblox 脚本仓库！这里集合了我开发的一些 Roblox 脚本，所有脚本均可直接执行。如果你有任何问题或建议，欢迎提交 Issue 或 Pull Request！
+  
+# ⚠️ **警告**  
+
+从📅2025年3月15日到📅3月25日，请尽量不要使用注入器，因The HUNT活动原因，此段时间极容易封号！
 
 ---
 
@@ -14,10 +18,10 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 **描述**  
 重新编写了我的菜单脚本，重新设计了新的 UI，并优化了代码结构。目前仍在持续完善中。  
 **支持的游戏：**  
-- **Deathball**（死亡球）  
-- **Grace**（格蕾丝）  
-- **ProjectTransfur**（项目Transfur）  
-- **CabinRolePlay**（小屋角色扮演）
+- 🛠️ **Deathball**（死亡球）  
+- ✅ **Grace**（格蕾丝）  
+- ✅ **ProjectTransfur**（项目Transfur）  
+- ✅ **CabinRolePlay**（小屋角色扮演）
 
 ---
 
