@@ -21,7 +21,8 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 - 🛠️ **Deathball**（死亡球）  
 - ✅ **Grace**（格蕾丝）  
 - ✅ **ProjectTransfur**（项目Transfur）  
-- ✅ **CabinRolePlay**（小屋角色扮演）
+- ✅ **CabinRolePlay**（小屋角色扮演）  
+- ✅ **DelusionalOffice**（妄想办公室）  
 
 ---
 
