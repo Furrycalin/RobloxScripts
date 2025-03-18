@@ -47,17 +47,6 @@ frame.BackgroundTransparency = 0
 
 
 -- 高级按钮实例
-local TweenService = game:GetService("TweenService")
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local screenGui = player:FindFirstChild("PlayerGui"):FindFirstChild("AdvancedButtonScreenGui")
-
--- 创建 ScreenGui
-if not screenGui then
-    screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "AdvancedButtonScreenGui"
-    screenGui.Parent = player.PlayerGui
-end
 
 -- 创建高级按钮的函数
 local function createAdvancedButton(text, size, position, callback)
@@ -71,7 +60,7 @@ local function createAdvancedButton(text, size, position, callback)
     button.TextColor3 = Color3.new(1, 1, 1) -- 白色文字
     button.TextScaled = true
     button.Font = Enum.Font.FredokaOne -- 卡通字体
-    button.Parent = screenGui
+    button.Parent = contentArea
 
     -- 圆角效果
     local corner = Instance.new("UICorner")
@@ -136,6 +125,8 @@ local function createAdvancedButton(text, size, position, callback)
                 particle:Destroy()
             end)
         end
+
+        uiclicker:Play()
 
         if callback then
             callback()
