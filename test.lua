@@ -129,7 +129,7 @@ local function createAdvancedButton(text, size, position, callback)
         uiclicker:Play()
 
         if callback then
-            callback()
+            callback(button)
         end
     end)
 
