@@ -52,7 +52,7 @@ function floatingWindow:createWindow(text, onClick)
     -- 拖动逻辑
     local isDragging = false
     local dragStartPosition = UDim2.new(0.5, -50, 0.5, -50)
-    local dragStartOffset
+    local dragStartOffset = UDim2.new(0.5, -50, 0.5, -50)
 
     local function startDrag(input)
         isDragging = true
