@@ -19,7 +19,7 @@ function floatingWindow:createWindow(text, onClick)
     local window = Instance.new("TextButton")
     window.Name = "FloatingWindow"
     window.Size = UDim2.new(0, 80, 0, 80) -- 大小
-    window.Position = UDim2.new(0.5, -50, 0.5, -50) -- 初始位置居中
+    window.Position = UDim2.new(0.5, -40, 0.5, -40) -- 初始位置居中
     window.BackgroundTransparency = 0
     window.Parent = screenGui
     window.Text = ""
@@ -89,7 +89,7 @@ function floatingWindow:createWindow(text, onClick)
         if windowPosition.Y < edgeThreshold then
             targetPosition = Vector2.new(targetPosition.X, -(windowSize.Y + windowSize.Y / 2 - windowSize.Y / 4)) -- 上边缘
         elseif windowPosition.Y + windowSize.Y > screenSize.Y - edgeThreshold then
-            targetPosition = Vector2.new(targetPosition.X, screenSize.Y - (windowSize.Y - windowSize.Y / 4)) -- 下边缘
+            targetPosition = Vector2.new(targetPosition.X, screenSize.Y - (windowSize.Y + windowSize.Y / 4)) -- 下边缘
         end
 
         -- 移动到目标位置
