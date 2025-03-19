@@ -223,6 +223,44 @@ DBT2.Position = UDim2.new(0.529, -40, 0.14, 0)
 DBT2.TextSize = 15
 DBT2.BackgroundTransparency = 1
 
+-- 粒子效果函数
+local function applyParticleEffect(button)
+    button.MouseButton1Click:Connect(function()
+        for i = 1, 10 do
+            local particle = Instance.new("Frame")
+            particle.Name = "Particle"
+            particle.Size = UDim2.new(0, 10, 0, 10)
+            particle.Position = UDim2.new(0.5, -5, 0.5, -5)
+            particle.AnchorPoint = Vector2.new(0.5, 0.5) -- 以中心为基准
+            particle.BackgroundColor3 = Color3.new(math.random(), math.random(), math.random()) -- 随机颜色
+            particle.BackgroundTransparency = 0
+            particle.Parent = button
+
+            local corner = Instance.new("UICorner")
+            corner.CornerRadius = UDim.new(1, 0)
+            corner.Parent = particle
+
+            -- 随机方向扩散
+            local angle = math.rad(math.random(0, 360))
+            local distance = math.random(50, 100)
+            local targetPosition = UDim2.new(
+                0.5, distance * math.cos(angle) - 5,
+                0.5, distance * math.sin(angle) - 5
+            )
+
+            local tween = TweenService:Create(particle, TweenInfo.new(0.5), {
+                Position = targetPosition,
+                BackgroundTransparency = 1
+            })
+            tween:Play()
+
+            tween.Completed:Connect(function()
+                particle:Destroy()
+            end)
+        end
+    end)
+end
+
 -- 创建主窗口
 local mainFrame = Instance.new("Frame")
 mainFrame.Size = UDim2.new(0, 500, 0, 300) -- 中等大小
@@ -300,6 +338,7 @@ minimizeButton.TextColor3 = Color3.new(1, 1, 1) -- 白色
 minimizeButton.Font = Enum.Font.SourceSansBold
 minimizeButton.TextSize = 18
 minimizeButton.Parent = titleBar
+applyParticleEffect(minimizeButton)
 
 local uiCorner3 = Instance.new("UICorner", minimizeButton)
 uiCorner3.CornerRadius = UDim.new(0, 5)
@@ -438,6 +477,7 @@ local function CreateList(size, position)
         button.Font = Enum.Font.SourceSans
         button.TextSize = 16
         button.Parent = list
+        applyParticleEffect(button)
 
         -- 绑定点击事件
         if callback then
@@ -488,6 +528,7 @@ local function CreateButton(text, size, position, callback)
     button.Parent = contentArea
     local uiCorner = Instance.new("UICorner", button)
     uiCorner.CornerRadius = UDim.new(0, 5)
+    applyParticleEffect(button)
     button.MouseButton1Click:Connect(function()
         uiclicker:Play()
         if callback then
@@ -622,6 +663,8 @@ local function createCheckbox(size, position, defaultState, callback)
         end
     end
 
+    applyParticleEffect(checkboxContainer)
+
     checkboxContainer.MouseButton1Click:Connect(function()
         isChecked = not isChecked
         uiclicker:Play()
@@ -685,6 +728,7 @@ local function createDropdown(options, size, position, defaultText, callback)
             optionButton.TextColor3 = Color3.new(1, 1, 1)
             optionButton.Text = option
             optionButton.Parent = scrollingFrame
+            applyParticleEffect(optionButton)
 
             -- 点击选项后填充到 TextBox
             optionButton.MouseButton1Click:Connect(function()
@@ -778,6 +822,7 @@ local function createTeleportPointList(size, position)
     addButton.Text = "添加路径点"
     addButton.Parent = container
     addButton.TextSize = 14
+    applyParticleEffect(addButton)
 
     -- 添加路径点的函数
     local isInitializing = true
@@ -809,6 +854,7 @@ local function createTeleportPointList(size, position)
         teleportButton.Text = "传送"
         teleportButton.Parent = pointFrame
         teleportButton.TextSize = 14
+        applyParticleEffect(teleportButton)
 
         -- 创建删除按钮
         local deleteButton = Instance.new("TextButton")
@@ -819,6 +865,7 @@ local function createTeleportPointList(size, position)
         deleteButton.Text = "×"
         deleteButton.Parent = pointFrame
         deleteButton.TextSize = 14
+        applyParticleEffect(deleteButton)
 
         -- 点击传送按钮的逻辑
         teleportButton.MouseButton1Click:Connect(function()
@@ -918,6 +965,7 @@ local function createTeleportList(size, position)
     teleportButton.Text = "未选择玩家"
     teleportButton.Parent = container
     teleportButton.TextSize = 12
+    applyParticleEffect(teleportButton)
 
     -- 存储选中的玩家
     local selectedPlayer = nil
@@ -960,6 +1008,7 @@ local function createTeleportList(size, position)
         playerFrame.Text = player.Name
         playerFrame.Parent = scrollingFrame
         playerFrame.TextSize = 12
+        applyParticleEffect(playerFrame)
 
         -- 点击玩家名字的逻辑
         playerFrame.MouseButton1Click:Connect(function()
@@ -2642,6 +2691,7 @@ local function addMenu(menutext)
     button.Parent = functionList
     local uiCorner = Instance.new("UICorner", button)
     uiCorner.CornerRadius = UDim.new(0, 5)
+    applyParticleEffect(button)
 
     button.MouseButton1Click:Connect(function()
         uiclicker:Play()
