@@ -75,7 +75,7 @@ function floatingWindow:createWindow(text, onClick)
 
          -- 判断是否为点击（点击时间小于 0.2 秒）
         if os.clock() - clickStartTime < 0.2 then
-            onClick() -- 执行点击事件
+            onClick(window) -- 执行点击事件
         else
 
             -- 吸附逻辑
