@@ -21,6 +21,7 @@ function translateModuel:translateText(text, api)
 
         if success then
             local data = HttpService:JSONDecode(response)
+            if data.code == 110 then return text end
             return data.data.answer
         else
             return nil
