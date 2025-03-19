@@ -477,9 +477,11 @@ minimizeButton.MouseButton1Click:Connect(function()
     if isMinimized then
         TweenService:Create(mainFrame, TweenInfo.new(0.2), {Size = UDim2.new(0, 200, 0, 30)}):Play()
         contentFrame.Visible = false
+        infoBar.Visible = false
     else
         TweenService:Create(mainFrame, TweenInfo.new(0.2), {Size = UDim2.new(0, 500, 0, 300)}):Play()
         contentFrame.Visible = true
+        infoBar.Visible = true
     end
 end)
 
@@ -749,8 +751,8 @@ local function createCheckbox(size, position, defaultState, callback)
     checkboxContainer.Parent = contentArea
 
     local checkIcon = Instance.new("ImageLabel")
-    checkIcon.Size = UDim2.new(0.8, 0, 0.8, 0)
-    checkIcon.Position = UDim2.new(0.1, 0, 0.1, 0)
+    checkIcon.Size = UDim2.new(1, 0, 1, 0)
+    checkIcon.Position = UDim2.new(0, 0, 0, 0)
     checkIcon.BackgroundTransparency = 1
     checkIcon.Image = "rbxassetid://11772672161"
     checkIcon.Parent = checkboxContainer
@@ -2537,7 +2539,7 @@ local function AddMenuContent(category)
             data.playerattr.speed = s and speedtb.Text or 18
         end)
         
-        createCheckbox(UDim2.new(0.06, 0, 0.09, 0), UDim2.new(0.92, 0, 0.031, 0), data.playercontrol.lockspeed, function(isChecked)
+        createCheckbox(UDim2.new(0, 20, 0, 20), UDim2.new(0.93, 0, 0.031, 0), data.playercontrol.lockspeed, function(isChecked)
             data.playercontrol.lockspeed = isChecked
         end)
 
@@ -2562,7 +2564,7 @@ local function AddMenuContent(category)
             data.playerattr.jump = m and jumptb.Text or 50
         end)
         
-        createCheckbox(UDim2.new(0.06, 0, 0.09, 0), UDim2.new(0.92, 0, 0.131, 0), data.playercontrol.lockjump, function(isChecked)
+        createCheckbox(UDim2.new(0, 20, 0, 20), UDim2.new(0.93, 0, 0.131, 0), data.playercontrol.lockjump, function(isChecked)
             data.playercontrol.lockjump = isChecked
         end)
 
@@ -2587,7 +2589,7 @@ local function AddMenuContent(category)
             data.playerattr.maxhealth = k and mhtb.Text or 100
         end)
         
-        createCheckbox(UDim2.new(0.06, 0, 0.09, 0), UDim2.new(0.92, 0, 0.231, 0), data.playercontrol.lockmaxhealth, function(isChecked)
+        createCheckbox(UDim2.new(0, 20, 0, 20), UDim2.new(0.93, 0, 0.231, 0), data.playercontrol.lockmaxhealth, function(isChecked)
             data.playercontrol.lockmaxhealth = isChecked
         end)
 
@@ -2612,7 +2614,7 @@ local function AddMenuContent(category)
             data.playerattr.health = p and htb.Text or 100
         end)
         
-        createCheckbox(UDim2.new(0.06, 0, 0.09, 0), UDim2.new(0.92, 0, 0.331, 0), data.playercontrol.lockhealth, function(isChecked)
+        createCheckbox(UDim2.new(0, 20, 0, 20), UDim2.new(0.93, 0, 0.331, 0), data.playercontrol.lockhealth, function(isChecked)
             data.playercontrol.lockhealth = isChecked
         end)
 
@@ -2637,7 +2639,7 @@ local function AddMenuContent(category)
             data.playerattr.gravity = z and gtb.Text or 196.2
         end)
         
-        createCheckbox(UDim2.new(0.06, 0, 0.09, 0), UDim2.new(0.92, 0, 0.431, 0), data.playercontrol.lockgravity, function(isChecked)
+        createCheckbox(UDim2.new(0, 20, 0, 20), UDim2.new(0.93, 0, 0.431, 0), data.playercontrol.lockgravity, function(isChecked)
             data.playercontrol.lockgravity = isChecked
         end)
     elseif category == "Project Transfur" then
@@ -2818,9 +2820,6 @@ if game.GameId == 6352299542 then addMenu("妄想办公室") end
 
 -- 更新功能栏的滚动区域
 functionList.CanvasSize = UDim2.new(0, 0, 0, #functionList:GetChildren() * 30)
-
--- 默认显示内容
-AddMenuContent("关于")
 
 -- 设置按钮
 local settingButton = Instance.new("TextButton")
