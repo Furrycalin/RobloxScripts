@@ -2863,36 +2863,29 @@ infoButton.MouseButton1Click:Connect(function()
     AddMenuContent("关于")
 end)
 
+local floatingWindow = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/floatingWindow.lua"))()
+local fw = floatingWindow:createWindow("📕", function(label)
+    if mainFrame.Visible then
+        mainFrame.Visible = false
+        CreateNotification("ChronixHub已隐藏", "点击悬浮窗重新打开界面", 10, false)
+        achievementSound:Stop()
+        label.Text = "📖"
+    else
+        mainFrame.Visible = true
+        label.Text = "📕"
+    end
+end)
+
+fw.Visible = false
+
 if GetDeviceType() == "Desktop" then
     CreateNotification("欢迎使用，电脑用户" .. displayName, "ChronixHub v2已启动!\n反挂机系统已自动开启", 10, true)
     CreateNotification("正在为您启动悬浮窗...", 10, true)
-    local floatingWindow = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/floatingWindow.lua"))()
-    local floatingwindow = floatingWindow:createWindow("📕", function(window)
-        if mainFrame.Visible then
-                mainFrame.Visible = false
-                CreateNotification("ChronixHub已隐藏", "点击悬浮窗重新打开界面", 10, false)
-                achievementSound:Stop()
-                window.Text = "📖"
-        else
-            mainFrame.Visible = true
-            window.Text = "📕"
-        end
-    end)
+    fw.Visible = true
 elseif GetDeviceType() == "Mobile" then
     CreateNotification("欢迎使用，手机用户" .. displayName, "ChronixHub v2已启动!\n反挂机系统已自动开启", 10, true)
     CreateNotification("正在为您启动悬浮窗...", 10, true)
-    local floatingWindow = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/floatingWindow.lua"))()
-    local floatingwindow = floatingWindow:createWindow("📕", function(window)
-        if mainFrame.Visible then
-                mainFrame.Visible = false
-                CreateNotification("ChronixHub已隐藏", "点击悬浮窗重新打开界面", 10, false)
-                achievementSound:Stop()
-                window.Text = "📖"
-        else
-            mainFrame.Visible = true
-            window.Text = "📕"
-        end
-    end)
+    fw.Visible = true
 end
 
 local function unloadchronixhub()
@@ -2912,6 +2905,7 @@ local function unloadchronixhub()
     dbl:Disconnect()
     toggleFeature(false)
     mainFrame:Destroy()
+    fw:Destroy()
     Gui:Destroy()
     DeathballGui:Destroy()
     script:Destroy()
