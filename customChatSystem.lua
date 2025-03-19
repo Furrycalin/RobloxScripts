@@ -59,20 +59,43 @@ local function createCustomChat()
 
     -- 接收消息并显示
     chatControl:MessageReceiver(function(msgData)
-        local msgtext = translateModuel:translateText(msgData.text)
+        local msgtext = translateModuel:translateText(msgData.text, "YouDao")
+
+        -- 创建消息容器
+        local messageContainer = Instance.new("Frame")
+        messageContainer.Name = "MessageContainer"
+        messageContainer.Size = UDim2.new(1, 0, 0, 20) -- 宽度 100%，高度 20
+        messageContainer.BackgroundTransparency = 1 -- 背景透明
+        messageContainer.Parent = scrollingFrame
 
         -- 创建消息文本
         local messageLabel = Instance.new("TextLabel")
         messageLabel.Name = "MessageLabel"
-        messageLabel.Size = UDim2.new(1, 0, 0, 20) -- 宽度 100%，高度 20
+        messageLabel.Size = UDim2.new(0.8, 0, 1, 0) -- 宽度 80%，高度 100%
+        messageLabel.Position = UDim2.new(0, 0, 0, 0)
         messageLabel.BackgroundTransparency = 1 -- 背景透明
         messageLabel.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-        messageLabel.Text = msgData.sender .. ": " .. msgtext -- 消息内容
+        messageLabel.Text = msgData.sender .. ": " .. msgData.text -- 消息内容
         messageLabel.TextXAlignment = Enum.TextXAlignment.Left -- 文字左对齐
-        messageLabel.Parent = scrollingFrame
+        messageLabel.Parent = messageContainer
+
+        -- 创建按钮
+        local editButton = Instance.new("TextButton")
+        editButton.Name = "翻译"
+        editButton.Size = UDim2.new(0.2, 0, 1, 0) -- 宽度 20%，高度 100%
+        editButton.Position = UDim2.new(0.8, 0, 0, 0)
+        editButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
+        editButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+        editButton.Text = "翻译" -- 按钮文字
+        editButton.Parent = messageContainer
+
+        -- 点击按钮触发代码
+        editButton.MouseButton1Click:Connect(function()
+            messageLabel.Text = msgData.sender .. ": " .. translateModuel:translateText(msgData.text, "YouDao")
+        end)
 
         -- 滚动到最下面
-        scrollingFrame.CanvasPosition = Vector2.new(0, 9999999)
+        -- scrollingFrame.CanvasPosition = Vector2.new(0, 9999999)
     end)
 end
 
