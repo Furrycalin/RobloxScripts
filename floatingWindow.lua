@@ -22,6 +22,7 @@ function floatingWindow:createWindow(text, onClick)
     window.Position = UDim2.new(0.5, -50, 0.5, -50) -- 初始位置居中
     window.BackgroundTransparency = 0
     window.Parent = screenGui
+    window.Text = ""
 
     -- 圆角效果
     local corner = Instance.new("UICorner")
@@ -51,12 +52,12 @@ function floatingWindow:createWindow(text, onClick)
 
     -- 拖动逻辑
     local isDragging = false
-    local dragStartPosition = UDim2.new(0.5, -50, 0.5, -50)
-    local dragStartOffset = UDim2.new(0.5, -50, 0.5, -50)
+    local dragStartPosition = UDim2.new(0.5, 0, 0.5, 0)
+    local dragStartOffset = UDim2.new(0.5, 0, 0.5, 0)
 
     -- 点击事件
     window.MouseButton1Click:Connect(function()
-        if not isDragging then
+        if onClick then
             onClick() -- 执行传入的代码
         end
     end)
@@ -95,7 +96,7 @@ function floatingWindow:createWindow(text, onClick)
         if windowPosition.Y < edgeThreshold then
             targetPosition = Vector2.new(targetPosition.X, -(windowSize.Y + windowSize.Y / 2)) -- 上边缘
         elseif windowPosition.Y + windowSize.Y > screenSize.Y - edgeThreshold then
-            targetPosition = Vector2.new(targetPosition.X, screenSize.Y - (windowSize.Y / 2)) -- 下边缘
+            targetPosition = Vector2.new(targetPosition.X, screenSize.Y + (windowSize.Y / 2)) -- 下边缘
         end
 
         -- 移动到目标位置
