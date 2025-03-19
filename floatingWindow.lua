@@ -138,4 +138,10 @@ function floatingWindow:createWindow(text, onClick)
     return window
 end
 
+-- 销毁悬浮窗的函数
+function floatingWindow:destroyWindow()
+    window:Destroy()
+    window = nil
+end
+
 return floatingWindow
