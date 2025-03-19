@@ -54,11 +54,13 @@ function floatingWindow:createWindow(text, onClick)
     local isDragging = false
     local dragStartPosition = UDim2.new(0.5, 0, 0.5, 0)
     local dragStartOffset = UDim2.new(0.5, 0, 0.5, 0)
+    local clickStartTime = 0
 
     local function startDrag(input)
         isDragging = true
         dragStartPosition = Vector2.new(window.Position.X.Offset, window.Position.Y.Offset)
         dragStartOffset = Vector2.new(input.Position.X, input.Position.Y)
+        clickStartTime = os.clock() -- 记录点击开始时间
     end
 
     local function updateDrag(input)
@@ -71,32 +73,38 @@ function floatingWindow:createWindow(text, onClick)
     local function endDrag()
         isDragging = false
 
-        -- 吸附逻辑
-        local screenSize = workspace.CurrentCamera.ViewportSize
-        local windowPosition = Vector2.new(window.Position.X.Offset, window.Position.Y.Offset)
-        local windowSize = Vector2.new(window.AbsoluteSize.X, window.AbsoluteSize.Y)
+         -- 判断是否为点击（点击时间小于 0.2 秒）
+        if os.clock() - clickStartTime < 0.2 then
+            onClick() -- 执行点击事件
+        else
 
-        -- 判断靠近哪一侧
-        local edgeThreshold = 20 -- 吸附阈值
-        local targetPosition = windowPosition
+            -- 吸附逻辑
+            local screenSize = workspace.CurrentCamera.ViewportSize
+            local windowPosition = Vector2.new(window.Position.X.Offset, window.Position.Y.Offset)
+            local windowSize = Vector2.new(window.AbsoluteSize.X, window.AbsoluteSize.Y)
 
-        if windowPosition.X < edgeThreshold then
-            targetPosition = Vector2.new(-windowSize.X / 2, targetPosition.Y) -- 左边缘
-        elseif windowPosition.X + windowSize.X > screenSize.X - edgeThreshold then
-            targetPosition = Vector2.new(screenSize.X - windowSize.X / 2, targetPosition.Y) -- 右边缘
+            -- 判断靠近哪一侧
+            local edgeThreshold = 20 -- 吸附阈值
+            local targetPosition = windowPosition
+
+            if windowPosition.X < edgeThreshold then
+                targetPosition = Vector2.new(-windowSize.X / 2, targetPosition.Y) -- 左边缘
+            elseif windowPosition.X + windowSize.X > screenSize.X - edgeThreshold then
+                targetPosition = Vector2.new(screenSize.X - windowSize.X / 2, targetPosition.Y) -- 右边缘
+            end
+
+            if windowPosition.Y < edgeThreshold then
+                targetPosition = Vector2.new(targetPosition.X, -(windowSize.Y + windowSize.Y / 2 - windowSize.Y / 4)) -- 上边缘
+            elseif windowPosition.Y + windowSize.Y > screenSize.Y - edgeThreshold then
+                targetPosition = Vector2.new(targetPosition.X, screenSize.Y - (windowSize.Y + windowSize.Y / 4)) -- 下边缘
+            end
+
+            -- 移动到目标位置
+            local tween = TweenService:Create(window, TweenInfo.new(0.2), {
+                Position = UDim2.new(0, targetPosition.X, 0, targetPosition.Y)
+            })
+            tween:Play()
         end
-
-        if windowPosition.Y < edgeThreshold then
-            targetPosition = Vector2.new(targetPosition.X, -(windowSize.Y + windowSize.Y / 2 - windowSize.Y / 4)) -- 上边缘
-        elseif windowPosition.Y + windowSize.Y > screenSize.Y - edgeThreshold then
-            targetPosition = Vector2.new(targetPosition.X, screenSize.Y - (windowSize.Y + windowSize.Y / 4)) -- 下边缘
-        end
-
-        -- 移动到目标位置
-        local tween = TweenService:Create(window, TweenInfo.new(0.2), {
-            Position = UDim2.new(0, targetPosition.X, 0, targetPosition.Y)
-        })
-        tween:Play()
     end
 
     -- 监听输入事件
@@ -123,13 +131,6 @@ function floatingWindow:createWindow(text, onClick)
     UserInputService.InputEnded:Connect(function(input)
         if isDragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1) then
             endDrag()
-        end
-    end)
-
-    -- 点击事件
-    window.MouseButton1Click:Connect(function()
-        if not isDragging and onClick then
-            onClick() -- 执行传入的代码
         end
     end)
 
