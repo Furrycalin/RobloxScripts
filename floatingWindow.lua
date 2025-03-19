@@ -47,7 +47,7 @@ function floatingWindow:createWindow(text, onClick)
     label.Position = UDim2.new(0, 0, 0, 0)
     label.TextColor3 = Color3.new(1, 1, 1) -- 白色文字
     label.BackgroundTransparency = 1
-    label.TextSize = 18
+    label.TextSize = 28
     label.Font = Enum.Font.SourceSansBold
     label.Parent = window
 
