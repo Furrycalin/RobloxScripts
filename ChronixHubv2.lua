@@ -122,7 +122,7 @@ local function getGameName(universeId)
     if success then
         local data = HttpService:JSONDecode(response)
         if data.data and #data.data > 0 then
-            return data.data[1].name
+            return data.data[1]
         else
             warn("未找到游戏信息")
             return nil
@@ -446,15 +446,14 @@ infotitleText.TextSize = 8
 infotitleText.TextXAlignment = Enum.TextXAlignment.Left
 infotitleText.Parent = infoBar
 
-local gameName = ""
-gameName = getGameName(game.GameId)
-if gameName then
+local gameInfo = getGameName(game.GameId)
+if gameInfo then
 else
-    gameName = "无法获取游戏名"
+    gameInfo = "无法获取游戏信息"
 end
 
 local infotitleText2 = Instance.new("TextLabel")
-infotitleText2.Text = "在玩: " .. gameName .. " | ID: " .. game.GameId
+infotitleText2.Text = "在玩: " .. gameInfo.name .. " | ID: " .. game.GameId
 infotitleText2.Size = UDim2.new(0, 100, 0.5, 0)
 infotitleText2.Position = UDim2.new(0, 60, 0.42, 0)
 infotitleText2.TextColor3 = Color3.new(1, 1, 1) -- 白色
