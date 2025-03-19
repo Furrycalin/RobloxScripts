@@ -1,4 +1,8 @@
-local chatControl = 
+local chatControl = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/chat_test.lua"))()
+local translateModuel = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/translateModuel.lua"))()
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
 
 -- 创建自定义聊天栏
 local function createCustomChat()
@@ -55,6 +59,8 @@ local function createCustomChat()
 
     -- 接收消息并显示
     chatControl:MessageReceiver(function(msgData)
+        local msgtext = translateModuel:
+
         -- 创建消息文本
         local messageLabel = Instance.new("TextLabel")
         messageLabel.Name = "MessageLabel"
