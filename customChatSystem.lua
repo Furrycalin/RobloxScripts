@@ -6,6 +6,7 @@ local UserInputService = game:GetService("UserInputService")
 
 -- 创建自定义聊天栏
 local function createCustomChat()
+    local translateAPI = "YouDao"
     -- 创建 ScreenGui
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "CustomChat"
@@ -57,9 +58,85 @@ local function createCustomChat()
         end
     end)
 
+    -- 创建侧边栏
+    local sideBar = Instance.new("Frame")
+    sideBar.Name = "SideBar"
+    sideBar.Size = UDim2.new(0.1, 0, 1, 0) -- 宽度 10%，高度 100%
+    sideBar.Position = UDim2.new(1, 0, 0, 0) -- 右侧
+    sideBar.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1) -- 背景颜色
+    sideBar.BackgroundTransparency = 0.5 -- 背景透明度
+    sideBar.Parent = chatFrame
+
+    -- 创建侧边栏标题
+    local sideBarTitle = Instance.new("TextLabel")
+    sideBarTitle.Name = "SideBarTitle"
+    sideBarTitle.Size = UDim2.new(1, 0, 0.1, 0) -- 宽度 100%，高度 10%
+    sideBarTitle.Position = UDim2.new(0, 0, 0, 0)
+    sideBarTitle.BackgroundTransparency = 1 -- 背景透明
+    sideBarTitle.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+    sideBarTitle.Text = "功能栏" -- 标题文字
+    sideBarTitle.TextXAlignment = Enum.TextXAlignment.Center -- 文字居中
+    sideBarTitle.Parent = sideBar
+
+    -- 创建按钮容器
+    local buttonContainer = Instance.new("Frame")
+    buttonContainer.Name = "ButtonContainer"
+    buttonContainer.Size = UDim2.new(1, 0, 0.9, 0) -- 宽度 100%，高度 90%
+    buttonContainer.Position = UDim2.new(0, 0, 0.1, 0)
+    buttonContainer.BackgroundTransparency = 1 -- 背景透明
+    buttonContainer.Parent = sideBar
+
+    -- 创建按钮布局
+    local buttonLayout = Instance.new("UIListLayout")
+    buttonLayout.Padding = UDim.new(0, 5) -- 按钮间距
+    buttonLayout.Parent = buttonContainer
+
+    -- 添加按钮的函数
+    local function addButtonToSideBar(buttonName, onClick)
+        local button = Instance.new("TextButton")
+        button.Name = buttonName
+        button.Size = UDim2.new(1, 0, 0.1, 0) -- 宽度 100%，高度 10%
+        button.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
+        button.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+        button.Text = buttonName -- 按钮文字
+        button.Parent = buttonContainer
+
+        -- 点击按钮时高亮
+        button.MouseButton1Click:Connect(function()
+            -- 取消所有按钮的高亮
+            for _, child in ipairs(buttonContainer:GetChildren()) do
+                if child:IsA("TextButton") then
+                    child.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+                end
+            end
+            -- 高亮当前按钮
+            button.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+            -- 执行点击事件
+            onClick()
+        end)
+    end
+
+    -- 默认高亮第一个按钮
+    local firstButton = nil
+
+    -- 添加示例按钮
+    addButtonToSideBar("有道翻译", function()
+        translateAPI = "YouDao"
+    end)
+
+    addButtonToSideBar("AI翻译", function()
+        translateAPI = "AI"
+    end)
+
+    -- 默认高亮第一个按钮
+    firstButton = buttonContainer:FindFirstChildOfClass("TextButton")
+    if firstButton then
+        firstButton.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+    end
+
     -- 接收消息并显示
     chatControl:MessageReceiver(function(msgData)
-        local msgtext = translateModuel:translateText(msgData.text, "YouDao")
+        local msgtext = translateModuel:translateText(msgData.text, translateAPI)
 
         -- 创建消息容器
         local messageContainer = Instance.new("Frame")
@@ -75,7 +152,7 @@ local function createCustomChat()
         messageLabel.Position = UDim2.new(0, 0, 0, 0)
         messageLabel.BackgroundTransparency = 1 -- 背景透明
         messageLabel.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-        messageLabel.Text = msgData.sender .. ": " .. msgData.text -- 消息内容
+        messageLabel.Text = msgData.sender .. ": " .. msgtext -- 消息内容
         messageLabel.TextXAlignment = Enum.TextXAlignment.Left -- 文字左对齐
         messageLabel.Parent = messageContainer
 
@@ -91,7 +168,7 @@ local function createCustomChat()
 
         -- 点击按钮触发代码
         editButton.MouseButton1Click:Connect(function()
-            messageLabel.Text = msgData.sender .. ": " .. translateModuel:translateText(msgData.text, "YouDao")
+            messageLabel.Text = msgData.sender .. ": " .. translateModuel:translateText(msgData.text, translateAPI)
         end)
 
         -- 滚动到最下面
