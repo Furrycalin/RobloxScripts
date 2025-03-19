@@ -86,9 +86,9 @@ function floatingWindow:createWindow(text, onClick)
         end
 
         if windowPosition.Y < edgeThreshold then
-            targetPosition = Vector2.new(targetPosition.X, -windowSize.Y / 1.5) -- 上边缘
+            targetPosition = Vector2.new(targetPosition.X, -(windowSize.Y / 2)) -- 上边缘
         elseif windowPosition.Y + windowSize.Y > screenSize.Y - edgeThreshold then
-            targetPosition = Vector2.new(targetPosition.X, screenSize.Y - windowSize.Y / 1.5) -- 下边缘
+            targetPosition = Vector2.new(targetPosition.X, screenSize.Y - (windowSize.Y / 2)) -- 下边缘
         end
 
         -- 移动到目标位置
