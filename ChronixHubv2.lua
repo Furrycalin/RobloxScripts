@@ -28,6 +28,7 @@ local VirtualInputManager = game:GetService("VirtualInputManager")
 local StarterGui = game:GetService("StarterGui")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TextChatService = game:GetService("TextChatService")
+local HttpService = game:GetService("HttpService")
 
 local LoadAnimationModule = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/NewLoadAnimation.lua"))()
 local tpWalk = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/tpWalk.lua"))()
@@ -92,6 +93,43 @@ local function GetDeviceType()
         return "Console" -- 控制台
     else
         return "Unknown" -- 未知设备
+    end
+end
+
+-- 获取 UniverseId
+local function getUniverseId(placeId)
+    local url = "https://apis.roblox.com/universes/v1/places/" .. placeId .. "/universe"
+    local success, response = pcall(function()
+        return game:HttpGet(url)
+    end)
+
+    if success then
+        local data = HttpService:JSONDecode(response)
+        return data.universeId
+    else
+        warn("获取 UniverseId 失败:", response)
+        return nil
+    end
+end
+
+-- 获取游戏名
+local function getGameName(universeId)
+    local url = "https://games.roblox.com/v1/games?universeIds=" .. universeId
+    local success, response = pcall(function()
+        return game:HttpGet(url)
+    end)
+
+    if success then
+        local data = HttpService:JSONDecode(response)
+        if data.data and #data.data > 0 then
+            return data.data[1].name
+        else
+            warn("未找到游戏信息")
+            return nil
+        end
+    else
+        warn("获取游戏名失败:", response)
+        return nil
     end
 end
 
@@ -360,7 +398,7 @@ uiCorner4.CornerRadius = UDim.new(0, 5)
 
 -- 创建内容区域
 local contentFrame = Instance.new("Frame")
-contentFrame.Size = UDim2.new(1, 0, 1, -30)
+contentFrame.Size = UDim2.new(1, 0, 1, -70)
 contentFrame.Position = UDim2.new(0, 0, 0, 30)
 contentFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 56) -- 中墨蓝色
 contentFrame.BorderSizePixel = 0
@@ -368,6 +406,69 @@ contentFrame.Parent = mainFrame
 
 local uiCorner5 = Instance.new("UICorner", contentFrame)
 uiCorner5.CornerRadius = UDim.new(0, 5)
+
+-- 创建信息栏
+local infoBar = Instance.new("Frame")
+infoBar.Size = UDim2.new(1, 0, 0, 40)
+infoBar.Position = UDim2.new(0, 0, 1, -40)
+infoBar.BackgroundColor3 = Color3.fromRGB(20, 20, 36)
+infoBar.BorderSizePixel = 0
+infoBar.Parent = mainFrame
+
+local uiCorner2 = Instance.new("UICorner", infoBar)
+uiCorner2.CornerRadius = UDim.new(0, 5)
+
+-- 创建 ImageLabel 显示头像
+local avatarImage = Instance.new("ImageLabel")
+avatarImage.Name = "AvatarImage"
+avatarImage.Size = UDim2.new(0, 40, 0, 40) -- 头像大小
+avatarImage.Position = UDim2.new(0, 10, -0.1, 0) -- 居中
+avatarImage.BackgroundTransparency = 1
+avatarImage.Image = thumbnailUrl -- 设置头像
+avatarImage.ScaleType = Enum.ScaleType.Fit
+avatarImage.Parent = infoBar
+
+infotitle = ""
+
+if GetDeviceType() == "Desktop" then
+    infotitle = "电脑用户"
+elseif GetDeviceType() == "Mobile" then
+    infotitle = "手机用户"
+end
+
+local infotitleText = Instance.new("TextLabel")
+infotitleText.Text = "欢迎使用! " .. infotitle .. playerName .. " ID:" .. userId
+infotitleText.Size = UDim2.new(0, 100, 0.5, 0)
+infotitleText.Position = UDim2.new(0, 60, 0.08, 0)
+infotitleText.TextColor3 = Color3.new(1, 1, 1) -- 白色
+infotitleText.BackgroundTransparency = 1
+infotitleText.TextSize = 8
+infotitleText.TextXAlignment = Enum.TextXAlignment.Left
+infotitleText.Parent = infoBar
+
+local gameName = ""
+
+local universeId = getUniverseId(game.GameId)
+if universeId then
+    gameName = getGameName(universeId)
+    if gameName then
+        print("游戏名:", gameName)
+    else
+        gameName = "无法获取游戏名"
+    end
+else
+    gameName = "无法获取 UniverseId"
+end
+
+local infotitleText2 = Instance.new("TextLabel")
+infotitleText2.Text = "当前游戏" .. gameName .. " ID: " .. game.GameId
+infotitleText2.Size = UDim2.new(0, 100, 0.5, 0)
+infotitleText2.Position = UDim2.new(0, 60, 0.42, 0)
+infotitleText2.TextColor3 = Color3.new(1, 1, 1) -- 白色
+infotitleText2.BackgroundTransparency = 1
+infotitleText2.TextSize = 8
+infotitleText2.TextXAlignment = Enum.TextXAlignment.Left
+infotitleText2.Parent = infoBar
 
 -- 缩小功能
 local isMinimized = false
@@ -2708,8 +2809,6 @@ addMenu("执行器")
 addMenu("音乐播放器")
 addMenu("音频检查器")
 addMenu("聊天接收器")
-addMenu("设置")
-addMenu("关于")
 addMenu("TPWalk")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
 if game.GameId == 6508759464 then addMenu("Grace") end
@@ -2717,11 +2816,53 @@ if game.GameId == 5166944221 then addMenu("Deathball") end
 if game.GameId == 3185346597 then addMenu("CabinRolePlay") end
 if game.GameId == 6352299542 then addMenu("妄想办公室") end
 
+-- 更新功能栏的滚动区域
+functionList.CanvasSize = UDim2.new(0, 0, 0, #functionList:GetChildren() * 30)
+
 -- 默认显示内容
 AddMenuContent("关于")
 
--- 更新功能栏的滚动区域
-functionList.CanvasSize = UDim2.new(0, 0, 0, #functionList:GetChildren() * 30)
+-- 设置按钮
+local settingButton = Instance.new("TextButton")
+settingButton.Size = UDim2.new(0, 30, 0, 30)
+settingButton.Position = UDim2.new(1, -35, 0.125, 0)
+settingButton.BackgroundColor3 = Color3.fromRGB(50, 50, 70) -- 浅墨蓝色
+settingButton.BorderSizePixel = 0
+settingButton.Text = "⚙️"
+settingButton.TextColor3 = Color3.new(1, 1, 1) -- 白色
+settingButton.Font = Enum.Font.SourceSansBold
+settingButton.TextSize = 18
+settingButton.Parent = infoBar
+applyParticleEffect(settingButton)
+
+local uiCorner40 = Instance.new("UICorner", settingButton)
+uiCorner40.CornerRadius = UDim.new(0, 5)
+
+settingButton.MouseButton1Click:Connect(function()
+    uiclicker:Play()
+    AddMenuContent("设置")
+end)
+
+-- 关闭按钮
+local infoButton = Instance.new("TextButton")
+infoButton.Size = UDim2.new(0, 30, 0, 30)
+infoButton.Position = UDim2.new(1, -70, 0.125, 0)
+infoButton.BackgroundColor3 = Color3.fromRGB(50, 50, 70) -- 浅墨蓝色
+infoButton.BorderSizePixel = 0
+infoButton.Text = "ℹ️"
+infoButton.TextColor3 = Color3.new(1, 1, 1) -- 白色
+infoButton.Font = Enum.Font.SourceSansBold
+infoButton.TextSize = 18
+infoButton.Parent = infoBar
+applyParticleEffect(infoButton)
+
+local uiCorner50 = Instance.new("UICorner", infoButton)
+uiCorner50.CornerRadius = UDim.new(0, 5)
+
+infoButton.MouseButton1Click:Connect(function()
+    uiclicker:Play()
+    AddMenuContent("关于")
+end)
 
 if GetDeviceType() == "Desktop" then
     CreateNotification("欢迎使用，电脑用户" .. displayName, "ChronixHub v2已启动!\n反挂机系统已自动开启", 10, true)
