@@ -18,8 +18,8 @@ function floatingWindow:createWindow(text, onClick)
     -- 创建悬浮窗
     local window = Instance.new("Frame")
     window.Name = "FloatingWindow"
-    window.Size = UDim2.new(0, 100, 0, 100) -- 大小
-    window.Position = UDim2.new(0.5, -50, 0.5, -50) -- 初始位置居中
+    window.Size = UDim2.new(0, 80, 0, 80) -- 大小调整为 80x80
+    window.Position = UDim2.new(0.5, -40, 0.5, -40) -- 初始位置居中
     window.BackgroundTransparency = 0
     window.Parent = screenGui
 
@@ -79,17 +79,11 @@ function floatingWindow:createWindow(text, onClick)
         local edgeThreshold = 20 -- 吸附阈值
         local targetPosition = windowPosition
 
-        if windowPosition.X < edgeThreshold then
-            targetPosition = Vector2.new(-windowSize.X / 2, targetPosition.Y) -- 左边缘
-        elseif windowPosition.X + windowSize.X > screenSize.X - edgeThreshold then
-            targetPosition = Vector2.new(screenSize.X - windowSize.X / 2, targetPosition.Y) -- 右边缘
-        end
-
-        if windowPosition.Y < edgeThreshold then
-            targetPosition = Vector2.new(targetPosition.X, -windowSize.Y / 2) -- 上边缘
-        elseif windowPosition.Y + windowSize.Y > screenSize.Y - edgeThreshold then
-            targetPosition = Vector2.new(targetPosition.X, screenSize.Y - windowSize.Y / 2) -- 下边缘
-        end
+        -- 限制悬浮窗在屏幕范围内
+        targetPosition = Vector2.new(
+            math.clamp(targetPosition.X, 0, screenSize.X - windowSize.X),
+            math.clamp(targetPosition.Y, 0, screenSize.Y - windowSize.Y)
+        )
 
         -- 移动到目标位置
         local tween = TweenService:Create(window, TweenInfo.new(0.2), {
