@@ -74,7 +74,7 @@ local function createCustomChat()
     sideBarTitle.Position = UDim2.new(0, 0, 0, 0)
     sideBarTitle.BackgroundTransparency = 1 -- 背景透明
     sideBarTitle.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-    sideBarTitle.Text = "功能栏" -- 标题文字
+    sideBarTitle.Text = "翻译器" -- 标题文字
     sideBarTitle.TextXAlignment = Enum.TextXAlignment.Center -- 文字居中
     sideBarTitle.Parent = sideBar
 
