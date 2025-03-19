@@ -2880,11 +2880,8 @@ fw.Visible = false
 
 if GetDeviceType() == "Desktop" then
     CreateNotification("欢迎使用，电脑用户" .. displayName, "ChronixHub v2已启动!\n反挂机系统已自动开启", 10, true)
-    CreateNotification("正在为您启动悬浮窗...", 10, true)
-    fw.Visible = true
 elseif GetDeviceType() == "Mobile" then
     CreateNotification("欢迎使用，手机用户" .. displayName, "ChronixHub v2已启动!\n反挂机系统已自动开启", 10, true)
-    CreateNotification("正在为您启动悬浮窗...", 10, true)
     fw.Visible = true
 end
 
