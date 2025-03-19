@@ -13,6 +13,7 @@ function floatingWindow:createWindow(text, onClick)
         screenGui = Instance.new("ScreenGui")
         screenGui.Name = "FloatingWindowScreenGui"
         screenGui.Parent = LocalPlayer.PlayerGui
+        screenGui.ResetOnSpawn = false
     end
 
     -- 创建悬浮窗
