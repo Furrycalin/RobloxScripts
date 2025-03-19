@@ -330,7 +330,7 @@ titleText.Parent = titleBar
 -- 缩小按钮
 local minimizeButton = Instance.new("TextButton")
 minimizeButton.Size = UDim2.new(0, 20, 0, 20)
-minimizeButton.Position = UDim2.new(0.9, -10, 0.2, 0)
+minimizeButton.Position = UDim2.new(1, -50, 0.2, 0)
 minimizeButton.BackgroundColor3 = Color3.fromRGB(50, 50, 70) -- 浅墨蓝色
 minimizeButton.BorderSizePixel = 0
 minimizeButton.Text = "_"
@@ -346,7 +346,7 @@ uiCorner3.CornerRadius = UDim.new(0, 5)
 -- 关闭按钮
 local closeButton = Instance.new("TextButton")
 closeButton.Size = UDim2.new(0, 20, 0, 20)
-closeButton.Position = UDim2.new(0.94, 0, 0.2, 0)
+closeButton.Position = UDim2.new(1, -25, 0.2, 0)
 closeButton.BackgroundColor3 = Color3.fromRGB(50, 50, 70) -- 浅墨蓝色
 closeButton.BorderSizePixel = 0
 closeButton.Text = "×"
