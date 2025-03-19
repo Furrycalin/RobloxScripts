@@ -19,7 +19,7 @@ function floatingWindow:createWindow(text, onClick)
     -- 创建悬浮窗
     local window = Instance.new("TextButton")
     window.Name = "FloatingWindow"
-    window.Size = UDim2.new(0, 80, 0, 80) -- 大小
+    window.Size = UDim2.new(0, 70, 0, 70) -- 大小
     window.Position = UDim2.new(0.5, -40, 0.5, -40) -- 初始位置居中
     window.BackgroundTransparency = 0
     window.Parent = screenGui
