@@ -174,6 +174,21 @@ local function createCustomChat()
         -- 滚动到最下面
         -- scrollingFrame.CanvasPosition = Vector2.new(0, 9999999)
     end)
+
+    -- 创建切换按钮
+    local toggleButton = Instance.new("TextButton")
+    toggleButton.Name = "ToggleChatButton"
+    toggleButton.Size = UDim2.new(0.05, 0, 0.05, 0) -- 按钮大小
+    toggleButton.Position = UDim2.new(0.95, 0, 0.95, 0) -- 放置在右下角
+    toggleButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
+    toggleButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+    toggleButton.Text = "切换" -- 按钮文字
+    toggleButton.Parent = screenGui
+
+    -- 切换聊天栏显示/隐藏
+    toggleButton.MouseButton1Click:Connect(function()
+        chatFrame.Visible = not chatFrame.Visible
+    end)
 end
 
 -- 初始化自定义聊天栏
