@@ -55,13 +55,6 @@ function floatingWindow:createWindow(text, onClick)
     local dragStartPosition = UDim2.new(0.5, 0, 0.5, 0)
     local dragStartOffset = UDim2.new(0.5, 0, 0.5, 0)
 
-    -- 点击事件
-    window.MouseButton1Click:Connect(function()
-        if onClick then
-            onClick() -- 执行传入的代码
-        end
-    end)
-
     local function startDrag(input)
         isDragging = true
         dragStartPosition = Vector2.new(window.Position.X.Offset, window.Position.Y.Offset)
@@ -96,7 +89,7 @@ function floatingWindow:createWindow(text, onClick)
         if windowPosition.Y < edgeThreshold then
             targetPosition = Vector2.new(targetPosition.X, -(windowSize.Y + windowSize.Y / 2 - windowSize.Y / 4)) -- 上边缘
         elseif windowPosition.Y + windowSize.Y > screenSize.Y - edgeThreshold then
-            targetPosition = Vector2.new(targetPosition.X, screenSize.Y - (windowSize.Y)) -- 下边缘
+            targetPosition = Vector2.new(targetPosition.X, screenSize.Y - (windowSize.Y - windowSize.Y / 4)) -- 下边缘
         end
 
         -- 移动到目标位置
@@ -130,6 +123,13 @@ function floatingWindow:createWindow(text, onClick)
     UserInputService.InputEnded:Connect(function(input)
         if isDragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1) then
             endDrag()
+        end
+    end)
+
+    -- 点击事件
+    window.MouseButton1Click:Connect(function()
+        if not isDragging and onClick then
+            onClick() -- 执行传入的代码
         end
     end)
 
