@@ -47,7 +47,7 @@ function floatingWindow:createWindow(text, onClick)
     label.Position = UDim2.new(0, 0, 0, 0)
     label.TextColor3 = Color3.new(1, 1, 1) -- 白色文字
     label.BackgroundTransparency = 1
-    label.TextScaled = true
+    label.TextSize = 18
     label.Font = Enum.Font.SourceSansBold
     label.Parent = window
 
@@ -76,7 +76,7 @@ function floatingWindow:createWindow(text, onClick)
 
          -- 判断是否为点击（点击时间小于 0.2 秒）
         if os.clock() - clickStartTime < 0.2 then
-            onClick(window) -- 执行点击事件
+            onClick(label) -- 执行点击事件
         else
 
             -- 吸附逻辑
