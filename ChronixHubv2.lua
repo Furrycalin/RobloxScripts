@@ -447,17 +447,10 @@ infotitleText.TextXAlignment = Enum.TextXAlignment.Left
 infotitleText.Parent = infoBar
 
 local gameName = ""
-
-local universeId = getUniverseId(game.GameId)
-if universeId then
-    gameName = getGameName(universeId)
-    if gameName then
-        print("游戏名:", gameName)
-    else
-        gameName = "无法获取游戏名"
-    end
+gameName = getGameName(game.GameId)
+if gameName then
 else
-    gameName = "无法获取 UniverseId"
+    gameName = "无法获取游戏名"
 end
 
 local infotitleText2 = Instance.new("TextLabel")
