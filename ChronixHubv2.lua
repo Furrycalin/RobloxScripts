@@ -2865,8 +2865,34 @@ end)
 
 if GetDeviceType() == "Desktop" then
     CreateNotification("欢迎使用，电脑用户" .. displayName, "ChronixHub v2已启动!\n反挂机系统已自动开启", 10, true)
+    CreateNotification("正在为您启动悬浮窗...", 10, true)
+    local floatingWindow = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/floatingWindow.lua"))()
+    local floatingwindow = floatingWindow:createWindow("📕", function(window)
+        if mainFrame.Visible then
+                mainFrame.Visible = false
+                CreateNotification("ChronixHub已隐藏", "点击悬浮窗重新打开界面", 10, false)
+                achievementSound:Stop()
+                window.Text = "📖"
+        else
+            mainFrame.Visible = true
+            window.Text = "📕"
+        end
+    end)
 elseif GetDeviceType() == "Mobile" then
     CreateNotification("欢迎使用，手机用户" .. displayName, "ChronixHub v2已启动!\n反挂机系统已自动开启", 10, true)
+    CreateNotification("正在为您启动悬浮窗...", 10, true)
+    local floatingWindow = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/floatingWindow.lua"))()
+    local floatingwindow = floatingWindow:createWindow("📕", function(window)
+        if mainFrame.Visible then
+                mainFrame.Visible = false
+                CreateNotification("ChronixHub已隐藏", "点击悬浮窗重新打开界面", 10, false)
+                achievementSound:Stop()
+                window.Text = "📖"
+        else
+            mainFrame.Visible = true
+            window.Text = "📕"
+        end
+    end)
 end
 
 local function unloadchronixhub()
