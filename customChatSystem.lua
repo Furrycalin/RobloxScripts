@@ -156,7 +156,7 @@ local function createCustomChat()
         messageLabel.Position = UDim2.new(0, 25, 0, 0)
         messageLabel.BackgroundTransparency = 1 -- 背景透明
         messageLabel.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-        messageLabel.Text = msgData.sender .. ": " .. msgData.text -- 消息内容
+        messageLabel.Text = msgData.nickname .. ": " .. msgData.text -- 消息内容
         messageLabel.TextXAlignment = Enum.TextXAlignment.Left -- 文字左对齐
         messageLabel.Parent = messageContainer
 
@@ -172,7 +172,7 @@ local function createCustomChat()
 
         -- 点击按钮触发代码
         editButton.MouseButton1Click:Connect(function()
-            messageLabel.Text = msgData.sender .. ": " .. translateModuel:translateText(msgData.text, translateAPI)
+            messageLabel.Text = msgData.nickname .. ": " .. translateModuel:translateText(msgData.text, translateAPI)
         end)
 
         -- 滚动到最下面
