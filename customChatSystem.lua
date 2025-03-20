@@ -257,7 +257,7 @@ local function createCustomChat()
         translateAPI = "Roblox"
     end)
 
-    addButtonToSideBar("复制日志", function()
+    addButtonToSideBar("1-复制日志", function()
         setclipboard(table.concat(chatlog, "\n"))
     end)
 
