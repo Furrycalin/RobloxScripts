@@ -4,61 +4,45 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local UserInputService = game:GetService("UserInputService")
 
+local colorCache = {}
+
 -- 封装函数：根据文本生成固定颜色
 local function getColorForText(text)
-    local colortable = {
-        Color3.fromRGB(255, 0, 0),
-        Color3.fromRGB(0, 255, 0),
-        Color3.fromRGB(255, 255, 0),
-        Color3.fromRGB(255, 0, 255),
-        Color3.fromRGB(0, 0, 255)
-    }
     -- 检查输入是否为 nil 或非字符串
     if not text or type(text) ~= "string" then
         warn("输入文本无效，必须是一个字符串。")
         return Color3.new(1, 1, 1) -- 返回默认颜色（白色）
     end
 
-    -- 哈希函数：将字符串转换为哈希值
-    local function hashString(str)
-        local hash = 5381 -- 初始哈希值
-        for i = 1, #str do
-            hash = (hash * 33) + str:byte(i) -- 简单的哈希算法
-        end
-        return tostring(hash)
-    end
-
     -- 颜色生成器：根据哈希值生成固定颜色
-    local function generateColorFromHash(hash)
-        -- 将哈希值转换为数值
-        local seed = tonumber(hash:sub(1, 10)) or 0 -- 取前10位作为种子
-        if not seed then
-            warn("哈希值转换失败，使用默认种子。")
-            seed = 0
-        end
-        math.randomseed(seed) -- 设置随机种子
+    local function generateColorFromHash()
 
         -- 生成 RGB 颜色
-        local r = math.random(0, 255)
-        local g = math.random(0, 255)
-        local b = math.random(0, 255)
-
-        return Color3.fromRGB(r, g, b)
+        local k = math.random(0, 6)
+        if k == 0 then
+            return Color3.fromRGB(152, 109, 216)
+        elseif k == 1 then
+            return Color3.fromRGB(237, 39, 64)
+        elseif k == 2 then
+            return Color3.fromRGB(3, 173, 82)
+        elseif k == 3 then
+            return Color3.fromRGB(239, 200, 47)
+        elseif k == 4 then
+            return Color3.fromRGB(227, 182, 196)
+        elseif k == 5 then
+            return Color3.fromRGB(3, 143, 225)
+        elseif k == 6 then
+            return Color3.fromRGB(211, 193, 151)
+        end
     end
-
-    -- 缓存文本与颜色的映射
-    local colorCache = {}
-
+    
     -- 如果颜色已缓存，直接返回
     if colorCache[text] then
         return colorCache[text]
     end
 
-    -- 生成统一码
-    local hash = hashString(text)
-
     -- 生成颜色
-    local color = generateColorFromHash(hash)
+    local color = generateColorFromHash()
 
     -- 缓存颜色
     colorCache[text] = color
