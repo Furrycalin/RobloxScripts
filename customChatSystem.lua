@@ -61,12 +61,12 @@ local function getColorForText(text)
         warn("输入文本无效，必须是一个字符串。")
         return Color3.new(1, 1, 1) -- 返回默认颜色（白色）
     end
-    
+
     -- 如果颜色已缓存，直接返回
     if colorCache[text] then
         return colorCache[text]
     end
-
+    
     -- 生成颜色
     local color = getRandomColor(colortable)
 
@@ -78,7 +78,6 @@ end
 
 -- 函数：将 TextLabel 中的某一段字改变颜色
 local function setTextColor(text, startIndex, endIndex, color)
-
     -- 提取需要改变颜色的部分
     local coloredText = text:sub(startIndex, endIndex)
     -- 使用 <font> 标签包裹
@@ -248,17 +247,17 @@ local function createCustomChat()
         translateAPI = "Roblox"
     end)
 
-    chatControl:MessageReceiver(function(msgData)
-        local function chuli(Data)
-            local sourcemsghand = Data.nickname .. ":"
-            local msghand = setTextColor(sourcemsghand, 1, #sourcemsghand, getColorForText(Data.sender))
-            local msgtail = Data.text
-            if player.name == Data.sender then
-                msgtail = setTextColor(Data.text, 1, #Data.text, Color3.fromRGB(204, 255, 204))
-            end
-            return msghand .. " " .. msgtail
+    local function chuli(Data)
+        local sourcemsghand = Data.nickname .. ":"
+        local msghand = setTextColor(sourcemsghand, 1, #sourcemsghand, getColorForText(Data.sender))
+        local msgtail = Data.text
+        if player.name == Data.sender then
+            msgtail = setTextColor(Data.text, 1, #Data.text, Color3.fromRGB(204, 255, 204))
         end
-        
+        return msghand .. " " .. msgtail
+    end
+
+    chatControl:MessageReceiver(function(msgData)
         -- 创建消息容器
         local messageContainer = Instance.new("Frame")
         messageContainer.Name = "MessageContainer"
