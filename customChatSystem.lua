@@ -128,6 +128,10 @@ local function createCustomChat()
         translateAPI = "AI"
     end)
 
+    addButtonToSideBar("Roblox翻译", function()
+        translateAPI = "Roblox"
+    end)
+
     chatControl:MessageReceiver(function(msgData)
         -- 创建消息容器
         local messageContainer = Instance.new("Frame")
