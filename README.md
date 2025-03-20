@@ -105,6 +105,22 @@ local text2 = translateModuel:translateText(text1, translateAPI)
 
 ---
 
+### **▶ floatingWindow.lua**  
+**使用方法：**  
+```lua
+-- 加载实例到脚本中
+local floatingWindow = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/floatingWindow.lua"))()
+
+-- 使用示例
+local fw = floatingWindow:createWindow("📕", function(label)
+	-- 这里是点击时的代码
+end)
+```
+**描述**  
+快捷的创建一个悬浮球，可吸附在屏幕边缘，并设定点击时触发的代码。
+
+---
+
 ### **▶ Notification.lua**  
 **描述**  
 轻量级的消息框提示脚本，适合开发者参考使用。 
