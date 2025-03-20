@@ -18,7 +18,7 @@ local function getColorForText(text)
     local function generateColorFromHash()
 
         -- 生成 RGB 颜色
-        local k = math.random(0, 6)
+        local k = math.random(0, 7)
         if k == 0 then
             return Color3.fromRGB(152, 109, 216)
         elseif k == 1 then
@@ -33,6 +33,8 @@ local function getColorForText(text)
             return Color3.fromRGB(3, 143, 225)
         elseif k == 6 then
             return Color3.fromRGB(211, 193, 151)
+        elseif k == 7 then
+            return Color3.fromRGB(207, 126, 62)
         end
     end
     
