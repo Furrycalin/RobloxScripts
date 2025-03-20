@@ -91,6 +91,8 @@ end
 -- 创建自定义聊天栏
 local function createCustomChat()
     local translateAPI = "YouDao"
+    local autotranslate = false
+
     -- 创建 ScreenGui
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "CustomChat"
@@ -234,6 +236,12 @@ local function createCustomChat()
     end
 
     -- 添加示例按钮
+
+    addButtonToSideBar(autotranslate and "0-自动(开)" or "0-自动(关)", function(button)
+        autotranslate = not autotranslate
+        button.Text = autotranslate and "0-自动(开)" or "0-自动(关)"
+    end)
+
     addButtonToSideBar("有道翻译", function(button)
         translateAPI = "YouDao"
         button.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
@@ -251,8 +259,9 @@ local function createCustomChat()
         local sourcemsghand = Data.nickname .. ":"
         local msghand = setTextColor(sourcemsghand, 1, #sourcemsghand, getColorForText(Data.sender))
         local msgtail = Data.text
+        if autotranslate then msgtail = translateModuel:translateText(Data.text, translateAPI) end
         if player.name == Data.sender then
-            msgtail = setTextColor(Data.text, 1, #Data.text, Color3.fromRGB(204, 255, 204))
+            msgtail = setTextColor(msgtail, 1, #msgtail, Color3.fromRGB(204, 255, 204))
         end
         return msghand .. " " .. msgtail
     end
