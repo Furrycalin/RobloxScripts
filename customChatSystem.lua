@@ -92,6 +92,7 @@ end
 local function createCustomChat()
     local translateAPI = "YouDao"
     local autotranslate = false
+    local chatlog = {}
 
     -- 创建 ScreenGui
     local screenGui = Instance.new("ScreenGui")
@@ -256,6 +257,10 @@ local function createCustomChat()
         translateAPI = "Roblox"
     end)
 
+    addButtonToSideBar("复制日志", function()
+        setclipboard(table.concat(chatlog, "\n"))
+    end)
+
     local function chuli(Data)
         local sourcemsghand = Data.nickname .. ":"
         local msghand = setTextColor(sourcemsghand, 1, #sourcemsghand, getColorForText(Data.sender))
@@ -267,7 +272,15 @@ local function createCustomChat()
         return msghand .. " " .. msgtail
     end
 
+    local function getCurrentDateTime()
+        -- 格式化日期和时间
+        local dateTime = os.date("%Y-%m-%d %H:%M:%S")
+        return dateTime
+    end
+
     chatControl:MessageReceiver(function(msgData)
+        table.insert(chatlog, "[" .. getCurrentDateTime() .. "] " .. msgData.nickname .. "(@" .. msgData.sender .. ") : " .. msgData.text)
+
         -- 创建消息容器
         local messageContainer = Instance.new("Frame")
         messageContainer.Name = "MessageContainer"
