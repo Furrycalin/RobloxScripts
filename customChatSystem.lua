@@ -140,11 +140,20 @@ local function createCustomChat()
         messageContainer.BackgroundTransparency = 1 -- 背景透明
         messageContainer.Parent = scrollingFrame
 
+        -- 创建图片框
+        local imageLabel = Instance.new("ImageLabel")
+        imageLabel.Name = "MessageImage"
+        imageLabel.Size = UDim2.new(0, 20, 0, 20) -- 正方形图片，大小 20x20
+        imageLabel.Position = UDim2.new(0, 0, 0, 0)
+        imageLabel.BackgroundTransparency = 1 -- 背景透明
+        imageLabel.Image = msgData.head -- 替换为实际的图片ID
+        imageLabel.Parent = messageContainer
+
         -- 创建消息文本
         local messageLabel = Instance.new("TextLabel")
         messageLabel.Name = "MessageLabel"
-        messageLabel.Size = UDim2.new(0.9, 0, 1, 0) -- 宽度 80%，高度 100%
-        messageLabel.Position = UDim2.new(0, 0, 0, 0)
+        messageLabel.Size = UDim2.new(0.8, 0, 1, 0) -- 宽度 80%，高度 100%
+        messageLabel.Position = UDim2.new(0, 25, 0, 0)
         messageLabel.BackgroundTransparency = 1 -- 背景透明
         messageLabel.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
         messageLabel.Text = msgData.sender .. ": " .. msgData.text -- 消息内容
