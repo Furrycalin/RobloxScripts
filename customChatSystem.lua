@@ -233,6 +233,8 @@ local function createCustomChat()
             -- 执行点击事件
             onClick(button)
         end)
+
+        if buttoName == "有道翻译" then button.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3) end
     end
 
     -- 添加示例按钮
@@ -244,7 +246,6 @@ local function createCustomChat()
 
     addButtonToSideBar("有道翻译", function(button)
         translateAPI = "YouDao"
-        button.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
     end)
 
     addButtonToSideBar("AI翻译", function()
