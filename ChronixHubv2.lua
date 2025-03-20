@@ -1201,6 +1201,7 @@ local function createCodeEditor(size, position)
     CodeBox.TextColor3 = Color3.fromRGB(200, 200, 200)
     CodeBox.TextXAlignment = Enum.TextXAlignment.Left
     CodeBox.TextYAlignment = Enum.TextYAlignment.Top
+    CodeBox.RichText = true -- 启用 RichText
     CodeBox.TextWrapped = true
     CodeBox.MultiLine = true
     CodeBox.ClearTextOnFocus = false
