@@ -230,7 +230,6 @@ local function createCustomChat()
         messageLabel.Parent = messageContainer
 
         setTextColor(messageLabel, 1, #msgData.nickname + 1, getColorForText(msgData.nickname))
-        if player.name == msgData.sender then setTextColor(messageLabel, #msgData.nickname + 2, #msgData.text, Color3.fromRGB(204, 255, 204)) end
 
         -- 创建按钮
         local editButton = Instance.new("TextButton")
