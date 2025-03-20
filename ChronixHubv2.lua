@@ -2391,6 +2391,7 @@ local function AddMenuContent(category)
                 CreateNotification("提示", button.Text .. " 已经成功启动!", 10, true)
             end)
         end
+        addscripts("高级聊天系统", "https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/customChatSystem.lua")
         addscripts("飞行V4", "https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/FlyV4.lua")
         addscripts("超高画质", "https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/Graphics.lua")
         addscripts("光影", "https://raw.gitcode.com/Furrycalin/ScriptStorage/raw/main/Shader.lua")
