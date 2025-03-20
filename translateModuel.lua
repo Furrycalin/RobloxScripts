@@ -1,4 +1,21 @@
 local HttpService = game:GetService("HttpService")
+local TextService = game:GetService("TextService")
+
+-- 预设常见语言
+local commonLanguages = {"en", "es", "fr", "de", "ja", "ko", "ru", "pt", "it"}
+
+-- 尝试翻译
+local function tryTranslate(text, targetLanguage)
+    for _, sourceLanguage in ipairs(commonLanguages) do
+        local success, result = pcall(function()
+            return TextService:Translate(text, sourceLanguage, targetLanguage)
+        end)
+        if success then
+            return result.Text
+        end
+    end
+    return text -- 如果所有语言都失败，返回原始文本
+end
 
 local translateModuel = {}
 
@@ -43,6 +60,8 @@ function translateModuel:translateText(text, api)
         else
             return nil
         end
+    elseif api == "Roblox" then
+        return tryTranslate(text, "zh")
     end
 end
 
