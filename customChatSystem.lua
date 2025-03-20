@@ -153,7 +153,7 @@ local function createCustomChat()
         -- 创建消息文本
         local messageLabel = Instance.new("TextLabel")
         messageLabel.Name = "MessageLabel"
-        messageLabel.Size = UDim2.new(0.8, 0, 1, 0) -- 宽度 80%，高度 100%
+        messageLabel.Size = UDim2.new(0.9, 0, 1, 0) -- 宽度 80%，高度 100%
         messageLabel.Position = UDim2.new(0, 0, 0, 0)
         messageLabel.BackgroundTransparency = 1 -- 背景透明
         messageLabel.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
@@ -164,8 +164,8 @@ local function createCustomChat()
         -- 创建按钮
         local editButton = Instance.new("TextButton")
         editButton.Name = "翻译"
-        editButton.Size = UDim2.new(0.2, 0, 1, 0) -- 宽度 20%，高度 100%
-        editButton.Position = UDim2.new(0.8, 0, 0, 0)
+        editButton.Size = UDim2.new(0.1, 0, 1, 0) -- 宽度 20%，高度 100%
+        editButton.Position = UDim2.new(0.9, 0, 0, 0)
         editButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
         editButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
         editButton.Text = "翻译" -- 按钮文字
