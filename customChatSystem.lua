@@ -77,9 +77,7 @@ local function getColorForText(text)
 end
 
 -- 函数：将 TextLabel 中的某一段字改变颜色
-local function setTextColor(textLabel, startIndex, endIndex, color)
-    -- 获取原始文本
-    local text = textLabel.Text
+local function setTextColor(text, startIndex, endIndex, color)
 
     -- 提取需要改变颜色的部分
     local coloredText = text:sub(startIndex, endIndex)
@@ -88,8 +86,7 @@ local function setTextColor(textLabel, startIndex, endIndex, color)
     -- 拼接最终文本
     local finalText = text:sub(1, startIndex - 1) .. coloredTextWithTag .. text:sub(endIndex + 1)
 
-    -- 更新 TextLabel 的文本
-    textLabel.Text = finalText
+    return finalText
 end
 
 -- 创建自定义聊天栏
@@ -125,27 +122,55 @@ local function createCustomChat()
     uiListLayout.Padding = UDim.new(0, 5) -- 消息间距
     uiListLayout.Parent = scrollingFrame
 
+    -- 创建输入栏容器
+    local inputContainer = Instance.new("Frame")
+    inputContainer.Name = "InputContainer"
+    inputContainer.Size = UDim2.new(1, 0, 0.1, 0) -- 宽度 100%，高度 10%
+    inputContainer.Position = UDim2.new(0, 0, 0.9, 0) -- 底部
+    inputContainer.BackgroundTransparency = 1 -- 背景透明
+    inputContainer.Parent = chatFrame
+
     -- 创建输入栏
     local inputBox = Instance.new("TextBox")
     inputBox.Name = "InputBox"
-    inputBox.Size = UDim2.new(1, 0, 0.1, 0) -- 宽度 100%，高度 10%
-    inputBox.Position = UDim2.new(0, 0, 0.9, 0) -- 底部
+    inputBox.Size = UDim2.new(0.85, 0, 1, 0) -- 宽度 85%，高度 100%
+    inputBox.Position = UDim2.new(0, 0, 0, 0)
     inputBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
     inputBox.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
     inputBox.PlaceholderText = "输入消息..." -- 提示文字
     inputBox.TextXAlignment = Enum.TextXAlignment.Left
+    inputBox.ClearTextOnFocus = false
     inputBox.Text = ""
     inputBox.TextSize = 12
-    inputBox.Parent = chatFrame
+    inputBox.Parent = inputContainer
+
+    -- 创建发送按钮
+    local sendButton = Instance.new("TextButton")
+    sendButton.Name = "SendButton"
+    sendButton.Size = UDim2.new(0.15, 0, 1, 0) -- 宽度 15%，高度 100%
+    sendButton.Position = UDim2.new(0.85, 0, 0, 0) -- 右侧
+    sendButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
+    sendButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+    sendButton.Text = "▶" -- 使用箭头图标代替文字
+    sendButton.TextSize = 12
+    sendButton.Parent = inputContainer
 
     -- 发送消息的逻辑
+    local function sendMessage()
+        local message = inputBox.Text
+        if message ~= "" then
+            chatControl:chat(message) -- 发送消息
+            inputBox.Text = "" -- 清空输入框
+        end
+    end
+
+    -- 绑定发送按钮点击事件
+    sendButton.MouseButton1Click:Connect(sendMessage)
+
+    -- 绑定输入栏回车事件
     inputBox.FocusLost:Connect(function(enterPressed)
         if enterPressed then
-            local message = inputBox.Text
-            if message ~= "" then
-                chatControl:chat(message) -- 发送消息
-                inputBox.Text = "" -- 清空输入框
-            end
+            sendMessage()
         end
     end)
 
@@ -224,6 +249,16 @@ local function createCustomChat()
     end)
 
     chatControl:MessageReceiver(function(msgData)
+        local function chuli(Data)
+            local sourcemsghand = Data.nickname .. ":"
+            local msghand = setTextColor(sourcemsghand, 1, #sourcemsghand, getColorForText(Data.sender))
+            local msgtail = Data.text
+            if player.name == Data.sender then
+                msgtail = setTextColor(Data.text, 1, #Data.text, Color3.fromRGB(204, 255, 204))
+            end
+            return msghand .. " " .. msgtail
+        end
+        
         -- 创建消息容器
         local messageContainer = Instance.new("Frame")
         messageContainer.Name = "MessageContainer"
@@ -247,13 +282,11 @@ local function createCustomChat()
         messageLabel.Position = UDim2.new(0, 25, 0, 0)
         messageLabel.BackgroundTransparency = 1 -- 背景透明
         messageLabel.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-        messageLabel.Text = msgData.nickname .. ": " .. msgData.text -- 消息内容
+        messageLabel.Text = chuli(msgData)
         messageLabel.TextXAlignment = Enum.TextXAlignment.Left -- 文字左对齐
         messageLabel.TextSize = 12
         messageLabel.RichText = true -- 启用 RichText
         messageLabel.Parent = messageContainer
-
-        setTextColor(messageLabel, 1, #msgData.nickname + 1, getColorForText(msgData.nickname))
 
         -- 创建按钮
         local editButton = Instance.new("TextButton")
@@ -268,9 +301,9 @@ local function createCustomChat()
 
         -- 点击按钮触发代码
         editButton.MouseButton1Click:Connect(function()
-            messageLabel.Text = msgData.nickname .. ": " .. translateModuel:translateText(msgData.text, translateAPI)
-            setTextColor(messageLabel, 1, #msgData.nickname + 1, getColorForText(msgData.nickname))
-            if player.name == msgData.sender then setTextColor(messageLabel, #msgData.nickname + 2, #msgData.text, Color3.fromRGB(204, 255, 204)) end
+            local linshiData = msgData
+            linshiData.text = translateModuel:translateText(msgData.text, translateAPI)
+            messageLabel.Text = chuli(linshiData)
         end)
 
         -- 滚动到最下面
