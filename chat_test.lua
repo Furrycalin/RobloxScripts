@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TextChatService = game:GetService("TextChatService")
+local Players = game:GetService("Players")
 
 -- 判断是否为旧聊天系统
 local isLegacyChat = TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService
