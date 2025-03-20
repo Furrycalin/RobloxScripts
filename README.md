@@ -83,6 +83,28 @@ end)
 
 ---
 
+### **▶ translateModuel.lua**  
+**使用方法：**  
+```lua
+-- 加载实例到脚本中
+local translateModuel = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/translateModuel.lua"))()
+
+-- 使用示例
+-- 翻译API
+-- YouDao 为有道词典的免费翻译API，速度较快，限制较少
+-- AI 为使用AI来翻译，限制每秒2次，并且传回速度较慢，但结果会更加准确
+-- Roblox 直接传回原文本（本来设计的使用Roblox本身的翻译API，但没成功）
+local translateAPI = "YouDao"
+-- 原文本
+local text1 = "Hello, Nice to meet you!"
+-- 翻译后的文本
+local text2 = translateModuel:translateText(text1, translateAPI)
+```
+**描述**  
+传入任意字符串通过API将其翻译成中文。
+
+---
+
 ### **▶ Notification.lua**  
 **描述**  
 轻量级的消息框提示脚本，适合开发者参考使用。 
