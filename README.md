@@ -26,6 +26,22 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 
 ---
 
+### **▶ customChatSystem.lua**  
+**执行代码：**  
+```lua
+loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/customChatSystem.lua"))()
+```
+**描述**  
+设计的全新聊天界面，主要修改有
+- 📏 **文字字号调大**
+- 👤 **玩家名左侧添加头像**
+- 🎨 **拥有比原版更多的随机名称颜色**
+- 🌐 **允许随时使用自定义API翻译文本**
+   
+可通过屏幕右下角来开关新聊天界面显示
+
+---
+
 ### **▶ FlyV4.lua**  
 **执行代码：**  
 ```lua
