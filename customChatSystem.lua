@@ -47,6 +47,7 @@ local function createCustomChat()
     inputBox.PlaceholderText = "输入消息..." -- 提示文字
     inputBox.TextXAlignment = Enum.TextXAlignment.Left
     inputBox.Text = ""
+    inputBox.TextSize = 12
     inputBox.Parent = chatFrame
 
     -- 发送消息的逻辑
@@ -77,6 +78,7 @@ local function createCustomChat()
     sideBarTitle.BackgroundTransparency = 1 -- 背景透明
     sideBarTitle.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
     sideBarTitle.Text = "翻译器" -- 标题文字
+    sideBarTitle.TextSize = 12
     sideBarTitle.TextXAlignment = Enum.TextXAlignment.Center -- 文字居中
     sideBarTitle.Parent = sideBar
 
@@ -101,6 +103,7 @@ local function createCustomChat()
         button.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
         button.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
         button.Text = buttonName -- 按钮文字
+        button.TextSize = 12
         button.Parent = buttonContainer
 
         -- 点击按钮时高亮
@@ -158,6 +161,7 @@ local function createCustomChat()
         messageLabel.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
         messageLabel.Text = msgData.nickname .. ": " .. msgData.text -- 消息内容
         messageLabel.TextXAlignment = Enum.TextXAlignment.Left -- 文字左对齐
+        messageLabel.TextSize = 12
         messageLabel.Parent = messageContainer
 
         -- 创建按钮
@@ -168,6 +172,7 @@ local function createCustomChat()
         editButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
         editButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
         editButton.Text = "翻译" -- 按钮文字
+        editButton.TextSize = 12
         editButton.Parent = messageContainer
 
         -- 点击按钮触发代码
