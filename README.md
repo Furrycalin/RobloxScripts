@@ -39,6 +39,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 - 🌐 **使用自定义API翻译文本**
 - 📝 **复制聊天日志**
 - 🌌 **无限的聊天记录（游戏中）**
+- 🔍 **搜索玩家昵称筛选聊天**
    
 可通过点击屏幕右下角的按钮来开关新聊天界面显示。
 
