@@ -60,6 +60,42 @@ function translateModuel:translateText(text, api)
         else
             return nil
         end
+    elseif api == "Bing" then
+        local url = "https://api.52vmy.cn/api/query/fanyi?msg=" .. urlEncode(text)
+        local success, response = pcall(function()
+            return game:HttpGet(url)
+        end)
+
+        if success then
+            local data = HttpService:JSONDecode(response)
+            return data.data.target
+        else
+            return nil
+        end
+    elseif api == "SoGou" then
+        local url = "https://api.52vmy.cn/api/query/fanyi/sogou?msg=" .. urlEncode(text)
+        local success, response = pcall(function()
+            return game:HttpGet(url)
+        end)
+
+        if success then
+            local data = HttpService:JSONDecode(response)
+            return data.data.target
+        else
+            return nil
+        end
+    elseif api == "QQ" then
+        local url = "https://api.52vmy.cn/api/query/fanyi/qq?msg=" .. urlEncode(text)
+        local success, response = pcall(function()
+            return game:HttpGet(url)
+        end)
+
+        if success then
+            local data = HttpService:JSONDecode(response)
+            return data.data.target
+        else
+            return nil
+        end
     elseif api == "Roblox" then
         return tryTranslate(text, "zh")
     end
