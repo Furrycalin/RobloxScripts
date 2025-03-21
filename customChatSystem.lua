@@ -363,13 +363,19 @@ local function createCustomChat()
     -- 创建切换按钮
     local toggleButton = Instance.new("TextButton")
     toggleButton.Name = "ToggleChatButton"
-    toggleButton.Size = UDim2.new(0.05, 0, 0.05, 0) -- 按钮大小
-    toggleButton.Position = UDim2.new(0.95, 0, 0.95, 0) -- 放置在右下角
+    toggleButton.Size = UDim2.new(0, 45, 0, 45) -- 按钮大小
+    toggleButton.Position = UDim2.new(0.17, 0, -0.06, 0)
     toggleButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
     toggleButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-    toggleButton.Text = "切换" -- 按钮文字
-    toggleButton.TextSize = 12
+    toggleButton.BackgroundTransparency = 0.7
+    toggleButton.Text = "💬" -- 按钮文字
+    toggleButton.TextSize = 14
     toggleButton.Parent = screenGui
+
+    -- 圆角效果
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(1, 0) -- 完全圆形
+    corner.Parent = toggleButton
 
     -- 切换聊天栏显示/隐藏
     toggleButton.MouseButton1Click:Connect(function()
@@ -380,7 +386,7 @@ local function createCustomChat()
     local uninstallButton = Instance.new("TextButton")
     uninstallButton.Name = "UninstallButton"
     uninstallButton.Size = UDim2.new(0.05, 0, 0.05, 0) -- 按钮大小
-    uninstallButton.Position = UDim2.new(0.95, 0, 0.9, 0) -- 放置在切换按钮上方
+    uninstallButton.Position = UDim2.new(0.95, 0, 0.95, 0) -- 放置在切换按钮上方
     uninstallButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
     uninstallButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
     uninstallButton.Text = "卸载" -- 按钮文字
