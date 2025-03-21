@@ -293,7 +293,7 @@ local function createCustomChat()
     chatControl:MessageReceiver(function(msgData)
         table.insert(chatlog, "[" .. getCurrentDateTime() .. "] " .. msgData.nickname .. "(@" .. msgData.sender .. ") : " .. msgData.text)
         -- 检测滚动条是否在最下方
-        local isAtBottom = scrollingFrame.CanvasPosition.Y + scrollingFrame.AbsoluteWindowSize.Y >= scrollingFrame.CanvasSize.Y.Offset
+        local isAtBottom = scrollingFrame.CanvasSize.Y.Offset - scrollingFrame.AbsoluteWindowSize.Y >= scrollingFrame.CanvasPosition.Y
 
         -- 创建消息容器
         local messageContainer = Instance.new("Frame")
