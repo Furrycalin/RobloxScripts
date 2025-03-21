@@ -176,7 +176,7 @@ local function createCustomChat()
     -- 创建输入栏
     local inputBox = Instance.new("TextBox")
     inputBox.Name = "InputBox"
-    inputBox.Size = UDim2.new(0.85, 0, 1, 0) -- 宽度 85%，高度 100%
+    inputBox.Size = UDim2.new(0.9, 0, 1, 0) -- 宽度 85%，高度 100%
     inputBox.Position = UDim2.new(0, 0, 0, 0)
     inputBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
     inputBox.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
@@ -190,9 +190,9 @@ local function createCustomChat()
     -- 创建发送按钮
     local sendButton = Instance.new("TextButton")
     sendButton.Name = "SendButton"
-    sendButton.Size = UDim2.new(0.15, 0, 1, 0) -- 宽度 15%，高度 100%
-    sendButton.Position = UDim2.new(0.85, 0, 0, 0) -- 右侧
-    sendButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
+    sendButton.Size = UDim2.new(0.1, 0, 1, 0) -- 宽度 15%，高度 100%
+    sendButton.Position = UDim2.new(0.9, 0, 0, 0) -- 右侧
+    sendButton.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3) -- 背景颜色
     sendButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
     sendButton.Text = "▶" -- 使用箭头图标代替文字
     sendButton.TextSize = 12
