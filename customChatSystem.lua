@@ -253,6 +253,18 @@ local function createCustomChat()
         translateAPI = "AI"
     end)
 
+    addButtonToSideBar("必应翻译", function()
+        translateAPI = "Bing"
+    end)
+
+    addButtonToSideBar("搜狗翻译", function()
+        translateAPI = "SoGou"
+    end)
+
+    addButtonToSideBar("QQ翻译", function()
+        translateAPI = "QQ"
+    end)
+
     addButtonToSideBar("原文", function()
         translateAPI = "Roblox"
     end)
