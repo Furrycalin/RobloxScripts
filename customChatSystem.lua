@@ -343,7 +343,177 @@ local function createCustomChat()
         end
     end)
 
+    -- 存储消息的表
+    local messageTable = {}
+
+    -- 创建搜索框容器
+    local searchContainer = Instance.new("Frame")
+    searchContainer.Name = "SearchContainer"
+    searchContainer.Size = UDim2.new(0.3, 0, 0.07, 0) -- 宽度 20%，高度 4%
+    searchContainer.Position = UDim2.new(0.7, 0, -0.1, 0) -- 紧贴聊天栏外侧右上角
+    searchContainer.BackgroundTransparency = 1 -- 背景透明
+    searchContainer.Parent = chatFrame
+
+    -- 创建搜索框
+    local searchBox = Instance.new("TextBox")
+    searchBox.Name = "SearchBox"
+    searchBox.Size = UDim2.new(0.7, 0, 1, 0) -- 宽度 70%，高度 100%
+    searchBox.Position = UDim2.new(0, 0, 0, 0)
+    searchBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
+    searchBox.BackgroundTransparency = 0.5 -- 半透明
+    searchBox.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+    searchBox.PlaceholderText = "搜索昵称..." -- 提示文字
+    searchBox.TextXAlignment = Enum.TextXAlignment.Left
+    searchBox.ClearTextOnFocus = false
+    searchBox.Text = ""
+    searchBox.TextSize = 12
+    searchBox.Parent = searchContainer
+
+    -- 创建搜索按钮
+    local searchButton = Instance.new("TextButton")
+    searchButton.Name = "SearchButton"
+    searchButton.Size = UDim2.new(0.25, 0, 1, 0) -- 宽度 25%，高度 100%
+    searchButton.Position = UDim2.new(0.75, 0, 0, 0) -- 右侧
+    searchButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
+    searchButton.BackgroundTransparency = 0.5 -- 半透明
+    searchButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+    searchButton.Text = "🔍" -- 使用放大镜图标
+    searchButton.TextSize = 12
+    searchButton.Parent = searchContainer
+
+    -- 搜索功能
+    local function searchMessages(keyword)
+        -- 清空当前消息显示
+        for _, child in ipairs(scrollingFrame:GetChildren()) do
+            if child:IsA("Frame") then
+                child:Destroy()
+            end
+        end
+
+        -- 如果关键字为空，还原原本的聊天栏
+        if keyword == "" then
+            for _, msgData in ipairs(messageTable) do
+                -- 创建消息容器
+                local messageContainer = Instance.new("Frame")
+                messageContainer.Name = "MessageContainer"
+                messageContainer.Size = UDim2.new(1, 0, 0, 20) -- 宽度 100%，高度 20
+                messageContainer.BackgroundTransparency = 1 -- 背景透明
+                messageContainer.Parent = scrollingFrame
+
+                -- 创建图片框
+                local imageLabel = Instance.new("ImageLabel")
+                imageLabel.Name = "MessageImage"
+                imageLabel.Size = UDim2.new(0, 20, 0, 20) -- 正方形图片，大小 20x20
+                imageLabel.Position = UDim2.new(0, 0, 0, 0)
+                imageLabel.BackgroundTransparency = 1 -- 背景透明
+                imageLabel.Image = msgData.head -- 替换为实际的图片ID
+                imageLabel.Parent = messageContainer
+
+                -- 创建消息文本
+                local messageLabel = Instance.new("TextLabel")
+                messageLabel.Name = "MessageLabel"
+                messageLabel.Size = UDim2.new(0.8, 0, 1, 0) -- 宽度 80%，高度 100%
+                messageLabel.Position = UDim2.new(0, 25, 0, 0)
+                messageLabel.BackgroundTransparency = 1 -- 背景透明
+                messageLabel.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+                messageLabel.Text = HandleText(msgData)
+                messageLabel.TextXAlignment = Enum.TextXAlignment.Left -- 文字左对齐
+                messageLabel.TextSize = 12
+                messageLabel.RichText = true -- 启用 RichText
+                messageLabel.Parent = messageContainer
+
+                -- 创建按钮
+                local editButton = Instance.new("TextButton")
+                editButton.Name = "翻译"
+                editButton.Size = UDim2.new(0.1, 0, 1, 0) -- 宽度 20%，高度 100%
+                editButton.Position = UDim2.new(0.9, 0, 0, 0)
+                editButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
+                editButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+                editButton.Text = "翻译" -- 按钮文字
+                editButton.TextSize = 12
+                editButton.Parent = messageContainer
+
+                -- 点击按钮触发代码
+                editButton.MouseButton1Click:Connect(function()
+                    local linshiData = msgData
+                    linshiData.text = translateModuel:translateText(msgData.text, translateAPI)
+                    messageLabel.Text = HandleText(linshiData)
+                end)
+            end
+            return
+        end
+
+        -- 遍历 messageTable，筛选出包含关键字的 nickname 消息
+        for _, msgData in ipairs(messageTable) do
+            if string.find(msgData.nickname:lower(), keyword:lower()) then
+                -- 创建消息容器
+                local messageContainer = Instance.new("Frame")
+                messageContainer.Name = "MessageContainer"
+                messageContainer.Size = UDim2.new(1, 0, 0, 20) -- 宽度 100%，高度 20
+                messageContainer.BackgroundTransparency = 1 -- 背景透明
+                messageContainer.Parent = scrollingFrame
+
+                -- 创建图片框
+                local imageLabel = Instance.new("ImageLabel")
+                imageLabel.Name = "MessageImage"
+                imageLabel.Size = UDim2.new(0, 20, 0, 20) -- 正方形图片，大小 20x20
+                imageLabel.Position = UDim2.new(0, 0, 0, 0)
+                imageLabel.BackgroundTransparency = 1 -- 背景透明
+                imageLabel.Image = msgData.head -- 替换为实际的图片ID
+                imageLabel.Parent = messageContainer
+
+                -- 创建消息文本
+                local messageLabel = Instance.new("TextLabel")
+                messageLabel.Name = "MessageLabel"
+                messageLabel.Size = UDim2.new(0.8, 0, 1, 0) -- 宽度 80%，高度 100%
+                messageLabel.Position = UDim2.new(0, 25, 0, 0)
+                messageLabel.BackgroundTransparency = 1 -- 背景透明
+                messageLabel.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+                messageLabel.Text = HandleText(msgData)
+                messageLabel.TextXAlignment = Enum.TextXAlignment.Left -- 文字左对齐
+                messageLabel.TextSize = 12
+                messageLabel.RichText = true -- 启用 RichText
+                messageLabel.Parent = messageContainer
+
+                -- 创建按钮
+                local editButton = Instance.new("TextButton")
+                editButton.Name = "翻译"
+                editButton.Size = UDim2.new(0.1, 0, 1, 0) -- 宽度 20%，高度 100%
+                editButton.Position = UDim2.new(0.9, 0, 0, 0)
+                editButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
+                editButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+                editButton.Text = "翻译" -- 按钮文字
+                editButton.TextSize = 12
+                editButton.Parent = messageContainer
+
+                -- 点击按钮触发代码
+                editButton.MouseButton1Click:Connect(function()
+                    local linshiData = msgData
+                    linshiData.text = translateModuel:translateText(msgData.text, translateAPI)
+                    messageLabel.Text = HandleText(linshiData)
+                end)
+            end
+        end
+    end
+
+    -- 绑定搜索按钮点击事件
+    searchButton.MouseButton1Click:Connect(function()
+        local keyword = searchBox.Text
+        searchMessages(keyword)
+        scrollingFrame.CanvasPosition = Vector2.new(0, 99999999)
+        maxbottom = scrollingFrame.CanvasPosition.Y
+    end)
+
+    -- 绑定搜索框回车事件
+    searchBox.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            local keyword = searchBox.Text
+            searchMessages(keyword)
+        end
+    end)
+
     chatControl:MessageReceiver(function(msgData)
+        table.insert(messageTable, msgData)
         table.insert(chatlog, "[" .. getCurrentDateTime() .. "] " .. msgData.nickname .. "(@" .. msgData.sender .. ") : " .. msgData.text)
 
         -- 创建消息容器
