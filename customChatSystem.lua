@@ -280,6 +280,8 @@ local function createCustomChat()
 
     chatControl:MessageReceiver(function(msgData)
         table.insert(chatlog, "[" .. getCurrentDateTime() .. "] " .. msgData.nickname .. "(@" .. msgData.sender .. ") : " .. msgData.text)
+        -- 检测滚动条是否在最下方
+        local isAtBottom = scrollingFrame.CanvasPosition.Y + scrollingFrame.AbsoluteWindowSize.Y >= scrollingFrame.CanvasSize.Y.Offset
 
         -- 创建消息容器
         local messageContainer = Instance.new("Frame")
@@ -327,10 +329,7 @@ local function createCustomChat()
             linshiData.text = translateModuel:translateText(msgData.text, translateAPI)
             messageLabel.Text = HandleText(linshiData)
         end)
-
-        -- 检测滚动条是否在最下方
-        local isAtBottom = scrollingFrame.CanvasPosition.Y + scrollingFrame.AbsoluteWindowSize.Y >= scrollingFrame.CanvasSize.Y.Offset
-
+        
         -- 如果滚动条在最下方，自动滚动到最下方
         if isAtBottom then
             scrollingFrame.CanvasPosition = Vector2.new(0, scrollingFrame.CanvasSize.Y.Offset)
