@@ -332,7 +332,7 @@ local function createCustomChat()
         
         -- 如果滚动条在最下方，自动滚动到最下方
         if isAtBottom then
-            scrollingFrame.CanvasPosition = Vector2.new(0, scrollingFrame.CanvasSize.Y.Offset)
+            scrollingFrame.CanvasPosition = Vector2.new(0, 99999999)
         end
     end)
 
