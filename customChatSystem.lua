@@ -261,7 +261,7 @@ local function createCustomChat()
         setclipboard(table.concat(chatlog, "\n"))
     end)
 
-    local function chuli(Data)
+    local function HandleText(Data)
         local sourcemsghand = Data.nickname .. ":"
         local msghand = setTextColor(sourcemsghand, 1, #sourcemsghand, getColorForText(Data.sender))
         local msgtail = Data.text
@@ -304,7 +304,7 @@ local function createCustomChat()
         messageLabel.Position = UDim2.new(0, 25, 0, 0)
         messageLabel.BackgroundTransparency = 1 -- 背景透明
         messageLabel.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-        messageLabel.Text = chuli(msgData)
+        messageLabel.Text = HandleText(msgData)
         messageLabel.TextXAlignment = Enum.TextXAlignment.Left -- 文字左对齐
         messageLabel.TextSize = 12
         messageLabel.RichText = true -- 启用 RichText
@@ -325,7 +325,7 @@ local function createCustomChat()
         editButton.MouseButton1Click:Connect(function()
             local linshiData = msgData
             linshiData.text = translateModuel:translateText(msgData.text, translateAPI)
-            messageLabel.Text = chuli(linshiData)
+            messageLabel.Text = HandleText(linshiData)
         end)
 
         -- 滚动到最下面
