@@ -218,7 +218,7 @@ local function createCustomChat()
         button.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
         button.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
         button.Text = buttonName -- 按钮文字
-        button.TextSize = 12
+        button.TextSize = 10
         button.Parent = buttonContainer
 
         -- 点击按钮时高亮
