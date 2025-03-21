@@ -41,7 +41,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 - 🌌 **无限的聊天记录（游戏中）**
 - 🔍 **搜索玩家昵称筛选聊天**
    
-可通过点击屏幕右下角的按钮来开关新聊天界面显示。
+可通过点击屏幕左上角的按钮来开关新聊天界面显示，点击右下角按钮卸载聊天界面。
 
 ---
 
