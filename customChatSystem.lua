@@ -328,8 +328,13 @@ local function createCustomChat()
             messageLabel.Text = HandleText(linshiData)
         end)
 
-        -- 滚动到最下面
-        -- scrollingFrame.CanvasPosition = Vector2.new(0, 9999999)
+        -- 检测滚动条是否在最下方
+        local isAtBottom = scrollingFrame.CanvasPosition.Y + scrollingFrame.AbsoluteWindowSize.Y >= scrollingFrame.CanvasSize.Y.Offset
+
+        -- 如果滚动条在最下方，自动滚动到最下方
+        if isAtBottom then
+            scrollingFrame.CanvasPosition = Vector2.new(0, scrollingFrame.CanvasSize.Y.Offset)
+        end
     end)
 
     -- 创建切换按钮
