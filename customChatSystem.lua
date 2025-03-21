@@ -290,10 +290,20 @@ local function createCustomChat()
         return dateTime
     end
 
+    local maxbottom = 0
+    local autoscroll = false
+
+    scrollingFrame:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
+        if maxbottom < scrollingFrame.CanvasPosition.Y then
+            maxbottom = scrollingFrame.CanvasPosition.Y
+            autoscroll = true
+        elseif maxbottom > scrollingFrame.CanvasPosition.Y then
+            autoscroll = false
+        end
+    end)
+
     chatControl:MessageReceiver(function(msgData)
         table.insert(chatlog, "[" .. getCurrentDateTime() .. "] " .. msgData.nickname .. "(@" .. msgData.sender .. ") : " .. msgData.text)
-        -- 检测滚动条是否在最下方
-        local isAtBottom = scrollingFrame.CanvasSize.Y.Offset - scrollingFrame.AbsoluteWindowSize.Y >= scrollingFrame.CanvasPosition.Y
 
         -- 创建消息容器
         local messageContainer = Instance.new("Frame")
@@ -343,8 +353,9 @@ local function createCustomChat()
         end)
         
         -- 如果滚动条在最下方，自动滚动到最下方
-        if isAtBottom then
+        if autoscroll then
             scrollingFrame.CanvasPosition = Vector2.new(0, 99999999)
+            maxbottom = scrollingFrame.CanvasPosition.Y
         end
     end)
 
