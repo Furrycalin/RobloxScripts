@@ -109,6 +109,9 @@ local translateModuel = loadstring(game:HttpGet("https://raw.gitcode.com/Furryca
 -- 翻译API
 -- YouDao 为有道词典的免费翻译API，速度较快，限制较少
 -- AI 为使用AI来翻译，限制每秒2次，并且传回速度较慢，但结果会更加准确
+-- SoGou 使用搜狗翻译API来翻译
+-- QQ 使用QQ翻译API来翻译
+-- Bing 使用必应翻译来翻译
 -- Roblox 直接传回原文本（本来设计的使用Roblox本身的翻译API，但没成功）
 local translateAPI = "YouDao"
 -- 原文本
