@@ -3,6 +3,7 @@ local chatControl = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 
 local colorCache = {}
 
@@ -293,7 +294,7 @@ local function createCustomChat()
     local maxbottom = 0
     local autoscroll = false
 
-    scrollingFrame:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
+    RunService.Heartbeat:Connect(function()
         if maxbottom < scrollingFrame.CanvasPosition.Y then
             maxbottom = scrollingFrame.CanvasPosition.Y
             autoscroll = true
@@ -374,6 +375,51 @@ local function createCustomChat()
     toggleButton.MouseButton1Click:Connect(function()
         chatFrame.Visible = not chatFrame.Visible
     end)
+
+    -- 添加卸载按钮
+    local uninstallButton = Instance.new("TextButton")
+    uninstallButton.Name = "UninstallButton"
+    uninstallButton.Size = UDim2.new(0.05, 0, 0.05, 0) -- 按钮大小
+    uninstallButton.Position = UDim2.new(0.95, 0, 0.9, 0) -- 放置在切换按钮上方
+    uninstallButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
+    uninstallButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+    uninstallButton.Text = "卸载" -- 按钮文字
+    uninstallButton.TextSize = 12
+    uninstallButton.Parent = screenGui
+
+    -- 卸载功能
+    local function uninstallScript()
+        -- 断开所有事件监听
+        for _, connection in ipairs(getconnections(sendButton.MouseButton1Click)) do
+            connection:Disconnect()
+        end
+        for _, connection in ipairs(getconnections(inputBox.FocusLost)) do
+            connection:Disconnect()
+        end
+        for _, connection in ipairs(getconnections(toggleButton.MouseButton1Click)) do
+            connection:Disconnect()
+        end
+        for _, connection in ipairs(getconnections(uninstallButton.MouseButton1Click)) do
+            connection:Disconnect()
+        end
+
+        -- 移除所有实例
+        if screenGui and screenGui.Parent then
+            screenGui:Destroy()
+        end
+
+        -- 清理缓存和全局变量
+        colorCache = {}
+        chatlog = {}
+        translateModuel = nil
+        chatControl = nil
+
+        -- 打印卸载成功信息
+        print("脚本已完全卸载！")
+    end
+
+    -- 绑定卸载按钮点击事件
+    uninstallButton.MouseButton1Click:Connect(uninstallScript)
 end
 
 -- 初始化自定义聊天栏
