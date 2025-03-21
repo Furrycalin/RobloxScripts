@@ -502,6 +502,7 @@ local function createCustomChat()
         searchMessages(keyword)
         scrollingFrame.CanvasPosition = Vector2.new(0, 99999999)
         maxbottom = scrollingFrame.CanvasPosition.Y
+        autoscroll = true
     end)
 
     -- 绑定搜索框回车事件
