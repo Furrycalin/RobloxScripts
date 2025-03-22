@@ -548,6 +548,8 @@ local function createCustomChat()
         messageLabel.TextXAlignment = Enum.TextXAlignment.Left -- 文字左对齐
         messageLabel.TextSize = 12
         messageLabel.RichText = true -- 启用 RichText
+        messageLabel.TextWrapped = true -- 启用自动换行
+        messageLabel.AutomaticSize = Enum.AutomaticSize.Y -- 自动调整高度
         messageLabel.Parent = messageContainer
 
         -- 创建按钮
@@ -579,10 +581,10 @@ local function createCustomChat()
     local toggleButton = Instance.new("TextButton")
     toggleButton.Name = "ToggleChatButton"
     toggleButton.Size = UDim2.new(0, 45, 0, 45) -- 按钮大小
-    toggleButton.Position = UDim2.new(0.17, 0, -0.06, 0)
+    toggleButton.Position = UDim2.new(0.17, 0, -0.07, 0)
     toggleButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
     toggleButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-    toggleButton.BackgroundTransparency = 0.7
+    toggleButton.BackgroundTransparency = 0.3
     toggleButton.Text = "💬" -- 按钮文字
     toggleButton.TextSize = 14
     toggleButton.Parent = screenGui
