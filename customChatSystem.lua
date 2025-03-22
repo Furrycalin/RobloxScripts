@@ -532,9 +532,9 @@ local function createCustomChat()
     end)
 
     chatControl:MessageReceiver(function(msgData)
-        if searchBox.Text ~= "" and not string.find(msgData.nickname:lower(), searchBox.Text:lower()) then return end
         table.insert(messageTable, msgData)
         table.insert(chatlog, "[" .. getCurrentDateTime() .. "] " .. msgData.nickname .. "(@" .. msgData.sender .. ") : " .. msgData.text)
+        if searchBox.Text ~= "" and not string.find(msgData.nickname:lower(), searchBox.Text:lower()) then return end
 
         -- 创建消息容器
         local messageContainer = Instance.new("Frame")
