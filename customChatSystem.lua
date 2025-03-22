@@ -138,7 +138,10 @@ local function createCustomChat()
     -- 创建 ScreenGui
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "CustomChat"
-    screenGui.Parent = player.PlayerGui
+    -- screenGui.Parent = player.PlayerGui
+    screenGui.Parent = game.CoreGui
+    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    screenGui.ResetOnSpawn = false
 
     -- 创建聊天栏背景
     local chatFrame = Instance.new("Frame")
