@@ -386,8 +386,8 @@ local function createCustomChat()
     searchButton.Name = "SearchButton"
     searchButton.Size = UDim2.new(0.25, 0, 1, 0) -- 宽度 25%，高度 100%
     searchButton.Position = UDim2.new(0.75, 0, 0, 0) -- 右侧
-    searchButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
-    searchButton.BackgroundTransparency = 0.5 -- 半透明
+    searchButton.BackgroundColor3 = Color3.new(0, 0, 0) -- 背景颜色
+    searchButton.BackgroundTransparency = 0.2 -- 半透明
     searchButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
     searchButton.Text = "🔍" -- 使用放大镜图标
     searchButton.TextSize = 12
