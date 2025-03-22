@@ -347,7 +347,7 @@ local function createCustomChat()
     local autoscroll = false
 
     RunService.Heartbeat:Connect(function()
-        if maxbottom < scrollingFrame.CanvasPosition.Y then
+        if maxbottom <= scrollingFrame.CanvasPosition.Y then
             maxbottom = scrollingFrame.CanvasPosition.Y
             autoscroll = true
         elseif maxbottom > scrollingFrame.CanvasPosition.Y then
