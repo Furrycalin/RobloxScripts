@@ -321,7 +321,8 @@ local function createCustomChat()
         local sourcemsghand = Data.nickname .. ":"
         local msghand = setTextColor(sourcemsghand, 1, #sourcemsghand, getColorForText(Data.sender))
         local msgtail = Data.text
-        if Data.text:sub(1, 1) ~= "/" and autotranslate then msgtail = translateModuel:translateText(Data.text, translateAPI) end
+        local iscmd = Data.text:sub(1, 1) == "/" or Data.text:sub(1, 1) == ";"
+        if not iscmd and autotranslate then msgtail = translateModuel:translateText(Data.text, translateAPI) end
         if player.name == Data.sender then
             msgtail = setTextColor(msgtail, 1, #msgtail, Color3.fromRGB(204, 255, 204))
         end
