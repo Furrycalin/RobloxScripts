@@ -526,6 +526,7 @@ local function createCustomChat()
         messageContainer.Name = "MessageContainer"
         messageContainer.Size = UDim2.new(1, 0, 0, 20) -- 宽度 100%，高度 20
         messageContainer.BackgroundTransparency = 1 -- 背景透明
+        messageContainer.AutomaticSize = Enum.AutomaticSize.Y -- 自动调整高度
         messageContainer.Parent = scrollingFrame
 
         -- 创建图片框
