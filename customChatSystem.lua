@@ -252,10 +252,14 @@ local function createCustomChat()
     -- 创建按钮布局
     local buttonLayout = Instance.new("UIListLayout")
     buttonLayout.Padding = UDim.new(0, 5) -- 按钮间距
+    buttonLayout.SortOrder = Enum.SortOrder.LayoutOrder -- 按 LayoutOrder 排序
     buttonLayout.Parent = buttonContainer
 
     -- 添加按钮的函数
+    local buttonIndex = 0 -- 用于记录按钮的顺序
     local function addButtonToSideBar(buttonName, onClick)
+        buttonIndex = buttonIndex + 1 -- 递增顺序索引
+
         local button = Instance.new("TextButton")
         button.Name = buttonName
         button.Size = UDim2.new(1, 0, 0.1, 0) -- 宽度 100%，高度 10%
@@ -263,6 +267,7 @@ local function createCustomChat()
         button.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
         button.Text = buttonName -- 按钮文字
         button.TextSize = 10
+        button.LayoutOrder = buttonIndex -- 设置 LayoutOrder
         button.Parent = buttonContainer
 
         -- 点击按钮时高亮
@@ -279,14 +284,25 @@ local function createCustomChat()
             onClick(button)
         end)
 
-        if buttoName == "有道翻译" then button.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3) end
+        -- 默认高亮第一个按钮
+        if buttonName == "有道翻译" then
+            button.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+        end
     end
 
     -- 添加示例按钮
 
-    addButtonToSideBar(autotranslate and "0-自动(开)" or "0-自动(关)", function(button)
+    addButtonToSideBar(autotranslate and "自动(开)" or "自动(关)", function(button)
         autotranslate = not autotranslate
-        button.Text = autotranslate and "0-自动(开)" or "0-自动(关)"
+        button.Text = autotranslate and "自动(开)" or "自动(关)"
+    end)
+
+    addButtonToSideBar("复制日志", function()
+        setclipboard(table.concat(chatlog, "\n"))
+    end)
+
+    addButtonToSideBar("原文", function()
+        translateAPI = "Roblox"
     end)
 
     addButtonToSideBar("有道翻译", function(button)
@@ -307,14 +323,6 @@ local function createCustomChat()
 
     addButtonToSideBar("QQ翻译", function()
         translateAPI = "QQ"
-    end)
-
-    addButtonToSideBar("原文", function()
-        translateAPI = "Roblox"
-    end)
-
-    addButtonToSideBar("1-复制日志", function()
-        setclipboard(table.concat(chatlog, "\n"))
     end)
 
     local function HandleText(Data)
@@ -524,6 +532,7 @@ local function createCustomChat()
     end)
 
     chatControl:MessageReceiver(function(msgData)
+        if searchBox.Text ~= "" and not string.find(msgData.nickname:lower(), searchBox.Text:lower()) then return end
         table.insert(messageTable, msgData)
         table.insert(chatlog, "[" .. getCurrentDateTime() .. "] " .. msgData.nickname .. "(@" .. msgData.sender .. ") : " .. msgData.text)
 
@@ -588,7 +597,7 @@ local function createCustomChat()
     local toggleButton = Instance.new("TextButton")
     toggleButton.Name = "ToggleChatButton"
     toggleButton.Size = UDim2.new(0, 45, 0, 45) -- 按钮大小
-    toggleButton.Position = UDim2.new(0.17, 0, -0.07, 0)
+    toggleButton.Position = UDim2.new(0.17, 0, -0.065, 0)
     toggleButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
     toggleButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
     toggleButton.BackgroundTransparency = 0.3
