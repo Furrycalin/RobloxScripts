@@ -319,7 +319,6 @@ local function createCustomChat()
         local msghand = setTextColor(sourcemsghand, 1, #sourcemsghand, getColorForText(Data.sender))
         local msgtail = Data.text
         if Data.text:sub(1, 1) ~= "/" and autotranslate then msgtail = translateModuel:translateText(Data.text, translateAPI) end
-        if Data.text:sub(1, 1) == "/" then msgtail = Data.text end
         if player.name == Data.sender then
             msgtail = setTextColor(msgtail, 1, #msgtail, Color3.fromRGB(204, 255, 204))
         end
