@@ -402,6 +402,7 @@ local function createCustomChat()
                 messageContainer.Name = "MessageContainer"
                 messageContainer.Size = UDim2.new(1, 0, 0, 20) -- 宽度 100%，高度 20
                 messageContainer.BackgroundTransparency = 1 -- 背景透明
+                messageContainer.AutomaticSize = Enum.AutomaticSize.Y -- 自动调整高度
                 messageContainer.Parent = scrollingFrame
 
                 -- 创建图片框
@@ -424,6 +425,8 @@ local function createCustomChat()
                 messageLabel.TextXAlignment = Enum.TextXAlignment.Left -- 文字左对齐
                 messageLabel.TextSize = 12
                 messageLabel.RichText = true -- 启用 RichText
+                messageLabel.TextWrapped = true -- 启用自动换行
+                messageLabel.AutomaticSize = Enum.AutomaticSize.Y -- 自动调整高度
                 messageLabel.Parent = messageContainer
 
                 -- 创建按钮
@@ -455,6 +458,7 @@ local function createCustomChat()
                 messageContainer.Name = "MessageContainer"
                 messageContainer.Size = UDim2.new(1, 0, 0, 20) -- 宽度 100%，高度 20
                 messageContainer.BackgroundTransparency = 1 -- 背景透明
+                messageContainer.AutomaticSize = Enum.AutomaticSize.Y -- 自动调整高度
                 messageContainer.Parent = scrollingFrame
 
                 -- 创建图片框
@@ -477,6 +481,8 @@ local function createCustomChat()
                 messageLabel.TextXAlignment = Enum.TextXAlignment.Left -- 文字左对齐
                 messageLabel.TextSize = 12
                 messageLabel.RichText = true -- 启用 RichText
+                messageLabel.TextWrapped = true -- 启用自动换行
+                messageLabel.AutomaticSize = Enum.AutomaticSize.Y -- 自动调整高度
                 messageLabel.Parent = messageContainer
 
                 -- 创建按钮
