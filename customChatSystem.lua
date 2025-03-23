@@ -549,18 +549,11 @@ local function createCustomChat()
 
         local privateMsgButton = Instance.new("TextButton")
         privateMsgButton.Name = "privateMsgButton"
-        privateMsgButton.Size = UDim2.new(findl.islink and 0.75 or 0.8, 0, 1, 0)
-        privateMsgButton.Position = UDim2.new(0, 25, 0, 0)
+        privateMsgButton.Size = messageLabel.Size
+        privateMsgButton.Position = messageLabel.Position
         privateMsgButton.BackgroundTransparency = 1
-        privateMsgButton.TextColor3 = Color3.new(1, 1, 1)
-        privateMsgButton.Text = HandleText(msgData)
-        privateMsgButton.TextXAlignment = Enum.TextXAlignment.Left
-        privateMsgButton.TextSize = 12
-        privateMsgButton.RichText = true
-        privateMsgButton.TextWrapped = true
-        privateMsgButton.AutomaticSize = Enum.AutomaticSize.Y
+        privateMsgButton.Text = ""
         privateMsgButton.Parent = messageContainer
-        privateMsgButton.Visible = true
 
         privateMsgButton.MouseButton1Click:Connect(function()
             inputBox.Text = getPrivateMessageTag(msgData.sender)
