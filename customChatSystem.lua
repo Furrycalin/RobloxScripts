@@ -525,28 +525,6 @@ local function createCustomChat()
     searchButton.TextSize = 12
     searchButton.Parent = searchContainer
 
-    -- 搜索功能
-    local function searchMessages(keyword)
-        for _, child in ipairs(scrollingFrame:GetChildren()) do
-            if child:IsA("Frame") then
-                child:Destroy()
-            end
-        end
-
-        if keyword == "" then
-            for _, msgData in ipairs(messageTable) do
-                createMessageUI(msgData)
-            end
-            return
-        end
-
-        for _, msgData in ipairs(messageTable) do
-            if string.find(msgData.nickname:lower(), keyword:lower()) then
-                createMessageUI(msgData)
-            end
-        end
-    end
-
     -- 创建消息 UI
     local function createMessageUI(msgData)
         local findl = findLink(msgData.text)
@@ -643,6 +621,28 @@ local function createCustomChat()
         copyButton.MouseButton1Click:Connect(function()
             setclipboard(msgData.text)
         end)
+    end
+
+    -- 搜索功能
+    local function searchMessages(keyword)
+        for _, child in ipairs(scrollingFrame:GetChildren()) do
+            if child:IsA("Frame") then
+                child:Destroy()
+            end
+        end
+
+        if keyword == "" then
+            for _, msgData in ipairs(messageTable) do
+                createMessageUI(msgData)
+            end
+            return
+        end
+
+        for _, msgData in ipairs(messageTable) do
+            if string.find(msgData.nickname:lower(), keyword:lower()) then
+                createMessageUI(msgData)
+            end
+        end
     end
 
     -- 绑定搜索按钮点击事件
