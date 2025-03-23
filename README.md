@@ -43,7 +43,6 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 - 🔗 **超链接检测**
 
 尚未与原版同步内容：
-- 🚧 **点击玩家名发送私聊**
 - 🚧 **正确处理指令**
 - 🚧 **其他未发现内容**
    
