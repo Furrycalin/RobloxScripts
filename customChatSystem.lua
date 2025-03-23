@@ -507,8 +507,8 @@ local function createCustomChat()
     searchButton.Name = "SearchButton"
     searchButton.Size = UDim2.new(0.25, 0, 1, 0)
     searchButton.Position = UDim2.new(0.75, 0, 0, 0)
-    searchButton.BackgroundColor3 = Color3.new(0, 0, 0)
-    searchButton.BackgroundTransparency = 0.2
+    searchButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    searchButton.BackgroundTransparency = 0.5
     searchButton.TextColor3 = Color3.new(1, 1, 1)
     searchButton.Text = "🔍"
     searchButton.TextSize = 12
@@ -673,9 +673,9 @@ local function createCustomChat()
     toggleButton.Name = "ToggleChatButton"
     toggleButton.Size = UDim2.new(0, 45, 0, 45)
     toggleButton.Position = UDim2.new(0.17, 0, -0.065, 0)
-    toggleButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    toggleButton.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
     toggleButton.TextColor3 = Color3.new(1, 1, 1)
-    toggleButton.BackgroundTransparency = 0.3
+    toggleButton.BackgroundTransparency = 0.2
     toggleButton.Text = "💬"
     toggleButton.TextSize = 14
     toggleButton.Parent = screenGui
