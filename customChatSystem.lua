@@ -117,7 +117,7 @@ local function getColorForText(text)
     return color
 end
 
--- 函数：将 TextLabel 中的某一段字改变颜色
+-- 函数：将字改变颜色
 local function setTextColor(text, startIndex, endIndex, color)
     -- 提取需要改变颜色的部分
     local coloredText = text:sub(startIndex, endIndex)
@@ -173,7 +173,8 @@ local function createCustomChat()
     inputContainer.Name = "InputContainer"
     inputContainer.Size = UDim2.new(1, 0, 0.1, 0) -- 宽度 100%，高度 10%
     inputContainer.Position = UDim2.new(0, 0, 0.9, 0) -- 底部
-    inputContainer.BackgroundTransparency = 1 -- 背景透明
+    inputContainer.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
+    inputContainer.BackgroundTransparency = 0.5 -- 背景半透明
     inputContainer.Parent = chatFrame
 
     -- 创建输入栏
@@ -185,6 +186,7 @@ local function createCustomChat()
     inputBox.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
     inputBox.PlaceholderText = "输入消息..." -- 提示文字
     inputBox.TextXAlignment = Enum.TextXAlignment.Left
+    inputContainer.BackgroundTransparency = 1
     inputBox.ClearTextOnFocus = false
     inputBox.Text = ""
     inputBox.TextSize = 12
