@@ -327,17 +327,6 @@ local function createCustomChat()
         return os.date("%Y-%m-%d %H:%M:%S")
     end
 
-    -- 复制属性
-    local function copyProperties(source, target)
-        for property, _ in pairs(source:GetProperties()) do
-            if pcall(function()
-                return target[property]
-            end) then
-                target[property] = source[property]
-            end
-        end
-    end
-
     -- 函数：根据玩家 ID 或玩家名生成私聊格式
     local function getPrivateMessageTag(playerIdentifier)
         -- 如果传入的是玩家 ID
@@ -559,8 +548,19 @@ local function createCustomChat()
         messageLabel.Parent = messageContainer
 
         local privateMsgButton = Instance.new("TextButton")
-        copyProperties(messageLabel, privateMsgButton)
-        privateMsgButton.Visible = false
+        privateMsgButton.Name = "privateMsgButton"
+        privateMsgButton.Size = UDim2.new(findl.islink and 0.75 or 0.8, 0, 1, 0)
+        privateMsgButton.Position = UDim2.new(0, 25, 0, 0)
+        privateMsgButton.BackgroundTransparency = 1
+        privateMsgButton.TextColor3 = Color3.new(1, 1, 1)
+        privateMsgButton.Text = HandleText(msgData)
+        privateMsgButton.TextXAlignment = Enum.TextXAlignment.Left
+        privateMsgButton.TextSize = 12
+        privateMsgButton.RichText = true
+        privateMsgButton.TextWrapped = true
+        privateMsgButton.AutomaticSize = Enum.AutomaticSize.Y
+        privateMsgButton.Parent = messageContainer
+        privateMsgButton.Visible = true
 
         privateMsgButton.MouseButton1Click:Connect(function()
             inputBox.Text = getPrivateMessageTag(msgData.sender)
