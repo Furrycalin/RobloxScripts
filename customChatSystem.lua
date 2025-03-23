@@ -338,6 +338,32 @@ local function createCustomChat()
         end
     end
 
+    -- 函数：根据玩家 ID 或玩家名生成私聊格式
+    local function getPrivateMessageTag(playerIdentifier)
+        -- 如果传入的是玩家 ID
+        if type(playerIdentifier) == "number" then
+            local player = Players:GetPlayerByUserId(playerIdentifier)
+            if player then
+                return "[@" .. player.Name .. "]: "
+            else
+                warn("未找到玩家 ID: " .. playerIdentifier)
+                return nil
+            end
+        -- 如果传入的是玩家名
+        elseif type(playerIdentifier) == "string" then
+            local player = Players:FindFirstChild(playerIdentifier)
+            if player then
+                return "[@" .. player.Name .. "]: "
+            else
+                warn("未找到玩家名: " .. playerIdentifier)
+                return nil
+            end
+        else
+            warn("无效的玩家标识符类型")
+            return nil
+        end
+    end
+
     -- 创建消息框
     local function createMessageBox(title, content)
         local screenGui2 = Instance.new("ScreenGui")
@@ -553,6 +579,15 @@ local function createCustomChat()
         messageLabel.TextWrapped = true
         messageLabel.AutomaticSize = Enum.AutomaticSize.Y
         messageLabel.Parent = messageContainer
+
+        local privateMsgButton = Instance.new("TextButton")
+        copyProperties(messageLabel, privateMsgButton)
+        privateMsgButton.Visible = false
+
+        privateMsgButton.MouseButton1Click:Connect(function()
+            inputBox.Text = getPrivateMessageTag(msgData.sender)
+            inputBox:CaptureFocus()
+        end)
 
         if findl.islink then
             local superlinkButton = Instance.new("TextButton")
