@@ -523,6 +523,8 @@ local function createCustomChat()
 
     -- 创建消息 UI
     local function createMessageUI(msgData)
+        local findl = findLink(msgData.text)
+
         local messageContainer = Instance.new("Frame")
         messageContainer.Name = "MessageContainer"
         messageContainer.Size = UDim2.new(1, 0, 0, 20)
@@ -540,7 +542,7 @@ local function createCustomChat()
 
         local messageLabel = Instance.new("TextLabel")
         messageLabel.Name = "MessageLabel"
-        messageLabel.Size = UDim2.new(0.8, 0, 1, 0)
+        messageLabel.Size = UDim2.new(findl.islink and 0.75 or 0.8, 0, 1, 0)
         messageLabel.Position = UDim2.new(0, 25, 0, 0)
         messageLabel.BackgroundTransparency = 1
         messageLabel.TextColor3 = Color3.new(1, 1, 1)
@@ -552,15 +554,18 @@ local function createCustomChat()
         messageLabel.AutomaticSize = Enum.AutomaticSize.Y
         messageLabel.Parent = messageContainer
 
-        local findl = findLink(msgData.text)
-
         if findl.islink then
-            local superlink = Instance.new("TextButton")
-            copyProperties(messageLabel, superlink)
-            superlink.Name = "superlink"
-            superlink.Visible = false
+            local superlinkButton = Instance.new("TextButton")
+            superlinkButton.Name = "超链接"
+            superlinkButton.Size = UDim2.new(0.05, 0, 1, 0)
+            superlinkButton.Position = UDim2.new(0.85, 0, 0, 0)
+            superlinkButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+            superlinkButton.TextColor3 = Color3.new(1, 1, 1)
+            superlinkButton.Text = "🔗"
+            superlinkButton.TextSize = 12
+            superlinkButton.Parent = messageContainer
 
-            superlink.MouseButton1Click:Connect(function()
+            superlinkButton.MouseButton1Click:Connect(function()
                 local messageBox = createMessageBox("这是一段链接，是否将其复制吗？", findl.link)
 
                 messageBox.OnConfirm(function()
