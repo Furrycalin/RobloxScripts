@@ -274,14 +274,6 @@ local function createCustomChat()
 
         -- 点击按钮时高亮
         button.MouseButton1Click:Connect(function()
-            -- 取消所有按钮的高亮
-            for _, child in ipairs(buttonContainer:GetChildren()) do
-                if child:IsA("TextButton") then
-                    child.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
-                end
-            end
-            -- 高亮当前按钮
-            button.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
             -- 执行点击事件
             onClick(button)
         end)
@@ -290,6 +282,17 @@ local function createCustomChat()
         if buttonName == "有道翻译" then
             button.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
         end
+    end
+
+    local function highlightme(button)
+        -- 取消所有按钮的高亮
+        for _, child in ipairs(buttonContainer:GetChildren()) do
+            if child:IsA("TextButton") then
+                child.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+            end
+        end
+        -- 高亮当前按钮
+        button.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
     end
 
     -- 添加示例按钮
@@ -303,27 +306,33 @@ local function createCustomChat()
         setclipboard(table.concat(chatlog, "\n"))
     end)
 
-    addButtonToSideBar("原文", function()
+    addButtonToSideBar("原文", function(button)
+        highlightme(button)
         translateAPI = "Roblox"
     end)
 
     addButtonToSideBar("有道翻译", function(button)
+        highlightme(button)
         translateAPI = "YouDao"
     end)
 
-    addButtonToSideBar("AI翻译", function()
+    addButtonToSideBar("AI翻译", function(button)
+        highlightme(button)
         translateAPI = "AI"
     end)
 
-    addButtonToSideBar("必应翻译", function()
+    addButtonToSideBar("必应翻译", function(button)
+        highlightme(button)
         translateAPI = "Bing"
     end)
 
-    addButtonToSideBar("搜狗翻译", function()
+    addButtonToSideBar("搜狗翻译", function(button)
+        highlightme(button)
         translateAPI = "SoGou"
     end)
 
-    addButtonToSideBar("QQ翻译", function()
+    addButtonToSideBar("QQ翻译", function(button)
+        highlightme(button)
         translateAPI = "QQ"
     end)
 
