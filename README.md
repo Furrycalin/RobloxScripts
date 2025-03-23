@@ -44,9 +44,11 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 - 🌌 **无限的聊天记录（游戏中）**
 - 🔍 **搜索玩家昵称筛选聊天**
 - 🔗 **超链接检测**
+- 🆎 **主动绕过敏感词**
 - 🗑️ **意外的内容：过滤掉了玩家指令**
 
 > 尚未与原版同步内容：
+- 🚧 **发起私聊**
 - 🚧 **正确处理指令**
 - 🚧 **其他未发现内容**
    
