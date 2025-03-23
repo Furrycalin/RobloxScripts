@@ -196,6 +196,7 @@ local function createCustomChat()
     local autotranslate = false
     local chatlog = {}
     local replacefont = "default"
+    local repf = false
 
     -- 创建 ScreenGui
     local screenGui = Instance.new("ScreenGui")
@@ -284,7 +285,7 @@ local function createCustomChat()
     -- 创建侧边栏
     local sideBar = Instance.new("Frame")
     sideBar.Name = "SideBar"
-    sideBar.Size = UDim2.new(0.1, 0, 1, 0)
+    sideBar.Size = UDim2.new(0.15, 0, 1, 0)
     sideBar.Position = UDim2.new(1, 0, 0, 0)
     sideBar.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
     sideBar.BackgroundTransparency = 0.5
@@ -297,7 +298,7 @@ local function createCustomChat()
     sideBarTitle.Position = UDim2.new(0, 0, 0, 0)
     sideBarTitle.BackgroundTransparency = 1
     sideBarTitle.TextColor3 = Color3.new(1, 1, 1)
-    sideBarTitle.Text = "翻译器"
+    sideBarTitle.Text = "功能栏"
     sideBarTitle.TextSize = 12
     sideBarTitle.TextXAlignment = Enum.TextXAlignment.Center
     sideBarTitle.Parent = sideBar
@@ -357,6 +358,12 @@ local function createCustomChat()
 
     addButtonToSideBar("复制日志", function()
         setclipboard(table.concat(chatlog, "\n"))
+    end)
+
+    addButtonToSideBar(repf and "反敏感词(开)" or "反敏感词(关)", function(button)
+        repf = not repf
+        if repf then replacefont = "数学粗体字母" else replacefont = "default" end
+        button.Text = repf and "反敏感词(开)" or "反敏感词(关)"
     end)
 
     addButtonToSideBar("原文", function(button)
