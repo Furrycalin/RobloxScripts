@@ -468,7 +468,7 @@ local function createCustomChat()
     local maxbottom = 0
     local autoscroll = false
 
-    RunService.Heartbeat:Connect(function()
+    rs = RunService.Heartbeat:Connect(function()
         if maxbottom <= scrollingFrame.CanvasPosition.Y then
             maxbottom = scrollingFrame.CanvasPosition.Y
             autoscroll = true
@@ -536,7 +536,7 @@ local function createCustomChat()
 
         local messageLabel = Instance.new("TextLabel")
         messageLabel.Name = "MessageLabel"
-        messageLabel.Size = UDim2.new(findl.islink and 0.75 or 0.8, 0, 1, 0)
+        messageLabel.Size = UDim2.new(findl.islink and 0.725 or 0.775, 0, 1, 0)
         messageLabel.Position = UDim2.new(0, 25, 0, 0)
         messageLabel.BackgroundTransparency = 1
         messageLabel.TextColor3 = Color3.new(1, 1, 1)
@@ -565,7 +565,7 @@ local function createCustomChat()
             local superlinkButton = Instance.new("TextButton")
             superlinkButton.Name = "超链接"
             superlinkButton.Size = UDim2.new(0.05, 0, 1, 0)
-            superlinkButton.Position = UDim2.new(0.85, 0, 0, 0)
+            superlinkButton.Position = UDim2.new(0.825, 0, 0, 0)
             superlinkButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
             superlinkButton.TextColor3 = Color3.new(1, 1, 1)
             superlinkButton.Text = "🔗"
@@ -589,7 +589,7 @@ local function createCustomChat()
         local transleButton = Instance.new("TextButton")
         transleButton.Name = "翻译"
         transleButton.Size = UDim2.new(0.05, 0, 1, 0)
-        transleButton.Position = UDim2.new(0.9, 0, 0, 0)
+        transleButton.Position = UDim2.new(0.875, 0, 0, 0)
         transleButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
         transleButton.TextColor3 = Color3.new(1, 1, 1)
         transleButton.Text = "🌐"
@@ -605,7 +605,7 @@ local function createCustomChat()
         local copyButton = Instance.new("TextButton")
         copyButton.Name = "复制"
         copyButton.Size = UDim2.new(0.05, 0, 1, 0)
-        copyButton.Position = UDim2.new(0.95, 0, 0, 0)
+        copyButton.Position = UDim2.new(0.925, 0, 0, 0)
         copyButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
         copyButton.TextColor3 = Color3.new(1, 1, 1)
         copyButton.Text = "📋"
@@ -702,19 +702,6 @@ local function createCustomChat()
 
     -- 卸载功能
     local function uninstallScript()
-        for _, connection in ipairs(getconnections(sendButton.MouseButton1Click)) do
-            connection:Disconnect()
-        end
-        for _, connection in ipairs(getconnections(inputBox.FocusLost)) do
-            connection:Disconnect()
-        end
-        for _, connection in ipairs(getconnections(toggleButton.MouseButton1Click)) do
-            connection:Disconnect()
-        end
-        for _, connection in ipairs(getconnections(uninstallButton.MouseButton1Click)) do
-            connection:Disconnect()
-        end
-
         if screenGui and screenGui.Parent then
             screenGui:Destroy()
         end
@@ -724,7 +711,8 @@ local function createCustomChat()
         translateModuel = nil
         chatControl = nil
 
-        print("脚本已完全卸载！")
+        rs:Disconnect()
+        script:Destroy()
     end
 
     uninstallButton.MouseButton1Click:Connect(uninstallScript)
