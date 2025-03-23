@@ -167,6 +167,7 @@ local function createCustomChat()
     inputBox.TextColor3 = Color3.new(1, 1, 1)
     inputBox.PlaceholderText = "输入消息..."
     inputBox.TextXAlignment = Enum.TextXAlignment.Left
+    inputBox.BackgroundTransparency = 1
     inputBox.ClearTextOnFocus = false
     inputBox.Text = ""
     inputBox.TextSize = 12
