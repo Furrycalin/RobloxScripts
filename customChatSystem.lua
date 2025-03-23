@@ -282,6 +282,8 @@ local function createCustomChat()
         end
     end)
 
+    local sidebarismin = false
+
     -- 创建侧边栏
     local sideBar = Instance.new("Frame")
     sideBar.Name = "SideBar"
@@ -292,13 +294,13 @@ local function createCustomChat()
     sideBar.Parent = chatFrame
 
     -- 创建侧边栏标题
-    local sideBarTitle = Instance.new("TextLabel")
+    local sideBarTitle = Instance.new("TextButton")
     sideBarTitle.Name = "SideBarTitle"
     sideBarTitle.Size = UDim2.new(1, 0, 0.1, 0)
     sideBarTitle.Position = UDim2.new(0, 0, 0, 0)
     sideBarTitle.BackgroundTransparency = 1
     sideBarTitle.TextColor3 = Color3.new(1, 1, 1)
-    sideBarTitle.Text = "功能栏"
+    sideBarTitle.Text = "功能栏▼"
     sideBarTitle.TextSize = 12
     sideBarTitle.TextXAlignment = Enum.TextXAlignment.Center
     sideBarTitle.Parent = sideBar
@@ -340,6 +342,28 @@ local function createCustomChat()
             button.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
         end
     end
+
+    -- 折叠侧边栏
+    sideBarTitle.MouseButton1Click:Connect(function()
+        sidebarismin = not sidebarismin
+        if sidebarismin then
+            sideBarTitle.Text = "功能栏▲"
+            for _, child in ipairs(buttonContainer:GetChildren()) do
+                if child:IsA("TextButton") then
+                    child.Visible = false
+                end
+            end
+            sideBar.Size = UDim2.new(0.15, 0, 0.1, 0)
+        else
+            sideBarTitle.Text = "功能栏▼"
+            for _, child in ipairs(buttonContainer:GetChildren()) do
+                if child:IsA("TextButton") then
+                    child.Visible = true
+                end
+            end
+            sideBar.Size = UDim2.new(0.15, 0, 1, 0)
+        end
+    end)
 
     local function highlightButton(button)
         for _, child in ipairs(buttonContainer:GetChildren()) do
