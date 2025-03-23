@@ -85,48 +85,30 @@ local colortable = {
 
 -- 函数：从颜色表中随机选择一个颜色
 local function getRandomColor(colortable)
-    -- 获取颜色表的长度
-    local length = #colortable
-
-    -- 生成随机索引
-    local randomIndex = math.random(1, length)
-
-    -- 返回随机颜色
-    return colortable[randomIndex]
+    return colortable[math.random(1, #colortable)]
 end
 
 -- 封装函数：根据文本生成固定颜色
 local function getColorForText(text)
-    -- 检查输入是否为 nil 或非字符串
     if not text or type(text) ~= "string" then
         warn("输入文本无效，必须是一个字符串。")
         return Color3.new(1, 1, 1) -- 返回默认颜色（白色）
     end
 
-    -- 如果颜色已缓存，直接返回
     if colorCache[text] then
         return colorCache[text]
     end
-    
-    -- 生成颜色
+
     local color = getRandomColor(colortable)
-
-    -- 缓存颜色
     colorCache[text] = color
-
     return color
 end
 
 -- 函数：将字改变颜色
 local function setTextColor(text, startIndex, endIndex, color)
-    -- 提取需要改变颜色的部分
     local coloredText = text:sub(startIndex, endIndex)
-    -- 使用 <font> 标签包裹
     local coloredTextWithTag = string.format('<font color="#%s">%s</font>', color:ToHex(), coloredText)
-    -- 拼接最终文本
-    local finalText = text:sub(1, startIndex - 1) .. coloredTextWithTag .. text:sub(endIndex + 1)
-
-    return finalText
+    return text:sub(1, startIndex - 1) .. coloredTextWithTag .. text:sub(endIndex + 1)
 end
 
 -- 创建自定义聊天栏
@@ -138,7 +120,6 @@ local function createCustomChat()
     -- 创建 ScreenGui
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "CustomChat"
-    -- screenGui.Parent = player.PlayerGui
     screenGui.Parent = game.CoreGui
     screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     screenGui.ResetOnSpawn = false
@@ -146,47 +127,46 @@ local function createCustomChat()
     -- 创建聊天栏背景
     local chatFrame = Instance.new("Frame")
     chatFrame.Name = "ChatFrame"
-    chatFrame.Size = UDim2.new(0.3, 0, 0.4, 0) -- 宽度 30%，高度 40%
-    chatFrame.Position = UDim2.new(0, 10, 0, 10) -- 左上角
-    chatFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1) -- 背景颜色
-    chatFrame.BackgroundTransparency = 0.5 -- 背景透明度
+    chatFrame.Size = UDim2.new(0.3, 0, 0.4, 0)
+    chatFrame.Position = UDim2.new(0, 10, 0, 10)
+    chatFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+    chatFrame.BackgroundTransparency = 0.5
     chatFrame.Parent = screenGui
 
     -- 创建消息滚动区域
     local scrollingFrame = Instance.new("ScrollingFrame")
     scrollingFrame.Name = "MessageScroll"
-    scrollingFrame.Size = UDim2.new(1, 0, 0.9, 0) -- 宽度 100%，高度 90%
+    scrollingFrame.Size = UDim2.new(1, 0, 0.9, 0)
     scrollingFrame.Position = UDim2.new(0, 0, 0, 0)
-    scrollingFrame.BackgroundTransparency = 1 -- 背景透明
-    scrollingFrame.ScrollBarThickness = 5 -- 滚动条宽度
-    scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0) -- 初始内容大小
-    scrollingFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y -- 自动调整内容高度
+    scrollingFrame.BackgroundTransparency = 1
+    scrollingFrame.ScrollBarThickness = 5
+    scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+    scrollingFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
     scrollingFrame.Parent = chatFrame
 
     -- 创建消息布局
     local uiListLayout = Instance.new("UIListLayout")
-    uiListLayout.Padding = UDim.new(0, 5) -- 消息间距
+    uiListLayout.Padding = UDim.new(0, 5)
     uiListLayout.Parent = scrollingFrame
 
     -- 创建输入栏容器
     local inputContainer = Instance.new("Frame")
     inputContainer.Name = "InputContainer"
-    inputContainer.Size = UDim2.new(1, 0, 0.1, 0) -- 宽度 100%，高度 10%
-    inputContainer.Position = UDim2.new(0, 0, 0.9, 0) -- 底部
-    inputContainer.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
-    inputContainer.BackgroundTransparency = 0.5 -- 背景半透明
+    inputContainer.Size = UDim2.new(1, 0, 0.1, 0)
+    inputContainer.Position = UDim2.new(0, 0, 0.9, 0)
+    inputContainer.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    inputContainer.BackgroundTransparency = 0.5
     inputContainer.Parent = chatFrame
 
     -- 创建输入栏
     local inputBox = Instance.new("TextBox")
     inputBox.Name = "InputBox"
-    inputBox.Size = UDim2.new(0.9, 0, 1, 0) -- 宽度 85%，高度 100%
+    inputBox.Size = UDim2.new(0.9, 0, 1, 0)
     inputBox.Position = UDim2.new(0, 0, 0, 0)
-    inputBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
-    inputBox.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-    inputBox.PlaceholderText = "输入消息..." -- 提示文字
+    inputBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    inputBox.TextColor3 = Color3.new(1, 1, 1)
+    inputBox.PlaceholderText = "输入消息..."
     inputBox.TextXAlignment = Enum.TextXAlignment.Left
-    inputContainer.BackgroundTransparency = 1
     inputBox.ClearTextOnFocus = false
     inputBox.Text = ""
     inputBox.TextSize = 12
@@ -195,11 +175,11 @@ local function createCustomChat()
     -- 创建发送按钮
     local sendButton = Instance.new("TextButton")
     sendButton.Name = "SendButton"
-    sendButton.Size = UDim2.new(0.1, 0, 1, 0) -- 宽度 15%，高度 100%
-    sendButton.Position = UDim2.new(0.9, 0, 0, 0) -- 右侧
-    sendButton.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3) -- 背景颜色
-    sendButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-    sendButton.Text = "▶" -- 使用箭头图标代替文字
+    sendButton.Size = UDim2.new(0.1, 0, 1, 0)
+    sendButton.Position = UDim2.new(0.9, 0, 0, 0)
+    sendButton.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+    sendButton.TextColor3 = Color3.new(1, 1, 1)
+    sendButton.Text = "▶"
     sendButton.TextSize = 12
     sendButton.Parent = inputContainer
 
@@ -207,15 +187,12 @@ local function createCustomChat()
     local function sendMessage()
         local message = inputBox.Text
         if message ~= "" then
-            chatControl:chat(message) -- 发送消息
-            inputBox.Text = "" -- 清空输入框
+            chatControl:chat(message)
+            inputBox.Text = ""
         end
     end
 
-    -- 绑定发送按钮点击事件
     sendButton.MouseButton1Click:Connect(sendMessage)
-
-    -- 绑定输入栏回车事件
     inputBox.FocusLost:Connect(function(enterPressed)
         if enterPressed then
             sendMessage()
@@ -225,78 +202,72 @@ local function createCustomChat()
     -- 创建侧边栏
     local sideBar = Instance.new("Frame")
     sideBar.Name = "SideBar"
-    sideBar.Size = UDim2.new(0.1, 0, 1, 0) -- 宽度 10%，高度 100%
-    sideBar.Position = UDim2.new(1, 0, 0, 0) -- 右侧
-    sideBar.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1) -- 背景颜色
-    sideBar.BackgroundTransparency = 0.5 -- 背景透明度
+    sideBar.Size = UDim2.new(0.1, 0, 1, 0)
+    sideBar.Position = UDim2.new(1, 0, 0, 0)
+    sideBar.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+    sideBar.BackgroundTransparency = 0.5
     sideBar.Parent = chatFrame
 
     -- 创建侧边栏标题
     local sideBarTitle = Instance.new("TextLabel")
     sideBarTitle.Name = "SideBarTitle"
-    sideBarTitle.Size = UDim2.new(1, 0, 0.1, 0) -- 宽度 100%，高度 10%
+    sideBarTitle.Size = UDim2.new(1, 0, 0.1, 0)
     sideBarTitle.Position = UDim2.new(0, 0, 0, 0)
-    sideBarTitle.BackgroundTransparency = 1 -- 背景透明
-    sideBarTitle.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-    sideBarTitle.Text = "翻译器" -- 标题文字
+    sideBarTitle.BackgroundTransparency = 1
+    sideBarTitle.TextColor3 = Color3.new(1, 1, 1)
+    sideBarTitle.Text = "翻译器"
     sideBarTitle.TextSize = 12
-    sideBarTitle.TextXAlignment = Enum.TextXAlignment.Center -- 文字居中
+    sideBarTitle.TextXAlignment = Enum.TextXAlignment.Center
     sideBarTitle.Parent = sideBar
 
     -- 创建按钮容器
     local buttonContainer = Instance.new("Frame")
     buttonContainer.Name = "ButtonContainer"
-    buttonContainer.Size = UDim2.new(1, 0, 0.9, 0) -- 宽度 100%，高度 90%
+    buttonContainer.Size = UDim2.new(1, 0, 0.9, 0)
     buttonContainer.Position = UDim2.new(0, 0, 0.1, 0)
-    buttonContainer.BackgroundTransparency = 1 -- 背景透明
+    buttonContainer.BackgroundTransparency = 1
     buttonContainer.Parent = sideBar
 
     -- 创建按钮布局
     local buttonLayout = Instance.new("UIListLayout")
-    buttonLayout.Padding = UDim.new(0, 5) -- 按钮间距
-    buttonLayout.SortOrder = Enum.SortOrder.LayoutOrder -- 按 LayoutOrder 排序
+    buttonLayout.Padding = UDim.new(0, 5)
+    buttonLayout.SortOrder = Enum.SortOrder.LayoutOrder
     buttonLayout.Parent = buttonContainer
 
     -- 添加按钮的函数
-    local buttonIndex = 0 -- 用于记录按钮的顺序
+    local buttonIndex = 0
     local function addButtonToSideBar(buttonName, onClick)
-        buttonIndex = buttonIndex + 1 -- 递增顺序索引
+        buttonIndex = buttonIndex + 1
 
         local button = Instance.new("TextButton")
         button.Name = buttonName
-        button.Size = UDim2.new(1, 0, 0.1, 0) -- 宽度 100%，高度 10%
-        button.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
-        button.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-        button.Text = buttonName -- 按钮文字
+        button.Size = UDim2.new(1, 0, 0.1, 0)
+        button.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+        button.TextColor3 = Color3.new(1, 1, 1)
+        button.Text = buttonName
         button.TextSize = 10
-        button.LayoutOrder = buttonIndex -- 设置 LayoutOrder
+        button.LayoutOrder = buttonIndex
         button.Parent = buttonContainer
 
-        -- 点击按钮时高亮
         button.MouseButton1Click:Connect(function()
-            -- 执行点击事件
             onClick(button)
         end)
 
-        -- 默认高亮第一个按钮
         if buttonName == "有道翻译" then
             button.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
         end
     end
 
-    local function highlightme(button)
-        -- 取消所有按钮的高亮
+    local function highlightButton(button)
         for _, child in ipairs(buttonContainer:GetChildren()) do
             if child:IsA("TextButton") then
                 child.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
             end
         end
-        -- 高亮当前按钮
         button.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
     end
 
-    -- 添加示例按钮
-
+    -- 添加按钮
     addButtonToSideBar(autotranslate and "自动(开)" or "自动(关)", function(button)
         autotranslate = not autotranslate
         button.Text = autotranslate and "自动(开)" or "自动(关)"
@@ -307,51 +278,175 @@ local function createCustomChat()
     end)
 
     addButtonToSideBar("原文", function(button)
-        highlightme(button)
+        highlightButton(button)
         translateAPI = "Roblox"
     end)
 
     addButtonToSideBar("有道翻译", function(button)
-        highlightme(button)
+        highlightButton(button)
         translateAPI = "YouDao"
     end)
 
     addButtonToSideBar("AI翻译", function(button)
-        highlightme(button)
+        highlightButton(button)
         translateAPI = "AI"
     end)
 
     addButtonToSideBar("必应翻译", function(button)
-        highlightme(button)
+        highlightButton(button)
         translateAPI = "Bing"
     end)
 
     addButtonToSideBar("搜狗翻译", function(button)
-        highlightme(button)
+        highlightButton(button)
         translateAPI = "SoGou"
     end)
 
     addButtonToSideBar("QQ翻译", function(button)
-        highlightme(button)
+        highlightButton(button)
         translateAPI = "QQ"
     end)
 
+    -- 处理消息文本
     local function HandleText(Data)
         local sourcemsghand = Data.nickname .. ":"
         local msghand = setTextColor(sourcemsghand, 1, #sourcemsghand, getColorForText(Data.sender))
         local msgtail = Data.text
         local iscmd = Data.text:sub(1, 1) == "/" or Data.text:sub(1, 1) == ";"
-        if not iscmd and autotranslate then msgtail = translateModuel:translateText(Data.text, translateAPI) end
+        if not iscmd and autotranslate then
+            msgtail = translateModuel:translateText(Data.text, translateAPI)
+        end
         if player.name == Data.sender then
             msgtail = setTextColor(msgtail, 1, #msgtail, Color3.fromRGB(204, 255, 204))
         end
         return msghand .. " " .. msgtail
     end
 
+    -- 获取当前日期时间
     local function getCurrentDateTime()
-        -- 格式化日期和时间
-        local dateTime = os.date("%Y-%m-%d %H:%M:%S")
-        return dateTime
+        return os.date("%Y-%m-%d %H:%M:%S")
+    end
+
+    -- 复制属性
+    local function copyProperties(source, target)
+        for property, _ in pairs(source:GetProperties()) do
+            if pcall(function()
+                return target[property]
+            end) then
+                target[property] = source[property]
+            end
+        end
+    end
+
+    -- 创建消息框
+    local function createMessageBox(title, content)
+        local screenGui2 = Instance.new("ScreenGui")
+        screenGui2.Parent = game.CoreGui
+        screenGui2.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        screenGui2.ResetOnSpawn = false
+        screenGui2.Name = "MessageBoxGui"
+
+        local background = Instance.new("Frame")
+        background.Name = "Background"
+        background.Size = UDim2.new(1, 0, 1, 0)
+        background.Position = UDim2.new(0, 0, 0, 0)
+        background.BackgroundColor3 = Color3.new(0, 0, 0)
+        background.BackgroundTransparency = 0.5
+        background.Parent = screenGui2
+
+        local messageBox = Instance.new("Frame")
+        messageBox.Name = "MessageBox"
+        messageBox.Size = UDim2.new(0, 300, 0, 200)
+        messageBox.Position = UDim2.new(0.5, -150, 0.5, -100)
+        messageBox.AnchorPoint = Vector2.new(0.5, 0.5)
+        messageBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+        messageBox.BackgroundTransparency = 0.2
+        messageBox.BorderSizePixel = 0
+        messageBox.Parent = screenGui2
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 8)
+        corner.Parent = messageBox
+
+        local titleLabel = Instance.new("TextLabel")
+        titleLabel.Name = "Title"
+        titleLabel.Size = UDim2.new(1, -20, 0, 30)
+        titleLabel.Position = UDim2.new(0, 10, 0, 10)
+        titleLabel.Text = title
+        titleLabel.TextColor3 = Color3.new(1, 1, 1)
+        titleLabel.TextSize = 18
+        titleLabel.Font = Enum.Font.SourceSansBold
+        titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+        titleLabel.BackgroundTransparency = 1
+        titleLabel.Parent = messageBox
+
+        local contentLabel = Instance.new("TextLabel")
+        contentLabel.Name = "Content"
+        contentLabel.Size = UDim2.new(1, -20, 1, -100)
+        contentLabel.Position = UDim2.new(0, 10, 0, 50)
+        contentLabel.Text = content
+        contentLabel.TextColor3 = Color3.new(1, 1, 1)
+        contentLabel.TextSize = 14
+        contentLabel.Font = Enum.Font.SourceSans
+        contentLabel.TextWrapped = true
+        contentLabel.TextXAlignment = Enum.TextXAlignment.Left
+        contentLabel.TextYAlignment = Enum.TextYAlignment.Top
+        contentLabel.BackgroundTransparency = 1
+        contentLabel.Parent = messageBox
+
+        local confirmButton = Instance.new("TextButton")
+        confirmButton.Name = "ConfirmButton"
+        confirmButton.Size = UDim2.new(0, 120, 0, 40)
+        confirmButton.Position = UDim2.new(0.5, -130, 1, -50)
+        confirmButton.Text = "确认"
+        confirmButton.TextColor3 = Color3.new(1, 1, 1)
+        confirmButton.TextSize = 14
+        confirmButton.Font = Enum.Font.SourceSans
+        confirmButton.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
+        confirmButton.AutoButtonColor = true
+        confirmButton.Parent = messageBox
+
+        local confirmCorner = Instance.new("UICorner")
+        confirmCorner.CornerRadius = UDim.new(0, 8)
+        confirmCorner.Parent = confirmButton
+
+        local cancelButton = Instance.new("TextButton")
+        cancelButton.Name = "CancelButton"
+        cancelButton.Size = UDim2.new(0, 120, 0, 40)
+        cancelButton.Position = UDim2.new(0.5, 10, 1, -50)
+        cancelButton.Text = "取消"
+        cancelButton.TextColor3 = Color3.new(1, 1, 1)
+        cancelButton.TextSize = 14
+        cancelButton.Font = Enum.Font.SourceSans
+        cancelButton.BackgroundColor3 = Color3.new(0.6, 0.2, 0.2)
+        cancelButton.AutoButtonColor = true
+        cancelButton.Parent = messageBox
+
+        local cancelCorner = Instance.new("UICorner")
+        cancelCorner.CornerRadius = UDim.new(0, 8)
+        cancelCorner.Parent = cancelButton
+
+        local messageBoxInstance = {
+            ScreenGui = screenGui2,
+            OnConfirm = function(callback)
+                confirmButton.MouseButton1Click:Connect(callback)
+            end,
+            OnCancel = function(callback)
+                cancelButton.MouseButton1Click:Connect(callback)
+            end,
+            Destroy = function()
+                screenGui2:Destroy()
+            end
+        }
+
+        return messageBoxInstance
+    end
+
+    -- 查找链接
+    local function findLink(text)
+        local pattern = "https?://[%w-_%.%?%.:/%+=&]+"
+        local link = string.match(text, pattern)
+        return link and { islink = true, link = link } or { islink = false, link = nil }
     end
 
     local maxbottom = 0
@@ -372,20 +467,20 @@ local function createCustomChat()
     -- 创建搜索框容器
     local searchContainer = Instance.new("Frame")
     searchContainer.Name = "SearchContainer"
-    searchContainer.Size = UDim2.new(0.3, 0, 0.07, 0) -- 宽度 20%，高度 4%
-    searchContainer.Position = UDim2.new(0.7, 0, -0.1, 0) -- 紧贴聊天栏外侧右上角
-    searchContainer.BackgroundTransparency = 1 -- 背景透明
+    searchContainer.Size = UDim2.new(0.3, 0, 0.07, 0)
+    searchContainer.Position = UDim2.new(0.7, 0, -0.1, 0)
+    searchContainer.BackgroundTransparency = 1
     searchContainer.Parent = chatFrame
 
     -- 创建搜索框
     local searchBox = Instance.new("TextBox")
     searchBox.Name = "SearchBox"
-    searchBox.Size = UDim2.new(0.7, 0, 1, 0) -- 宽度 70%，高度 100%
+    searchBox.Size = UDim2.new(0.7, 0, 1, 0)
     searchBox.Position = UDim2.new(0, 0, 0, 0)
-    searchBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
-    searchBox.BackgroundTransparency = 0.5 -- 半透明
-    searchBox.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-    searchBox.PlaceholderText = "搜索昵称..." -- 提示文字
+    searchBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    searchBox.BackgroundTransparency = 0.5
+    searchBox.TextColor3 = Color3.new(1, 1, 1)
+    searchBox.PlaceholderText = "搜索昵称..."
     searchBox.TextXAlignment = Enum.TextXAlignment.Left
     searchBox.ClearTextOnFocus = false
     searchBox.Text = ""
@@ -395,150 +490,119 @@ local function createCustomChat()
     -- 创建搜索按钮
     local searchButton = Instance.new("TextButton")
     searchButton.Name = "SearchButton"
-    searchButton.Size = UDim2.new(0.25, 0, 1, 0) -- 宽度 25%，高度 100%
-    searchButton.Position = UDim2.new(0.75, 0, 0, 0) -- 右侧
-    searchButton.BackgroundColor3 = Color3.new(0, 0, 0) -- 背景颜色
-    searchButton.BackgroundTransparency = 0.2 -- 半透明
-    searchButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-    searchButton.Text = "🔍" -- 使用放大镜图标
+    searchButton.Size = UDim2.new(0.25, 0, 1, 0)
+    searchButton.Position = UDim2.new(0.75, 0, 0, 0)
+    searchButton.BackgroundColor3 = Color3.new(0, 0, 0)
+    searchButton.BackgroundTransparency = 0.2
+    searchButton.TextColor3 = Color3.new(1, 1, 1)
+    searchButton.Text = "🔍"
     searchButton.TextSize = 12
     searchButton.Parent = searchContainer
 
     -- 搜索功能
     local function searchMessages(keyword)
-        -- 清空当前消息显示
         for _, child in ipairs(scrollingFrame:GetChildren()) do
             if child:IsA("Frame") then
                 child:Destroy()
             end
         end
 
-        -- 如果关键字为空，还原原本的聊天栏
         if keyword == "" then
             for _, msgData in ipairs(messageTable) do
-                -- 创建消息容器
-                local messageContainer = Instance.new("Frame")
-                messageContainer.Name = "MessageContainer"
-                messageContainer.Size = UDim2.new(1, 0, 0, 20) -- 宽度 100%，高度 20
-                messageContainer.BackgroundTransparency = 1 -- 背景透明
-                messageContainer.AutomaticSize = Enum.AutomaticSize.Y -- 自动调整高度
-                messageContainer.Parent = scrollingFrame
-
-                -- 创建图片框
-                local imageLabel = Instance.new("ImageLabel")
-                imageLabel.Name = "MessageImage"
-                imageLabel.Size = UDim2.new(0, 20, 0, 20) -- 正方形图片，大小 20x20
-                imageLabel.Position = UDim2.new(0, 0, 0, 0)
-                imageLabel.BackgroundTransparency = 1 -- 背景透明
-                imageLabel.Image = msgData.head -- 替换为实际的图片ID
-                imageLabel.Parent = messageContainer
-
-                -- 创建消息文本
-                local messageLabel = Instance.new("TextLabel")
-                messageLabel.Name = "MessageLabel"
-                messageLabel.Size = UDim2.new(0.8, 0, 1, 0) -- 宽度 80%，高度 100%
-                messageLabel.Position = UDim2.new(0, 25, 0, 0)
-                messageLabel.BackgroundTransparency = 1 -- 背景透明
-                messageLabel.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-                messageLabel.Text = HandleText(msgData)
-                messageLabel.TextXAlignment = Enum.TextXAlignment.Left -- 文字左对齐
-                messageLabel.TextSize = 12
-                messageLabel.RichText = true -- 启用 RichText
-                messageLabel.TextWrapped = true -- 启用自动换行
-                messageLabel.AutomaticSize = Enum.AutomaticSize.Y -- 自动调整高度
-                messageLabel.Parent = messageContainer
-
-                -- 创建按钮
-                local editButton = Instance.new("TextButton")
-                editButton.Name = "翻译"
-                editButton.Size = UDim2.new(0.1, 0, 1, 0) -- 宽度 20%，高度 100%
-                editButton.Position = UDim2.new(0.9, 0, 0, 0)
-                editButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
-                editButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-                editButton.Text = "翻译" -- 按钮文字
-                editButton.TextSize = 12
-                editButton.Parent = messageContainer
-
-                -- 点击按钮触发代码
-                editButton.MouseButton1Click:Connect(function()
-                    local linshiData = msgData
-                    linshiData.text = translateModuel:translateText(msgData.text, translateAPI)
-                    messageLabel.Text = HandleText(linshiData)
-                end)
+                createMessageUI(msgData)
             end
             return
         end
 
-        -- 遍历 messageTable，筛选出包含关键字的 nickname 消息
         for _, msgData in ipairs(messageTable) do
             if string.find(msgData.nickname:lower(), keyword:lower()) then
-                -- 创建消息容器
-                local messageContainer = Instance.new("Frame")
-                messageContainer.Name = "MessageContainer"
-                messageContainer.Size = UDim2.new(1, 0, 0, 20) -- 宽度 100%，高度 20
-                messageContainer.BackgroundTransparency = 1 -- 背景透明
-                messageContainer.AutomaticSize = Enum.AutomaticSize.Y -- 自动调整高度
-                messageContainer.Parent = scrollingFrame
-
-                -- 创建图片框
-                local imageLabel = Instance.new("ImageLabel")
-                imageLabel.Name = "MessageImage"
-                imageLabel.Size = UDim2.new(0, 20, 0, 20) -- 正方形图片，大小 20x20
-                imageLabel.Position = UDim2.new(0, 0, 0, 0)
-                imageLabel.BackgroundTransparency = 1 -- 背景透明
-                imageLabel.Image = msgData.head -- 替换为实际的图片ID
-                imageLabel.Parent = messageContainer
-
-                -- 创建消息文本
-                local messageLabel = Instance.new("TextLabel")
-                messageLabel.Name = "MessageLabel"
-                messageLabel.Size = UDim2.new(0.8, 0, 1, 0) -- 宽度 80%，高度 100%
-                messageLabel.Position = UDim2.new(0, 25, 0, 0)
-                messageLabel.BackgroundTransparency = 1 -- 背景透明
-                messageLabel.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-                messageLabel.Text = HandleText(msgData)
-                messageLabel.TextXAlignment = Enum.TextXAlignment.Left -- 文字左对齐
-                messageLabel.TextSize = 12
-                messageLabel.RichText = true -- 启用 RichText
-                messageLabel.TextWrapped = true -- 启用自动换行
-                messageLabel.AutomaticSize = Enum.AutomaticSize.Y -- 自动调整高度
-                messageLabel.Parent = messageContainer
-
-                -- 创建按钮
-                local transleButton = Instance.new("TextButton")
-                transleButton.Name = "翻译"
-                transleButton.Size = UDim2.new(0.05, 0, 1, 0) -- 宽度 10%，高度 100%
-                transleButton.Position = UDim2.new(0.9, 0, 0, 0)
-                transleButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
-                transleButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-                transleButton.Text = "🌐" -- 按钮文字
-                transleButton.TextSize = 12
-                transleButton.Parent = messageContainer
-
-                -- 点击按钮触发代码
-                transleButton.MouseButton1Click:Connect(function()
-                    local linshiData = msgData
-                    linshiData.text = translateModuel:translateText(msgData.text, translateAPI)
-                    messageLabel.Text = HandleText(linshiData)
-                end)
-
-                -- 创建按钮
-                local copyButton = Instance.new("TextButton")
-                copyButton.Name = "复制"
-                copyButton.Size = UDim2.new(0.05, 0, 1, 0) -- 宽度 10%，高度 100%
-                copyButton.Position = UDim2.new(0.95, 0, 0, 0)
-                copyButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
-                copyButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-                copyButton.Text = "📋" -- 按钮文字
-                copyButton.TextSize = 12
-                copyButton.Parent = messageContainer
-
-                -- 点击按钮触发代码
-                copyButton.MouseButton1Click:Connect(function()
-                    setclipboard(msgData.text)
-                end)
+                createMessageUI(msgData)
             end
         end
+    end
+
+    -- 创建消息 UI
+    local function createMessageUI(msgData)
+        local messageContainer = Instance.new("Frame")
+        messageContainer.Name = "MessageContainer"
+        messageContainer.Size = UDim2.new(1, 0, 0, 20)
+        messageContainer.BackgroundTransparency = 1
+        messageContainer.AutomaticSize = Enum.AutomaticSize.Y
+        messageContainer.Parent = scrollingFrame
+
+        local imageLabel = Instance.new("ImageLabel")
+        imageLabel.Name = "MessageImage"
+        imageLabel.Size = UDim2.new(0, 20, 0, 20)
+        imageLabel.Position = UDim2.new(0, 0, 0, 0)
+        imageLabel.BackgroundTransparency = 1
+        imageLabel.Image = msgData.head
+        imageLabel.Parent = messageContainer
+
+        local messageLabel = Instance.new("TextLabel")
+        messageLabel.Name = "MessageLabel"
+        messageLabel.Size = UDim2.new(0.8, 0, 1, 0)
+        messageLabel.Position = UDim2.new(0, 25, 0, 0)
+        messageLabel.BackgroundTransparency = 1
+        messageLabel.TextColor3 = Color3.new(1, 1, 1)
+        messageLabel.Text = HandleText(msgData)
+        messageLabel.TextXAlignment = Enum.TextXAlignment.Left
+        messageLabel.TextSize = 12
+        messageLabel.RichText = true
+        messageLabel.TextWrapped = true
+        messageLabel.AutomaticSize = Enum.AutomaticSize.Y
+        messageLabel.Parent = messageContainer
+
+        local findl = findLink(msgData.text)
+
+        if findl.islink then
+            local superlink = Instance.new("TextButton")
+            copyProperties(messageLabel, superlink)
+            superlink.Name = "superlink"
+            superlink.Visible = false
+
+            superlink.MouseButton1Click:Connect(function()
+                local messageBox = createMessageBox("这是一段链接，是否将其复制吗？", findl.link)
+
+                messageBox.OnConfirm(function()
+                    setclipboard(findl.link)
+                    messageBox.Destroy()
+                end)
+
+                messageBox.OnCancel(function()
+                    messageBox.Destroy()
+                end)
+            end)
+        end
+
+        local transleButton = Instance.new("TextButton")
+        transleButton.Name = "翻译"
+        transleButton.Size = UDim2.new(0.05, 0, 1, 0)
+        transleButton.Position = UDim2.new(0.9, 0, 0, 0)
+        transleButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+        transleButton.TextColor3 = Color3.new(1, 1, 1)
+        transleButton.Text = "🌐"
+        transleButton.TextSize = 12
+        transleButton.Parent = messageContainer
+
+        transleButton.MouseButton1Click:Connect(function()
+            local linshiData = msgData
+            linshiData.text = translateModuel:translateText(msgData.text, translateAPI)
+            messageLabel.Text = HandleText(linshiData)
+        end)
+
+        local copyButton = Instance.new("TextButton")
+        copyButton.Name = "复制"
+        copyButton.Size = UDim2.new(0.05, 0, 1, 0)
+        copyButton.Position = UDim2.new(0.95, 0, 0, 0)
+        copyButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+        copyButton.TextColor3 = Color3.new(1, 1, 1)
+        copyButton.Text = "📋"
+        copyButton.TextSize = 12
+        copyButton.Parent = messageContainer
+
+        copyButton.MouseButton1Click:Connect(function()
+            setclipboard(msgData.text)
+        end)
     end
 
     -- 绑定搜索按钮点击事件
@@ -563,57 +627,8 @@ local function createCustomChat()
         table.insert(chatlog, "[" .. getCurrentDateTime() .. "] " .. msgData.nickname .. "(@" .. msgData.sender .. ") : " .. msgData.text)
         if searchBox.Text ~= "" and not string.find(msgData.nickname:lower(), searchBox.Text:lower()) then return end
 
-        -- 创建消息容器
-        local messageContainer = Instance.new("Frame")
-        messageContainer.Name = "MessageContainer"
-        messageContainer.Size = UDim2.new(1, 0, 0, 20) -- 宽度 100%，高度 20
-        messageContainer.BackgroundTransparency = 1 -- 背景透明
-        messageContainer.AutomaticSize = Enum.AutomaticSize.Y -- 自动调整高度
-        messageContainer.Parent = scrollingFrame
+        createMessageUI(msgData)
 
-        -- 创建图片框
-        local imageLabel = Instance.new("ImageLabel")
-        imageLabel.Name = "MessageImage"
-        imageLabel.Size = UDim2.new(0, 20, 0, 20) -- 正方形图片，大小 20x20
-        imageLabel.Position = UDim2.new(0, 0, 0, 0)
-        imageLabel.BackgroundTransparency = 1 -- 背景透明
-        imageLabel.Image = msgData.head -- 替换为实际的图片ID
-        imageLabel.Parent = messageContainer
-
-        -- 创建消息文本
-        local messageLabel = Instance.new("TextLabel")
-        messageLabel.Name = "MessageLabel"
-        messageLabel.Size = UDim2.new(0.8, 0, 1, 0) -- 宽度 80%，高度 100%
-        messageLabel.Position = UDim2.new(0, 25, 0, 0)
-        messageLabel.BackgroundTransparency = 1 -- 背景透明
-        messageLabel.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-        messageLabel.Text = HandleText(msgData)
-        messageLabel.TextXAlignment = Enum.TextXAlignment.Left -- 文字左对齐
-        messageLabel.TextSize = 12
-        messageLabel.RichText = true -- 启用 RichText
-        messageLabel.TextWrapped = true -- 启用自动换行
-        messageLabel.AutomaticSize = Enum.AutomaticSize.Y -- 自动调整高度
-        messageLabel.Parent = messageContainer
-
-        -- 创建按钮
-        local editButton = Instance.new("TextButton")
-        editButton.Name = "翻译"
-        editButton.Size = UDim2.new(0.1, 0, 1, 0) -- 宽度 20%，高度 100%
-        editButton.Position = UDim2.new(0.9, 0, 0, 0)
-        editButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
-        editButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-        editButton.Text = "翻译" -- 按钮文字
-        editButton.TextSize = 12
-        editButton.Parent = messageContainer
-
-        -- 点击按钮触发代码
-        editButton.MouseButton1Click:Connect(function()
-            local linshiData = msgData
-            linshiData.text = translateModuel:translateText(msgData.text, translateAPI)
-            messageLabel.Text = HandleText(linshiData)
-        end)
-        
-        -- 如果滚动条在最下方，自动滚动到最下方
         if autoscroll then
             scrollingFrame.CanvasPosition = Vector2.new(0, 99999999)
             maxbottom = scrollingFrame.CanvasPosition.Y
@@ -623,21 +638,19 @@ local function createCustomChat()
     -- 创建切换按钮
     local toggleButton = Instance.new("TextButton")
     toggleButton.Name = "ToggleChatButton"
-    toggleButton.Size = UDim2.new(0, 45, 0, 45) -- 按钮大小
+    toggleButton.Size = UDim2.new(0, 45, 0, 45)
     toggleButton.Position = UDim2.new(0.17, 0, -0.065, 0)
-    toggleButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
-    toggleButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+    toggleButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    toggleButton.TextColor3 = Color3.new(1, 1, 1)
     toggleButton.BackgroundTransparency = 0.3
-    toggleButton.Text = "💬" -- 按钮文字
+    toggleButton.Text = "💬"
     toggleButton.TextSize = 14
     toggleButton.Parent = screenGui
 
-    -- 圆角效果
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(1, 0) -- 完全圆形
+    corner.CornerRadius = UDim.new(1, 0)
     corner.Parent = toggleButton
 
-    -- 切换聊天栏显示/隐藏
     toggleButton.MouseButton1Click:Connect(function()
         chatFrame.Visible = not chatFrame.Visible
     end)
@@ -645,17 +658,16 @@ local function createCustomChat()
     -- 添加卸载按钮
     local uninstallButton = Instance.new("TextButton")
     uninstallButton.Name = "UninstallButton"
-    uninstallButton.Size = UDim2.new(0.05, 0, 0.05, 0) -- 按钮大小
-    uninstallButton.Position = UDim2.new(0.95, 0, 0.95, 0) -- 放置在切换按钮上方
-    uninstallButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
-    uninstallButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-    uninstallButton.Text = "卸载" -- 按钮文字
+    uninstallButton.Size = UDim2.new(0.05, 0, 0.05, 0)
+    uninstallButton.Position = UDim2.new(0.95, 0, 0.95, 0)
+    uninstallButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    uninstallButton.TextColor3 = Color3.new(1, 1, 1)
+    uninstallButton.Text = "卸载"
     uninstallButton.TextSize = 12
     uninstallButton.Parent = screenGui
 
     -- 卸载功能
     local function uninstallScript()
-        -- 断开所有事件监听
         for _, connection in ipairs(getconnections(sendButton.MouseButton1Click)) do
             connection:Disconnect()
         end
@@ -669,22 +681,18 @@ local function createCustomChat()
             connection:Disconnect()
         end
 
-        -- 移除所有实例
         if screenGui and screenGui.Parent then
             screenGui:Destroy()
         end
 
-        -- 清理缓存和全局变量
         colorCache = {}
         chatlog = {}
         translateModuel = nil
         chatControl = nil
 
-        -- 打印卸载成功信息
         print("脚本已完全卸载！")
     end
 
-    -- 绑定卸载按钮点击事件
     uninstallButton.MouseButton1Click:Connect(uninstallScript)
 end
 
