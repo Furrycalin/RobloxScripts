@@ -505,21 +505,37 @@ local function createCustomChat()
                 messageLabel.Parent = messageContainer
 
                 -- 创建按钮
-                local editButton = Instance.new("TextButton")
-                editButton.Name = "翻译"
-                editButton.Size = UDim2.new(0.1, 0, 1, 0) -- 宽度 20%，高度 100%
-                editButton.Position = UDim2.new(0.9, 0, 0, 0)
-                editButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
-                editButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
-                editButton.Text = "翻译" -- 按钮文字
-                editButton.TextSize = 12
-                editButton.Parent = messageContainer
+                local transleButton = Instance.new("TextButton")
+                transleButton.Name = "翻译"
+                transleButton.Size = UDim2.new(0.05, 0, 1, 0) -- 宽度 10%，高度 100%
+                transleButton.Position = UDim2.new(0.9, 0, 0, 0)
+                transleButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
+                transleButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+                transleButton.Text = "🌐" -- 按钮文字
+                transleButton.TextSize = 12
+                transleButton.Parent = messageContainer
 
                 -- 点击按钮触发代码
-                editButton.MouseButton1Click:Connect(function()
+                transleButton.MouseButton1Click:Connect(function()
                     local linshiData = msgData
                     linshiData.text = translateModuel:translateText(msgData.text, translateAPI)
                     messageLabel.Text = HandleText(linshiData)
+                end)
+
+                -- 创建按钮
+                local copyButton = Instance.new("TextButton")
+                copyButton.Name = "复制"
+                copyButton.Size = UDim2.new(0.05, 0, 1, 0) -- 宽度 10%，高度 100%
+                copyButton.Position = UDim2.new(0.95, 0, 0, 0)
+                copyButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 背景颜色
+                copyButton.TextColor3 = Color3.new(1, 1, 1) -- 文字颜色
+                copyButton.Text = "📋" -- 按钮文字
+                copyButton.TextSize = 12
+                copyButton.Parent = messageContainer
+
+                -- 点击按钮触发代码
+                copyButton.MouseButton1Click:Connect(function()
+                    setclipboard(msgData.text)
                 end)
             end
         end
