@@ -296,7 +296,7 @@ local function createCustomChat()
     -- 创建侧边栏标题
     local sideBarTitle = Instance.new("TextButton")
     sideBarTitle.Name = "SideBarTitle"
-    sideBarTitle.Size = UDim2.new(1, 0, 0.1, 0)
+    sideBarTitle.Size = UDim2.new(1, 0, 0, 30)
     sideBarTitle.Position = UDim2.new(0, 0, 0, 0)
     sideBarTitle.BackgroundTransparency = 1
     sideBarTitle.TextColor3 = Color3.new(1, 1, 1)
@@ -353,7 +353,7 @@ local function createCustomChat()
                     child.Visible = false
                 end
             end
-            sideBar.Size = UDim2.new(0.15, 0, 0.1, 0)
+            sideBar.Size = UDim2.new(0.15, 0, 0, 30)
         else
             sideBarTitle.Text = "功能栏▼"
             for _, child in ipairs(buttonContainer:GetChildren()) do
@@ -386,7 +386,7 @@ local function createCustomChat()
 
     addButtonToSideBar(repf and "反敏感词(开)" or "反敏感词(关)", function(button)
         repf = not repf
-        if repf then replacefont = "数学粗体字母" else replacefont = "default" end
+        if repf then replacefont = "全角字母" else replacefont = "default" end
         button.Text = repf and "反敏感词(开)" or "反敏感词(关)"
     end)
 
