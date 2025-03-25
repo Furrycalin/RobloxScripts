@@ -392,6 +392,11 @@ local function createCustomChat()
 
     addButtonToSideBar("原文", function(button)
         highlightButton(button)
+        translateAPI = "Source"
+    end)
+
+    addButtonToSideBar("RB翻译", function(button)
+        highlightButton(button)
         translateAPI = "Roblox"
     end)
 
