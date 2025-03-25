@@ -1,23 +1,27 @@
+local translateModuel = {}
+
 local HttpService = game:GetService("HttpService")
 local TextService = game:GetService("TextService")
 
--- 预设常见语言
-local commonLanguages = {"en", "es", "fr", "de", "ja", "ko", "ru", "pt", "it"}
-
--- 尝试翻译
-local function tryTranslate(text, targetLanguage)
-    for _, sourceLanguage in ipairs(commonLanguages) do
-        local success, result = pcall(function()
-            return TextService:Translate(text, sourceLanguage, targetLanguage)
-        end)
-        if success then
-            return result.Text
-        end
+-- 正确的Roblox翻译实现
+local function autoTranslate(text, targetLanguage)
+    -- 基本参数验证
+    if not text or type(text) ~= "string" or text == "" then
+        return text
     end
-    return text -- 如果所有语言都失败，返回原始文本
-end
 
-local translateModuel = {}
+    -- 直接使用自动检测翻译
+    local success, result = pcall(function()
+        return TextService:Translate(
+            text,
+            Enum.SourceLanguage.Automatic,  -- 自动检测源语言
+            targetLanguage
+        )
+    end)
+
+    -- 返回翻译结果或原始文本
+    return success and result.Text or text
+end
 
 local function urlEncode(text)
     local result = ""
@@ -85,8 +89,10 @@ function translateModuel:translateText(text, api)
     end
     
     -- 特殊处理Roblox翻译
-    if api == "Roblox" then
-        return tryTranslate(text, "zh")
+    if api == "Source" then
+        return text
+    elseif api == "Roblox" then
+        return tryTranslate(text, Enum.TargetLanguage.Chinese)
     end
     
     -- 调用通用API处理
