@@ -34,71 +34,66 @@ local function urlEncode(text)
     return result
 end
 
+-- 通用翻译API调用函数
+local function callTranslateAPI(apiType, text)
+    local apiEndpoints = {
+        YouDao = "https://api.52vmy.cn/api/query/fanyi/youdao?msg=",
+        AI = "https://api.52vmy.cn/api/ai/fanyi?msg=翻译成中文：",
+        Bing = "https://api.52vmy.cn/api/query/fanyi?msg=",
+        SoGou = "https://api.52vmy.cn/api/query/fanyi/sogou?msg=",
+        QQ = "https://api.52vmy.cn/api/query/fanyi/qq?msg="
+    }
+    
+    -- 检查API类型是否有效
+    if not apiEndpoints[apiType] then
+        return text
+    end
+    
+    local url = apiEndpoints[apiType] .. urlEncode(text)
+    
+    local success, response = pcall(function()
+        return game:HttpGet(url)
+    end)
+    
+    if not success then
+        return text
+    end
+    
+    local success, data = pcall(function()
+        return HttpService:JSONDecode(response)
+    end)
+    
+    if not success then
+        return text
+    end
+    
+    -- 处理不同API的响应结构
+    if apiType == "AI" then
+        if data.code == 110 then
+            return text -- 特殊代码，返回原文
+        end
+        return data.data.answer
+    else
+        return data.data.target
+    end
+end
+
 function translateModuel:translateText(text, api)
-    if api == "YouDao" then
-        local url = "https://api.52vmy.cn/api/query/fanyi/youdao?msg=" .. urlEncode(text)
-        local success, response = pcall(function()
-            return game:HttpGet(url)
-        end)
-
-        if success then
-            local data = HttpService:JSONDecode(response)
-            return data.data.target
-        else
-            return nil
-        end
-    elseif api == "AI" then
-        local url = "https://api.52vmy.cn/api/ai/fanyi?msg=翻译成中文：" .. urlEncode(text)
-        local success, response = pcall(function()
-            return game:HttpGet(url)
-        end)
-
-        if success then
-            local data = HttpService:JSONDecode(response)
-            if data.code == 110 then return text end
-            return data.data.answer
-        else
-            return nil
-        end
-    elseif api == "Bing" then
-        local url = "https://api.52vmy.cn/api/query/fanyi?msg=" .. urlEncode(text)
-        local success, response = pcall(function()
-            return game:HttpGet(url)
-        end)
-
-        if success then
-            local data = HttpService:JSONDecode(response)
-            return data.data.target
-        else
-            return nil
-        end
-    elseif api == "SoGou" then
-        local url = "https://api.52vmy.cn/api/query/fanyi/sogou?msg=" .. urlEncode(text)
-        local success, response = pcall(function()
-            return game:HttpGet(url)
-        end)
-
-        if success then
-            local data = HttpService:JSONDecode(response)
-            return data.data.target
-        else
-            return nil
-        end
-    elseif api == "QQ" then
-        local url = "https://api.52vmy.cn/api/query/fanyi/qq?msg=" .. urlEncode(text)
-        local success, response = pcall(function()
-            return game:HttpGet(url)
-        end)
-
-        if success then
-            local data = HttpService:JSONDecode(response)
-            return data.data.target
-        else
-            return nil
-        end
-    elseif api == "Roblox" then
+    -- 参数检查
+    if not text or type(text) ~= "string" then
+        return text
+    end
+    
+    -- 特殊处理Roblox翻译
+    if api == "Roblox" then
         return tryTranslate(text, "zh")
     end
+    
+    -- 调用通用API处理
+    local result = callTranslateAPI(api, text)
+    
+    -- 如果翻译失败，返回原始文本
+    return result or text
 end
 
 return translateModuel
