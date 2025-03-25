@@ -92,7 +92,7 @@ function translateModuel:translateText(text, api)
     if api == "Source" then
         return text
     elseif api == "Roblox" then
-        return tryTranslate(text, Enum.TargetLanguage.Chinese)
+        return autoTranslate(text, Enum.TargetLanguage.Chinese)
     end
     
     -- 调用通用API处理
