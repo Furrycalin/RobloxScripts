@@ -349,6 +349,43 @@ local function createCustomChat()
         end
     end)
 
+    -- 添加按钮的函数（完整版）
+    local buttonIndex = 0
+    local function addButtonToSideBar(buttonName, onClick)
+        buttonIndex = buttonIndex + 1
+
+        local button = Instance.new("TextButton")
+        button.Name = buttonName
+        button.Size = UDim2.new(1, -10, 0, 25)  -- 宽度减去10像素边距，固定高度25像素
+        button.Position = UDim2.new(0, 5, 0, 0)  -- 添加5像素左边距
+        button.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+        button.TextColor3 = Color3.new(1, 1, 1)
+        button.Text = buttonName
+        button.TextSize = 12
+        button.LayoutOrder = buttonIndex
+        button.Parent = buttonContainer
+
+        -- 添加圆角
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 4)
+        corner.Parent = button
+
+        -- 添加按钮悬停效果
+        button.MouseEnter:Connect(function()
+            button.BackgroundColor3 = Color3.new(0.25, 0.25, 0.25)
+        end)
+    
+        button.MouseLeave:Connect(function()
+            button.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+        end)
+
+        button.MouseButton1Click:Connect(function()
+            onClick(button)
+        end)
+
+        return button
+    end
+
     local function highlightButton(button)
         for _, child in ipairs(buttonContainer:GetChildren()) do
             if child:IsA("TextButton") then
