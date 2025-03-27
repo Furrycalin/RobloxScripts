@@ -293,6 +293,17 @@ local function createCustomChat()
     sideBar.BackgroundTransparency = 0.5
     sideBar.Parent = chatFrame
 
+    -- 创建侧边栏滚动区域
+    local sideBarScroll = Instance.new("ScrollingFrame")
+    sideBarScroll.Name = "SideBarScroll"
+    sideBarScroll.Size = UDim2.new(1, 0, 1, -30)  -- 留出标题空间
+    sideBarScroll.Position = UDim2.new(0, 0, 0, 30)
+    sideBarScroll.BackgroundTransparency = 1
+    sideBarScroll.ScrollBarThickness = 5
+    sideBarScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+    sideBarScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    sideBarScroll.Parent = sideBar
+
     -- 创建侧边栏标题
     local sideBarTitle = Instance.new("TextButton")
     sideBarTitle.Name = "SideBarTitle"
@@ -305,13 +316,13 @@ local function createCustomChat()
     sideBarTitle.TextXAlignment = Enum.TextXAlignment.Center
     sideBarTitle.Parent = sideBar
 
-    -- 创建按钮容器
+    -- 创建按钮容器（现在放在滚动区域内）
     local buttonContainer = Instance.new("Frame")
     buttonContainer.Name = "ButtonContainer"
-    buttonContainer.Size = UDim2.new(1, 0, 0.9, 0)
-    buttonContainer.Position = UDim2.new(0, 0, 0.1, 0)
+    buttonContainer.Size = UDim2.new(1, 0, 0, 0)  -- 高度由内容决定
+    buttonContainer.Position = UDim2.new(0, 0, 0, 0)
     buttonContainer.BackgroundTransparency = 1
-    buttonContainer.Parent = sideBar
+    buttonContainer.Parent = sideBarScroll
 
     -- 创建按钮布局
     local buttonLayout = Instance.new("UIListLayout")
@@ -319,48 +330,21 @@ local function createCustomChat()
     buttonLayout.SortOrder = Enum.SortOrder.LayoutOrder
     buttonLayout.Parent = buttonContainer
 
-    -- 添加按钮的函数
-    local buttonIndex = 0
-    local function addButtonToSideBar(buttonName, onClick)
-        buttonIndex = buttonIndex + 1
+    -- 更新按钮容器大小
+    buttonLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        sideBarScroll.CanvasSize = UDim2.new(0, 0, 0, buttonLayout.AbsoluteContentSize.Y)
+    end)
 
-        local button = Instance.new("TextButton")
-        button.Name = buttonName
-        button.Size = UDim2.new(1, 0, 0.1, 0)
-        button.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
-        button.TextColor3 = Color3.new(1, 1, 1)
-        button.Text = buttonName
-        button.TextSize = 10
-        button.LayoutOrder = buttonIndex
-        button.Parent = buttonContainer
-
-        button.MouseButton1Click:Connect(function()
-            onClick(button)
-        end)
-
-        if buttonName == "有道翻译" then
-            button.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
-        end
-    end
-
-    -- 折叠侧边栏
+    -- 修改折叠功能
     sideBarTitle.MouseButton1Click:Connect(function()
         sidebarismin = not sidebarismin
         if sidebarismin then
             sideBarTitle.Text = "功能栏▲"
-            for _, child in ipairs(buttonContainer:GetChildren()) do
-                if child:IsA("TextButton") then
-                    child.Visible = false
-                end
-            end
+            sideBarScroll.Visible = false
             sideBar.Size = UDim2.new(0.15, 0, 0, 30)
         else
             sideBarTitle.Text = "功能栏▼"
-            for _, child in ipairs(buttonContainer:GetChildren()) do
-                if child:IsA("TextButton") then
-                    child.Visible = true
-                end
-            end
+            sideBarScroll.Visible = true
             sideBar.Size = UDim2.new(0.15, 0, 1, 0)
         end
     end)
