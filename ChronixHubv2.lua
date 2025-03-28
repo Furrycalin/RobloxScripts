@@ -2870,13 +2870,13 @@ local fw = floatingWindow:createWindow("📕", function(label)
     end
 end)
 
-fw.Parent = nil
+fw.Position = UDim2.new(2, 0, 2, 0)
 
 if GetDeviceType() == "Desktop" then
     CreateNotification("欢迎使用，电脑用户" .. displayName, "ChronixHub v2已启动!\n反挂机系统已自动开启", 10, true)
 elseif GetDeviceType() == "Mobile" then
     CreateNotification("欢迎使用，手机用户" .. displayName, "ChronixHub v2已启动!\n反挂机系统已自动开启", 10, true)
-    fw.Parent = screenGui
+    fw.Position = UDim2.new(0.5, -40, 0.5, -40)
 end
 
 local function unloadchronixhub()
