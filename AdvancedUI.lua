@@ -372,6 +372,8 @@ function AdvancedUI:CreateButton(parent, config)
     return buttonAPI
 end
 
+return AdvancedUI
+
 -- 示例使用
 --[[
 local screenGui = Instance.new("ScreenGui")
