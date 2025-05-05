@@ -861,35 +861,48 @@ local function createCustomChat()
         chatFrame.Visible = not chatFrame.Visible
     end)
 
--- 鼠标进入事件
-chatFrame.MouseEnter:Connect(function()
-    lastMouseHoverTime = os.time()
-end)
+    -- 鼠标进入事件
+    chatFrame.MouseEnter:Connect(function()
+        lastMouseHoverTime = os.time()
+    end)
 
--- 鼠标离开事件
-chatFrame.MouseLeave:Connect(function()
-    lastMouseHoverTime = os.time()
-end)
+    -- 鼠标离开事件
+    chatFrame.MouseLeave:Connect(function()
+        lastMouseHoverTime = os.time()
+    end)
 
--- 创建定时检查循环
-local hideCheckLoop
-hideCheckLoop = RunService.Heartbeat:Connect(function()
-    local timeSinceLastHover = os.time() - lastMouseHoverTime
+    -- 创建定时检查循环
+    local hideCheckLoop
+    hideCheckLoop = RunService.Heartbeat:Connect(function()
+        local timeSinceLastHover = os.time() - lastMouseHoverTime
     
-    if timeSinceLastHover >= hoverTimeout and not isHiding then
-        isHiding = true
-        chatFrame.BackgroundTransparency = 1
-        searchContainer.Visible = false
-        inputContainer.Visible = false
-        sideBar.Visible = false
-    elseif timeSinceLastHover < hoverTimeout and isHiding then
-        isHiding = false
-        chatFrame.BackgroundTransparency = 0.5
-        searchContainer.Visible = true
-        inputContainer.Visible = true
-        sideBar.Visible = true
-    end
-end)
+        if timeSinceLastHover >= hoverTimeout and not isHiding then
+            isHiding = true
+            chatFrame.BackgroundTransparency = 1
+            searchContainer.Visible = false
+            inputContainer.Visible = false
+            sideBar.Visible = false
+        elseif timeSinceLastHover < hoverTimeout and isHiding then
+            isHiding = false
+            chatFrame.BackgroundTransparency = 0.5
+            searchContainer.Visible = true
+            inputContainer.Visible = true
+            sideBar.Visible = true
+            for _, child in ipairs(messageContainer:GetChildren()) do
+                if child:IsA("TextButton") then
+                    child.Visible = true
+                end
+            end
+        end
+
+        if isHiding then
+            for _, child in ipairs(messageContainer:GetChildren()) do
+                if child:IsA("TextButton") then
+                    child.Visible = false
+                end
+            end
+        end
+    end)
 
     -- 添加卸载按钮
     local uninstallButton = Instance.new("TextButton")
