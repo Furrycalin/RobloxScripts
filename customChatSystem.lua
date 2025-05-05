@@ -885,6 +885,7 @@ local function createCustomChat()
             superlinkButton.Visible = false
             transleButton.Visible = false
             copyButton.Visible = false
+            searchContainer.Visible = false
         end
     
         -- 如果鼠标悬停且当前透明度不是0
@@ -896,6 +897,7 @@ local function createCustomChat()
             superlinkButton.Visible = true
             transleButton.Visible = true
             copyButton.Visible = true
+            searchContainer.Visible = true
         end
     
         -- 平滑过渡透明度
@@ -915,9 +917,13 @@ local function createCustomChat()
     uninstallButton.Position = UDim2.new(0.95, 0, 0.95, 0)
     uninstallButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
     uninstallButton.TextColor3 = Color3.new(1, 1, 1)
+    uninstallButton.BackgroundTransparency = 0.5
     uninstallButton.Text = "卸载"
     uninstallButton.TextSize = 12
     uninstallButton.Parent = screenGui
+
+    local corner10086 = Instance.new("UICorner", uninstallButton)
+    corner10086.CornerRadius = UDim.new(0, 8)
 
     -- 卸载功能
     local function uninstallScript()
