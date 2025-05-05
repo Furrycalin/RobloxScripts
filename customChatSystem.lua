@@ -863,7 +863,7 @@ local function createCustomChat()
 
 -- 鼠标进入事件
 chatFrame.MouseEnter:Connect(function()
-    lastMouseMouseHoverTime = os.time()
+
     if isHiding then
         isHiding = false
         chatFrame.BackgroundTransparency = 0.5
@@ -890,7 +890,11 @@ hideCheckLoop = RunService.Heartbeat:Connect(function()
         inputContainer.Visible = false
         sideBar.Visible = false
     elseif timeSinceLastHover < hoverTimeout and isHiding then
-
+        isHiding = false
+        chatFrame.BackgroundTransparency = 0.5
+        searchContainer.Visible = true
+        inputContainer.Visible = true
+        sideBar.Visible = true
     end
 end)
 
