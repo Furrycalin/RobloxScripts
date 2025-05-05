@@ -951,7 +951,7 @@ chatFrame.MouseEnter:Connect(function()
     lastMouseMouseHoverTime = os.time()
     if isHiding then
         isHiding = false
-        fadeElements(0) -- 完全显示
+        fadeElements(0.5) -- 完全显示
     end
 end)
 
