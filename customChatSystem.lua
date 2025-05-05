@@ -893,15 +893,7 @@ local function updateTransparency()
     inputContainer.BackgroundTransparency = chatFrame.BackgroundTransparency + 0.1 -- 输入框比背景稍透明
     sideBar.BackgroundTransparency = chatFrame.BackgroundTransparency + 0.1 -- 侧边栏比背景稍透明
     
-    -- 控制子元素的可见性
-    local textTransparency = math.min(chatFrame.BackgroundTransparency * 1.5, 1)
-    for _, child in ipairs(chatFrame:GetDescendants()) do
-        if child:IsA("TextLabel") or child:IsA("TextBox") or child:IsA("TextButton") then
-            child.TextTransparency = textTransparency
-        elseif child:IsA("ImageLabel") then
-            child.ImageTransparency = textTransparency
-        end
-    end
+    
 end
 
 -- 在createCustomChat函数末尾添加这个循环（在返回前）
