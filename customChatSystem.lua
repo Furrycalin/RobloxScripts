@@ -471,6 +471,45 @@ local function createCustomChat()
         translateAPI = "QQ"
     end)
 
+        -- 添加淡出功能
+    -- 存储原始透明度
+    chatFrame.OriginalBackgroundTransparency = chatFrame.BackgroundTransparency
+    sideBar.OriginalBackgroundTransparency = sideBar.BackgroundTransparency
+
+    -- 鼠标进入事件
+    local function onMouseEnter()
+        isMouseOver = true
+        -- 立即恢复透明度
+        chatFrame.BackgroundTransparency = chatFrame.OriginalBackgroundTransparency
+        sideBar.BackgroundTransparency = sideBar.OriginalBackgroundTransparency
+    end
+
+    -- 鼠标离开事件
+    local function onMouseLeave()
+        isMouseOver = false
+        lastMouseLeaveTime = tick()
+    end
+
+    -- 为聊天框和侧边栏添加鼠标事件
+    chatFrame.MouseEnter:Connect(onMouseEnter)
+    chatFrame.MouseLeave:Connect(onMouseLeave)
+    sideBar.MouseEnter:Connect(onMouseEnter)
+    sideBar.MouseLeave:Connect(onMouseLeave)
+
+    -- 在RunService的心跳事件中添加淡出逻辑
+    RunService.Heartbeat:Connect(function()
+        if not isMouseOver and chatFrame.Visible then
+            local timeSinceLeave = tick() - lastMouseLeaveTime
+            if timeSinceLeave > fadeOutTime then
+                -- 计算淡出进度(0到1之间)
+                local fadeProgress = math.min(1, (timeSinceLeave - fadeOutTime) / fadeDuration)
+                -- 应用透明度变化
+                chatFrame.BackgroundTransparency = chatFrame.OriginalBackgroundTransparency + (1 - chatFrame.OriginalBackgroundTransparency) * fadeProgress
+                sideBar.BackgroundTransparency = sideBar.OriginalBackgroundTransparency + (1 - sideBar.OriginalBackgroundTransparency) * fadeProgress
+            end
+        end
+    end)
+
     -- 处理消息文本
     local function HandleText(Data)
         local sourcemsghand = Data.nickname .. ":"
@@ -754,6 +793,7 @@ local function createCustomChat()
         transleButton.Size = UDim2.new(0.05, 0, 1, 0)
         transleButton.Position = UDim2.new(0.885, 0, 0, 0)
         transleButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+        transleButton.BackgroundTransparency = 0.5
         transleButton.TextColor3 = Color3.new(1, 1, 1)
         transleButton.Text = "🌐"
         transleButton.TextSize = 12
@@ -771,6 +811,7 @@ local function createCustomChat()
         copyButton.Position = UDim2.new(0.935, 0, 0, 0)
         copyButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
         copyButton.TextColor3 = Color3.new(1, 1, 1)
+        copyButton.BackgroundTransparency = 0.5
         copyButton.Text = "📋"
         copyButton.TextSize = 12
         copyButton.Parent = messageContainer
