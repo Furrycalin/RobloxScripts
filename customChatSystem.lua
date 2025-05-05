@@ -888,17 +888,31 @@ local function createCustomChat()
             searchContainer.Visible = true
             inputContainer.Visible = true
             sideBar.Visible = true
-            for _, child in ipairs(messageContainer:GetChildren()) do
-                if child:IsA("TextButton") then
-                    child.Visible = true
+            -- 更高效的实现方式
+            for _, messageContainer in ipairs(scrollingFrame:GetChildren()) do
+                if messageContainer.Name == "MessageContainer" then
+                    -- 使用FindFirstChildOfClass递归查找所有TextButton
+                    local textButtons = messageContainer:GetDescendants()
+                    for _, child in ipairs(textButtons) do
+                        if child:IsA("TextButton") then
+                            child.Visible = true
+                        end
+                    end
                 end
             end
         end
 
         if isHiding then
-            for _, child in ipairs(messageContainer:GetChildren()) do
-                if child:IsA("TextButton") then
-                    child.Visible = false
+            -- 更高效的实现方式
+            for _, messageContainer in ipairs(scrollingFrame:GetChildren()) do
+                if messageContainer.Name == "MessageContainer" then
+                    -- 使用FindFirstChildOfClass递归查找所有TextButton
+                    local textButtons = messageContainer:GetDescendants()
+                    for _, child in ipairs(textButtons) do
+                        if child:IsA("TextButton") then
+                            child.Visible = false
+                        end
+                    end
                 end
             end
         end
