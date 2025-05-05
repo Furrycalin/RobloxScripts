@@ -471,45 +471,6 @@ local function createCustomChat()
         translateAPI = "QQ"
     end)
 
-        -- 添加淡出功能
-    -- 存储原始透明度
-    chatFrame.OriginalBackgroundTransparency = chatFrame.BackgroundTransparency
-    sideBar.OriginalBackgroundTransparency = sideBar.BackgroundTransparency
-
-    -- 鼠标进入事件
-    local function onMouseEnter()
-        isMouseOver = true
-        -- 立即恢复透明度
-        chatFrame.BackgroundTransparency = chatFrame.OriginalBackgroundTransparency
-        sideBar.BackgroundTransparency = sideBar.OriginalBackgroundTransparency
-    end
-
-    -- 鼠标离开事件
-    local function onMouseLeave()
-        isMouseOver = false
-        lastMouseLeaveTime = tick()
-    end
-
-    -- 为聊天框和侧边栏添加鼠标事件
-    chatFrame.MouseEnter:Connect(onMouseEnter)
-    chatFrame.MouseLeave:Connect(onMouseLeave)
-    sideBar.MouseEnter:Connect(onMouseEnter)
-    sideBar.MouseLeave:Connect(onMouseLeave)
-
-    -- 在RunService的心跳事件中添加淡出逻辑
-    RunService.Heartbeat:Connect(function()
-        if not isMouseOver and chatFrame.Visible then
-            local timeSinceLeave = tick() - lastMouseLeaveTime
-            if timeSinceLeave > fadeOutTime then
-                -- 计算淡出进度(0到1之间)
-                local fadeProgress = math.min(1, (timeSinceLeave - fadeOutTime) / fadeDuration)
-                -- 应用透明度变化
-                chatFrame.BackgroundTransparency = chatFrame.OriginalBackgroundTransparency + (1 - chatFrame.OriginalBackgroundTransparency) * fadeProgress
-                sideBar.BackgroundTransparency = sideBar.OriginalBackgroundTransparency + (1 - sideBar.OriginalBackgroundTransparency) * fadeProgress
-            end
-        end
-    end)
-
     -- 处理消息文本
     local function HandleText(Data)
         local sourcemsghand = Data.nickname .. ":"
