@@ -890,11 +890,7 @@ hideCheckLoop = RunService.Heartbeat:Connect(function()
         inputContainer.Visible = false
         sideBar.Visible = false
     elseif timeSinceLastHover < hoverTimeout and isHiding then
-        isHiding = false
-        chatFrame.BackgroundTransparency = 0.5
-        searchContainer.Visible = true
-        inputContainer.Visible = true
-        sideBar.Visible = true
+
     end
 end)
 
