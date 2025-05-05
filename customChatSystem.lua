@@ -195,9 +195,6 @@ local lastMouseHoverTime = os.time()
 local isHiding = false
 local activeTween = nil
 
--- 淡出参数
-local fadeOutTransparency = 1  -- 淡出后的透明度
-local fadeDuration = 0.5         -- 淡入淡出持续时间(秒)
 local hoverTimeout = 10          -- 隐藏超时时间(秒)
 
 -- 创建自定义聊天栏
@@ -864,94 +861,15 @@ local function createCustomChat()
         chatFrame.Visible = not chatFrame.Visible
     end)
 
-    -- 创建透明度动画函数
-local function fadeElements(targetTransparency)
-    -- 取消当前正在进行的动画
-    if activeTween then
-        activeTween:Cancel()
-    end
-
-    -- 要应用动画的对象列表
-    local elementsToTween = {
-        chatFrame,
-        inputContainer,
-        sideBar,
-        scrollingFrame
-    }
-    
-    -- 收集所有需要改变透明度的文本和图像元素
-    local textElements = {}
-    local imageElements = {}
-    
-    for _, child in ipairs(chatFrame:GetDescendants()) do
-        if child:IsA("TextLabel") or child:IsA("TextBox") or child:IsA("TextButton") then
-            table.insert(textElements, child)
-        elseif child:IsA("ImageLabel") then
-            table.insert(imageElements, child)
-        end
-    end
-
-    -- 创建并启动动画
-    local tweenInfo = TweenInfo.new(
-        fadeDuration,
-        Enum.EasingStyle.Quad,
-        Enum.EasingDirection.Out
-    )
-    
-    -- 为每个元素创建动画
-    local function createTweenProperties(element, prop, value)
-        local properties = {}
-        properties[prop] = value
-        return TweenService:Create(element, tweenInfo, properties)
-    end
-
-    -- 背景元素动画
-    local backgroundTweens = {}
-    for _, element in ipairs(elementsToTween) do
-        table.insert(backgroundTweens, 
-            createTweenProperties(element, "BackgroundTransparency", targetTransparency)
-        )
-    end
-    
-    -- 文本元素动画
-    local textTweens = {}
-    for _, element in ipairs(textElements) do
-        table.insert(textTweens,
-            createTweenProperties(element, "TextTransparency", targetTransparency)
-        )
-    end
-    
-    -- 图像元素动画
-    local imageTweens = {}
-    for _, element in ipairs(imageElements) do
-        table.insert(imageTweens,
-            createTweenProperties(element, "ImageTransparency", targetTransparency)
-        )
-    end
-
-    -- 合并所有动画
-    local allTweens = {}
-    for _, t in ipairs(backgroundTweens) do table.insert(allTweens, t) end
-    for _, t in ipairs(textTweens) do table.insert(allTweens, t) end
-    for _, t in ipairs(imageTweens) do table.insert(allTweens, t) end
-
-    -- 启动动画
-    for _, tween in ipairs(allTweens) do
-        tween:Play()
-    end
-    
-    -- 保存最后一个tween作为activeTween引用
-    if #allTweens > 0 then
-        activeTween = allTweens[#allTweens]
-    end
-end
-
 -- 鼠标进入事件
 chatFrame.MouseEnter:Connect(function()
     lastMouseMouseHoverTime = os.time()
     if isHiding then
         isHiding = false
-        fadeElements(0.5) -- 完全显示
+        chatFrame.BackgroundTransparency = 0.5
+        searchContainer.Visible = true
+        inputContainer.Visible = true
+        sideBar.Visible = true
     end
 end)
 
@@ -967,10 +885,16 @@ hideCheckLoop = RunService.Heartbeat:Connect(function()
     
     if timeSinceLastHover >= hoverTimeout and not isHiding then
         isHiding = true
-        fadeElements(fadeOutTransparency)
+        chatFrame.BackgroundTransparency = 1
+        searchContainer.Visible = false
+        inputContainer.Visible = false
+        sideBar.Visible = false
     elseif timeSinceLastHover < hoverTimeout and isHiding then
         isHiding = false
-        fadeElements(0)
+        chatFrame.BackgroundTransparency = 0.5
+        searchContainer.Visible = true
+        inputContainer.Visible = true
+        sideBar.Visible = true
     end
 end)
 
