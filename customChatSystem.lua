@@ -384,6 +384,7 @@ local function createCustomChat()
         button.Position = UDim2.new(0, 5, 0, 0)  -- 添加5像素左边距
         button.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
         button.TextColor3 = Color3.new(1, 1, 1)
+        button.BackgroundTransparency = 0.5
         button.Text = buttonName
         button.TextSize = 12
         button.LayoutOrder = buttonIndex
