@@ -861,50 +861,52 @@ local function createCustomChat()
     end)
 
     -- 在chatFrame创建后添加鼠标事件监听
-chatFrame.MouseEnter:Connect(function()
-    lastMouseHoverTime = os.time()
-    targetTransparency = 0.5 -- 完全不透明
-    isHiding = false
-end)
-
-chatFrame.MouseLeave:Connect(function()
-    lastMouseHoverTime = os.time() -- 重置计时器
-end)
-
--- 创建一个函数来处理透明度变化
-local function updateTransparency()
-    local now = os.time()
-    local timeSinceLastHover = now - lastMouseHoverTime
-    
-    -- 如果10秒没有鼠标悬停且当前不是隐藏状态
-    if timeSinceLastHover >= 10 and not isHiding then
-        isHiding = true
-        targetTransparency = 1 -- 目标透明度为80%透明
-        sideBar.Visible = false
-        inputContainer.visible = false
-    end
-    
-    -- 如果鼠标悬停且当前透明度不是0
-    if timeSinceLastHover < 10 and targetTransparency ~= 0 then
+    chatFrame.MouseEnter:Connect(function()
+        lastMouseHoverTime = os.time()
+        targetTransparency = 0.5 -- 完全不透明
         isHiding = false
-        targetTransparency = 0.5 -- 恢复完全不透明
-        sideBar.Visible = true
-        inputContainer.visible = true
-    end
-    
-    -- 平滑过渡透明度
-    chatFrame.BackgroundTransparency = chatFrame.BackgroundTransparency + (targetTransparency - chatFrame.BackgroundTransparency) * fadeSpeed
-    inputContainer.BackgroundTransparency = chatFrame.BackgroundTransparency + 0.1 -- 输入框比背景稍透明
-    sideBar.BackgroundTransparency = chatFrame.BackgroundTransparency + 0.1 -- 侧边栏比背景稍透明
-    
-    
-end
+    end)
 
--- 在createCustomChat函数末尾添加这个循环（在返回前）
-local fadeLoop
-fadeLoop = RunService.Heartbeat:Connect(function()
-    updateTransparency()
-end)
+    chatFrame.MouseLeave:Connect(function()
+        lastMouseHoverTime = os.time() -- 重置计时器
+    end)
+
+    -- 创建一个函数来处理透明度变化
+    local function updateTransparency()
+        local now = os.time()
+        local timeSinceLastHover = now - lastMouseHoverTime
+    
+        -- 如果10秒没有鼠标悬停且当前不是隐藏状态
+        if timeSinceLastHover >= 10 and not isHiding then
+            isHiding = true
+            targetTransparency = 1 -- 目标透明度为80%透明
+            sideBar.Visible = false
+            inputContainer.Visible = false
+            superlinkButton.Visible = false
+            transleButton.Visible = false
+            copyButton.Visible = false
+        end
+    
+        -- 如果鼠标悬停且当前透明度不是0
+        if timeSinceLastHover < 10 and targetTransparency ~= 0 then
+            isHiding = false
+            targetTransparency = 0.5 -- 恢复完全不透明
+            sideBar.Visible = true
+            inputContainer.Visible = true
+            superlinkButton.Visible = true
+            transleButton.Visible = true
+            copyButton.Visible = true
+        end
+    
+        -- 平滑过渡透明度
+        chatFrame.BackgroundTransparency = chatFrame.BackgroundTransparency + (targetTransparency - chatFrame.BackgroundTransparency) * fadeSpeed
+    end
+
+    -- 在createCustomChat函数末尾添加这个循环（在返回前）
+    local fadeLoop
+    fadeLoop = RunService.Heartbeat:Connect(function()
+        updateTransparency()
+    end)
 
     -- 添加卸载按钮
     local uninstallButton = Instance.new("TextButton")
