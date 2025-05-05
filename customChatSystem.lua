@@ -863,7 +863,7 @@ local function createCustomChat()
     -- 在chatFrame创建后添加鼠标事件监听
 chatFrame.MouseEnter:Connect(function()
     lastMouseHoverTime = os.time()
-    targetTransparency = 0 -- 完全不透明
+    targetTransparency = 0.5 -- 完全不透明
     isHiding = false
 end)
 
@@ -879,13 +879,17 @@ local function updateTransparency()
     -- 如果10秒没有鼠标悬停且当前不是隐藏状态
     if timeSinceLastHover >= 10 and not isHiding then
         isHiding = true
-        targetTransparency = 0.8 -- 目标透明度为80%透明
+        targetTransparency = 1 -- 目标透明度为80%透明
+        sideBar.Visible = false
+        inputContainer.visible = false
     end
     
     -- 如果鼠标悬停且当前透明度不是0
     if timeSinceLastHover < 10 and targetTransparency ~= 0 then
         isHiding = false
-        targetTransparency = 0 -- 恢复完全不透明
+        targetTransparency = 0.5 -- 恢复完全不透明
+        sideBar.Visible = true
+        inputContainer.visible = true
     end
     
     -- 平滑过渡透明度
