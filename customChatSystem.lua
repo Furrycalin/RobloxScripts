@@ -225,6 +225,9 @@ local function createCustomChat()
     scrollingFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
     scrollingFrame.Parent = chatFrame
 
+    local corner2 = Instance.new("UICorner", scrollingFrame)
+    corner2.CornerRadius = UDim.new(0, 4)
+
     -- 创建消息布局
     local uiListLayout = Instance.new("UIListLayout")
     uiListLayout.Padding = UDim.new(0, 5)
@@ -238,6 +241,9 @@ local function createCustomChat()
     inputContainer.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
     inputContainer.BackgroundTransparency = 0.5
     inputContainer.Parent = chatFrame
+
+    local corner3 = Instance.new("UICorner", inputContainer)
+    corner3.CornerRadius = UDim.new(0, 4)
 
     -- 创建输入栏
     local inputBox = Instance.new("TextBox")
@@ -254,6 +260,9 @@ local function createCustomChat()
     inputBox.TextSize = 12
     inputBox.Parent = inputContainer
 
+    local corner4 = Instance.new("UICorner", inputBox)
+    corner4.CornerRadius = UDim.new(0, 4)
+
     -- 创建发送按钮
     local sendButton = Instance.new("TextButton")
     sendButton.Name = "SendButton"
@@ -264,6 +273,9 @@ local function createCustomChat()
     sendButton.Text = "▶"
     sendButton.TextSize = 12
     sendButton.Parent = inputContainer
+
+    local corner5 = Instance.new("UICorner", sendButton)
+    corner5.CornerRadius = UDim.new(0, 4)
 
     -- 发送消息的逻辑
     local function sendMessage()
@@ -293,6 +305,9 @@ local function createCustomChat()
     sideBar.BackgroundTransparency = 0.5
     sideBar.Parent = chatFrame
 
+    local corner6 = Instance.new("UICorner", sideBar)
+    corner6.CornerRadius = UDim.new(0, 4)
+
     -- 创建侧边栏滚动区域
     local sideBarScroll = Instance.new("ScrollingFrame")
     sideBarScroll.Name = "SideBarScroll"
@@ -303,6 +318,9 @@ local function createCustomChat()
     sideBarScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
     sideBarScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
     sideBarScroll.Parent = sideBar
+
+    local corner7 = Instance.new("UICorner", sideBarScroll)
+    corner7.CornerRadius = UDim.new(0, 4)
 
     -- 创建侧边栏标题
     local sideBarTitle = Instance.new("TextButton")
@@ -315,6 +333,9 @@ local function createCustomChat()
     sideBarTitle.TextSize = 12
     sideBarTitle.TextXAlignment = Enum.TextXAlignment.Center
     sideBarTitle.Parent = sideBar
+
+    local corner8 = Instance.new("UICorner", sideBarTitle)
+    corner8.CornerRadius = UDim.new(0, 4)
 
     -- 创建按钮容器（现在放在滚动区域内）
     local buttonContainer = Instance.new("Frame")
