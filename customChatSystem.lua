@@ -190,6 +190,12 @@ local function replaceText(text, style)
     return result
 end
 
+-- 在createCustomChat函数开头添加这些变量
+local fadeSpeed = 0.05 -- 淡出/淡入速度
+local targetTransparency = 0 -- 目标透明度
+local lastMouseHoverTime = os.time() -- 记录最后鼠标悬停时间
+local isHiding = false -- 是否正在隐藏
+
 -- 创建自定义聊天栏
 local function createCustomChat()
     local translateAPI = "YouDao"
@@ -854,6 +860,56 @@ local function createCustomChat()
         chatFrame.Visible = not chatFrame.Visible
     end)
 
+    -- 在chatFrame创建后添加鼠标事件监听
+chatFrame.MouseEnter:Connect(function()
+    lastMouseHoverTime = os.time()
+    targetTransparency = 0 -- 完全不透明
+    isHiding = false
+end)
+
+chatFrame.MouseLeave:Connect(function()
+    lastMouseHoverTime = os.time() -- 重置计时器
+end)
+
+-- 创建一个函数来处理透明度变化
+local function updateTransparency()
+    local now = os.time()
+    local timeSinceLastHover = now - lastMouseHoverTime
+    
+    -- 如果10秒没有鼠标悬停且当前不是隐藏状态
+    if timeSinceLastHover >= 10 and not isHiding then
+        isHiding = true
+        targetTransparency = 0.8 -- 目标透明度为80%透明
+    end
+    
+    -- 如果鼠标悬停且当前透明度不是0
+    if timeSinceLastHover < 10 and targetTransparency ~= 0 then
+        isHiding = false
+        targetTransparency = 0 -- 恢复完全不透明
+    end
+    
+    -- 平滑过渡透明度
+    chatFrame.BackgroundTransparency = chatFrame.BackgroundTransparency + (targetTransparency - chatFrame.BackgroundTransparency) * fadeSpeed
+    inputContainer.BackgroundTransparency = chatFrame.BackgroundTransparency + 0.1 -- 输入框比背景稍透明
+    sideBar.BackgroundTransparency = chatFrame.BackgroundTransparency + 0.1 -- 侧边栏比背景稍透明
+    
+    -- 控制子元素的可见性
+    local textTransparency = math.min(chatFrame.BackgroundTransparency * 1.5, 1)
+    for _, child in ipairs(chatFrame:GetDescendants()) do
+        if child:IsA("TextLabel") or child:IsA("TextBox") or child:IsA("TextButton") then
+            child.TextTransparency = textTransparency
+        elseif child:IsA("ImageLabel") then
+            child.ImageTransparency = textTransparency
+        end
+    end
+end
+
+-- 在createCustomChat函数末尾添加这个循环（在返回前）
+local fadeLoop
+fadeLoop = RunService.Heartbeat:Connect(function()
+    updateTransparency()
+end)
+
     -- 添加卸载按钮
     local uninstallButton = Instance.new("TextButton")
     uninstallButton.Name = "UninstallButton"
@@ -869,6 +925,10 @@ local function createCustomChat()
     local function uninstallScript()
         if screenGui and screenGui.Parent then
             screenGui:Destroy()
+        end
+
+        if fadeLoop then
+            fadeLoop:Disconnect()
         end
 
         colorCache = {}
