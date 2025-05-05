@@ -886,6 +886,8 @@ local function createCustomChat()
             transleButton.Visible = false
             copyButton.Visible = false
             searchContainer.Visible = false
+            searchBox.Visible = false
+            searchButton.Visible = false
         end
     
         -- 如果鼠标悬停且当前透明度不是0
@@ -898,6 +900,8 @@ local function createCustomChat()
             transleButton.Visible = true
             copyButton.Visible = true
             searchContainer.Visible = true
+            searchBox.Visible = true
+            searchButton.Visible = true
         end
     
         -- 平滑过渡透明度
