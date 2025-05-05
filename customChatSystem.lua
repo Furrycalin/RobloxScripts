@@ -226,7 +226,7 @@ local function createCustomChat()
     scrollingFrame.Parent = chatFrame
 
     local corner2 = Instance.new("UICorner", scrollingFrame)
-    corner2.CornerRadius = UDim.new(0, 4)
+    corner2.CornerRadius = UDim.new(0, 7)
 
     -- 创建消息布局
     local uiListLayout = Instance.new("UIListLayout")
@@ -243,7 +243,7 @@ local function createCustomChat()
     inputContainer.Parent = chatFrame
 
     local corner3 = Instance.new("UICorner", inputContainer)
-    corner3.CornerRadius = UDim.new(0, 4)
+    corner3.CornerRadius = UDim.new(0, 7)
 
     -- 创建输入栏
     local inputBox = Instance.new("TextBox")
@@ -261,7 +261,7 @@ local function createCustomChat()
     inputBox.Parent = inputContainer
 
     local corner4 = Instance.new("UICorner", inputBox)
-    corner4.CornerRadius = UDim.new(0, 4)
+    corner4.CornerRadius = UDim.new(0, 7)
 
     -- 创建发送按钮
     local sendButton = Instance.new("TextButton")
@@ -275,7 +275,7 @@ local function createCustomChat()
     sendButton.Parent = inputContainer
 
     local corner5 = Instance.new("UICorner", sendButton)
-    corner5.CornerRadius = UDim.new(0, 4)
+    corner5.CornerRadius = UDim.new(0, 7)
 
     -- 发送消息的逻辑
     local function sendMessage()
@@ -306,7 +306,7 @@ local function createCustomChat()
     sideBar.Parent = chatFrame
 
     local corner6 = Instance.new("UICorner", sideBar)
-    corner6.CornerRadius = UDim.new(0, 4)
+    corner6.CornerRadius = UDim.new(0, 7)
 
     -- 创建侧边栏滚动区域
     local sideBarScroll = Instance.new("ScrollingFrame")
@@ -320,7 +320,7 @@ local function createCustomChat()
     sideBarScroll.Parent = sideBar
 
     local corner7 = Instance.new("UICorner", sideBarScroll)
-    corner7.CornerRadius = UDim.new(0, 4)
+    corner7.CornerRadius = UDim.new(0, 7)
 
     -- 创建侧边栏标题
     local sideBarTitle = Instance.new("TextButton")
@@ -335,7 +335,7 @@ local function createCustomChat()
     sideBarTitle.Parent = sideBar
 
     local corner8 = Instance.new("UICorner", sideBarTitle)
-    corner8.CornerRadius = UDim.new(0, 4)
+    corner8.CornerRadius = UDim.new(0, 7)
 
     -- 创建按钮容器（现在放在滚动区域内）
     local buttonContainer = Instance.new("Frame")
@@ -388,7 +388,7 @@ local function createCustomChat()
 
         -- 添加圆角
         local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, 4)
+        corner.CornerRadius = UDim.new(0, 7)
         corner.Parent = button
 
         -- 添加按钮悬停效果
