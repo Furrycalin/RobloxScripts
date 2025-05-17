@@ -1799,6 +1799,7 @@ local function playeraddfunction()
             -- 监听 Humanoid 的 Died 事件
             humanoid.Died:Connect(function()
                 if data.tools.playeresp then
+                    wait(1)
                     removePlayerEffects(player)
                     addHighlight(player)
                     addUsernameLabel(player)
