@@ -1801,7 +1801,7 @@ local function playeraddfunction()
                 if data.tools.playeresp then
                     removePlayerEffects(player)
                     addHighlight(player)
-                    wait(3)
+                    wait(2)
                     addUsernameLabel(player)
                 end
             end)
