@@ -1552,7 +1552,7 @@ local function UpdateUI()
         return
     end
 
-    local isSpectating = playerPos.Z < -877.55 and playerPos.Y > 279.17
+    local isSpectating = playerPos.Z < -767.55 and playerPos.Y > 279.17
     if isSpectating then
         DBT1.TextColor3 = Color3.fromRGB(230, 230, 250)
         DBT1.Text = "观战中"
