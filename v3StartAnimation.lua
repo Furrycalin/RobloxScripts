@@ -191,13 +191,27 @@ function LoadAnimationModule:LoadAnimation(duration, config)
         slideIn:Play()
         slideIn.Completed:Wait()
 
-        -- 模拟加载进度
+        -- 模拟加载进度 - 改进版：速度更慢，有停顿效果
         local startTime = tick()
         local isCancelled = false
+        local lastUpdateTime = tick()
+        local progress = 0
+        
+        -- 停顿效果配置
+        local pauseChance = 0.1 -- 10%的概率停顿
+        local minPauseDuration = 0.3 -- 最小停顿时间
+        local maxPauseDuration = 1.0 -- 最大停顿时间
+        local isPaused = false
+        local pauseEndTime = 0
 
         if config.showCancelButton then
             cancelButton.MouseButton1Click:Connect(function()
                 isCancelled = true
+                -- 停止音乐
+                if loadingSound then
+                    loadingSound:Stop()
+                    loadingSound:Destroy()
+                end
                 -- 取消时的动画：界面滑出屏幕
                 local slideOut = game:GetService("TweenService"):Create(
                     frame, 
@@ -211,7 +225,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
             end)
         end
 
-        -- 使用 RenderStepped 更新进度条
+        -- 使用 RenderStepped 更新进度条 - 改进版
         local connection
         connection = game:GetService("RunService").RenderStepped:Connect(function()
             if isCancelled then
@@ -219,29 +233,67 @@ function LoadAnimationModule:LoadAnimation(duration, config)
                 return
             end
 
-            local progress = (tick() - startTime) / duration
-            if progress >= 1 then
-                progress = 1
-                connection:Disconnect()
+            local currentTime = tick()
+            
+            -- 检查是否在停顿中
+            if isPaused then
+                if currentTime >= pauseEndTime then
+                    isPaused = false
+                    lastUpdateTime = currentTime
+                else
+                    return -- 停顿期间不更新进度
+                end
             end
 
-            loadingText.Text = config.loadingText .. math.floor(progress * 100) .. "%"
-            progressBar.Size = UDim2.new(progress, 0, 1, 0)
+            -- 计算理论进度
+            local theoreticalProgress = (currentTime - startTime) / duration
+            
+            -- 随机决定是否停顿
+            if not isPaused and math.random() < pauseChance and theoreticalProgress < 0.9 then
+                isPaused = true
+                local pauseDuration = math.random() * (maxPauseDuration - minPauseDuration) + minPauseDuration
+                pauseEndTime = currentTime + pauseDuration
+                return
+            end
+
+            -- 更新实际进度 - 让进度条速度更慢
+            if not isPaused then
+                -- 减缓进度条速度，让它比理论进度慢一些
+                local slowdownFactor = 1.5 -- 速度减慢1.5倍
+                progress = math.min(theoreticalProgress / slowdownFactor, 1)
+                
+                loadingText.Text = config.loadingText .. math.floor(progress * 100) .. "%"
+                progressBar.Size = UDim2.new(progress, 0, 1, 0)
+                
+                -- 当进度达到100%时断开连接
+                if progress >= 1 then
+                    connection:Disconnect()
+                end
+            end
         end)
 
         -- 等待加载完成
-        while tick() - startTime < duration and not isCancelled do
+        while (tick() - startTime) < (duration * 1.5) and not isCancelled do -- 等待时间也相应延长
             wait(0.1)
         end
 
         if not isCancelled then
+            -- 确保进度条显示100%
+            progress = 1
             loadingText.Text = "加载完毕!"
+            progressBar.Size = UDim2.new(1, 0, 1, 0)
+            
             if config.showCancelButton then cancelButton.Parent = nil end
-            loadingSound.TimePosition = 128
+            
+            -- 停止音乐
+            if loadingSound then
+                loadingSound:Stop()
+                loadingSound:Destroy()
+            end
+            
             wait(0.5)
 
             loadingText.Text = config.loadingText .. "100%"
-            progressBar.Size = UDim2.new(1, 0, 1, 0)
             
             -- 完成时的动画：界面滑出屏幕
             local slideOut = game:GetService("TweenService"):Create(
