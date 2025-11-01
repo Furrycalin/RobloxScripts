@@ -44,8 +44,8 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     screenGui.Name = "LoadAnimationGui"
     screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-    -- 使用固定的1030*605像素大小，稍微缩小一点
-    local uiScale = 0.9 -- 缩小10%
+    -- 使用固定的1030*605像素大小，总共缩小20%（先缩10%再缩10%）
+    local uiScale = 0.8 -- 总共缩小20%
     local uiWidth = 1030 * uiScale
     local uiHeight = 605 * uiScale
 
@@ -65,8 +65,8 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     -- 创建波浪形嵌入效果 - 左上角
     local topLeftWave = Instance.new("ImageLabel")
     topLeftWave.Name = "TopLeftWave"
-    topLeftWave.Size = UDim2.new(0, 150, 0, 150) -- 固定大小
-    topLeftWave.Position = UDim2.new(0, -75, 0, -75)
+    topLeftWave.Size = UDim2.new(0, 120, 0, 120) -- 缩小波浪大小
+    topLeftWave.Position = UDim2.new(0, -60, 0, -60)
     topLeftWave.BackgroundTransparency = 1
     topLeftWave.Image = "rbxassetid://154967018" -- 波浪形图片
     topLeftWave.ImageColor3 = Color3.new(0.078, 0.078, 0.078) -- #141414
@@ -76,62 +76,67 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     -- 创建波浪形嵌入效果 - 右下角
     local bottomRightWave = Instance.new("ImageLabel")
     bottomRightWave.Name = "BottomRightWave"
-    bottomRightWave.Size = UDim2.new(0, 150, 0, 150) -- 固定大小
-    bottomRightWave.Position = UDim2.new(0, uiWidth - 75, 0, uiHeight - 75)
+    bottomRightWave.Size = UDim2.new(0, 120, 0, 120) -- 缩小波浪大小
+    bottomRightWave.Position = UDim2.new(0, uiWidth - 60, 0, uiHeight - 60)
     bottomRightWave.BackgroundTransparency = 1
     bottomRightWave.Image = "rbxassetid://154967018" -- 波浪形图片
     bottomRightWave.ImageColor3 = Color3.new(0.078, 0.078, 0.078) -- #141414
     bottomRightWave.Parent = frame
 
-    -- 创建标题文本 - 更小的字体，中间偏上位置
+    -- 创建标题文本
     local titleFrame = Instance.new("Frame")
-    titleFrame.Size = UDim2.new(0, 400, 0, 60) -- 固定大小
-    titleFrame.Position = UDim2.new(0, uiWidth/2 - 200, 0, uiHeight*0.2) -- 中间偏上位置
+    titleFrame.Size = UDim2.new(0, 350, 0, 50) -- 缩小标题大小
+    titleFrame.Position = UDim2.new(0, uiWidth/2 - 175, 0, uiHeight*0.2) -- 中间偏上位置
     titleFrame.BackgroundTransparency = 1
     titleFrame.Parent = frame
 
     -- ChronixHub 文本 (纯白色)
     local chronixText = Instance.new("TextLabel")
     chronixText.Text = "ChronixHub"
-    chronixText.Size = UDim2.new(0, 280, 0, 60) -- 固定大小
+    chronixText.Size = UDim2.new(0, 240, 0, 50) -- 缩小文本大小
     chronixText.Position = UDim2.new(0, 0, 0, 0)
     chronixText.TextColor3 = Color3.new(1, 1, 1) -- 纯白色
     chronixText.BackgroundTransparency = 1
     chronixText.Font = Enum.Font.SourceSansBold
-    chronixText.TextSize = 36 -- 合适的字体大小
+    chronixText.TextSize = 32 -- 缩小字体
     chronixText.TextScaled = false
     chronixText.Parent = titleFrame
 
     -- V3 文本 (更偏绿的黄绿色)
     local v3Text = Instance.new("TextLabel")
     v3Text.Text = "V3"
-    v3Text.Size = UDim2.new(0, 80, 0, 60) -- 固定大小
-    v3Text.Position = UDim2.new(0, 270, 0, 0) -- 贴近ChronixHub
+    v3Text.Size = UDim2.new(0, 70, 0, 50) -- 缩小文本大小
+    v3Text.Position = UDim2.new(0, 230, 0, 0) -- 贴近ChronixHub
     v3Text.TextColor3 = Color3.new(0.8, 1, 0.5) -- 更偏绿的黄绿色
     v3Text.BackgroundTransparency = 1
     v3Text.Font = Enum.Font.SourceSansBold
-    v3Text.TextSize = 36 -- 合适的字体大小
+    v3Text.TextSize = 32 -- 缩小字体
     v3Text.TextScaled = false
     v3Text.Parent = titleFrame
 
-    -- 加载文本 - 更小的字体，中间偏下位置，与标题对称
+    -- 加载文本
     local loadingText = Instance.new("TextLabel")
     loadingText.Text = config.loadingText .. "0%"
-    loadingText.Size = UDim2.new(0, 300, 0, 40) -- 固定大小
-    loadingText.Position = UDim2.new(0, uiWidth/2 - 150, 0, uiHeight*0.6) -- 中间偏下位置
+    loadingText.Size = UDim2.new(0, 250, 0, 35) -- 缩小文本大小
+    loadingText.Position = UDim2.new(0, uiWidth/2 - 125, 0, uiHeight*0.6) -- 中间偏下位置
     loadingText.TextColor3 = config.textColor
     loadingText.BackgroundTransparency = 1
     loadingText.Font = Enum.Font.SourceSans
-    loadingText.TextSize = 20 -- 合适的字体大小
+    loadingText.TextSize = 18 -- 缩小字体
     loadingText.Parent = frame
 
-    -- 创建进度条背景 - 更细，透明背景，黑色边框
+    -- 创建进度条背景 - 更细，透明背景，黑色边框，带圆角
     local progressBarBackground = Instance.new("Frame")
-    progressBarBackground.Size = UDim2.new(0, uiWidth*0.8, 0, 8) -- 固定大小，更细
+    progressBarBackground.Size = UDim2.new(0, uiWidth*0.8, 0, 6) -- 更细的进度条
     progressBarBackground.Position = UDim2.new(0, uiWidth*0.1, 0, uiHeight*0.75) -- 位置调整
     progressBarBackground.BackgroundTransparency = 1 -- 透明背景
     progressBarBackground.ClipsDescendants = true
     progressBarBackground.Parent = frame
+
+    -- 进度条背景圆角
+    local progressBgCorner = Instance.new("UICorner")
+    progressBgCorner.CornerRadius = UDim.new(0.5, 0) -- 圆形边角
+    progressBgCorner.Parent = progressBarBackground
 
     -- 进度条背景黑色边框
     local progressBorder = Instance.new("UIStroke")
@@ -139,28 +144,36 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     progressBorder.Thickness = 1
     progressBorder.Parent = progressBarBackground
 
-    -- 创建进度条 - 与V3相同颜色，更细
+    -- 创建进度条 - 与V3相同颜色，更细，带圆角
     local progressBar = Instance.new("Frame")
-    progressBar.Size = UDim2.new(0, 0, 0, 8) -- 固定大小，更细
+    progressBar.Size = UDim2.new(0, 0, 0, 6) -- 初始宽度为 0，更细
     progressBar.Position = UDim2.new(0, 0, 0, 0)
     progressBar.BackgroundColor3 = Color3.new(0.8, 1, 0.5) -- 与V3相同颜色
     progressBar.Parent = progressBarBackground
 
-    -- 进度条缓动效果用的初始值
+    -- 进度条圆角
+    local progressCorner = Instance.new("UICorner")
+    progressCorner.CornerRadius = UDim.new(0.5, 0) -- 圆形边角
+    progressCorner.Parent = progressBar
+
+    -- 进度条缓动效果用的变量
     local currentProgress = 0
+    local targetProgress = 0
+    local progressSteps = {0, 0.2, 0.5, 0.9, 1} -- 跳跃式进度：0% → 20% → 50% → 90% → 100%
+    local currentStep = 1
 
     -- 创建取消按钮
     local cancelButton
     if config.showCancelButton then
         cancelButton = Instance.new("TextButton")
         cancelButton.Text = "✕" -- 叉号符号
-        cancelButton.Size = UDim2.new(0, 35, 0, 35) -- 固定大小
-        cancelButton.Position = UDim2.new(0, uiWidth - 45, 0, 10) -- 右上角位置
+        cancelButton.Size = UDim2.new(0, 30, 0, 30) -- 缩小按钮大小
+        cancelButton.Position = UDim2.new(0, uiWidth - 40, 0, 10) -- 右上角位置
         cancelButton.TextColor3 = Color3.new(1, 1, 1)
         cancelButton.BackgroundTransparency = 0.8
         cancelButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
         cancelButton.Font = Enum.Font.SourceSans
-        cancelButton.TextSize = 20
+        cancelButton.TextSize = 16
         cancelButton.Parent = frame
 
         -- 取消按钮圆角
@@ -191,17 +204,10 @@ function LoadAnimationModule:LoadAnimation(duration, config)
         slideIn:Play()
         slideIn.Completed:Wait()
 
-        -- 模拟加载进度 - 改进版：不同时长的定点卡顿
-        local startTime = tick()
+        -- 模拟加载进度 - 跳跃式更新，明显的缓动效果
         local isCancelled = false
+        local stepDurations = {1.5, 2.0, 2.5, 2.0} -- 每个步骤的持续时间（秒）
         
-        -- 定点卡顿配置 - 不同的卡顿时间
-        local pausePoints = {0.2, 0.5, 0.9} -- 20%, 50%, 90% 处卡顿
-        local pauseDurations = {2.0, 3.0, 5.0} -- 2秒, 3秒, 5秒
-        local pauseIndex = 1 -- 当前该处理哪个卡顿点
-        local isPaused = false
-        local pauseEndTime = 0
-
         if config.showCancelButton then
             cancelButton.MouseButton1Click:Connect(function()
                 isCancelled = true
@@ -223,69 +229,62 @@ function LoadAnimationModule:LoadAnimation(duration, config)
             end)
         end
 
-        -- 使用 RenderStepped 更新进度条 - 带缓动效果
-        local connection
-        connection = game:GetService("RunService").RenderStepped:Connect(function()
-            if isCancelled then
-                connection:Disconnect()
-                return
-            end
-
-            local currentTime = tick()
+        -- 跳跃式进度更新
+        while currentStep < #progressSteps and not isCancelled do
+            -- 设置下一个目标进度
+            targetProgress = progressSteps[currentStep + 1]
             
-            -- 检查是否在停顿中
-            if isPaused then
-                if currentTime >= pauseEndTime then
-                    isPaused = false
-                    startTime = currentTime - (currentProgress * duration) -- 调整开始时间
-                else
-                    return -- 停顿期间不更新进度
+            -- 记录开始时间
+            local stepStartTime = tick()
+            
+            -- 使用TweenService实现平滑的进度条动画
+            local progressTween = game:GetService("TweenService"):Create(
+                progressBar,
+                TweenInfo.new(stepDurations[currentStep], Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                {Size = UDim2.new(0, targetProgress * uiWidth * 0.8, 0, 6)}
+            )
+            progressTween:Play()
+            
+            -- 更新文本显示
+            while tick() - stepStartTime < stepDurations[currentStep] and not isCancelled do
+                local elapsed = tick() - stepStartTime
+                local tweenProgress = elapsed / stepDurations[currentStep]
+                currentProgress = progressSteps[currentStep] + (targetProgress - progressSteps[currentStep]) * tweenProgress
+                
+                local displayProgress = math.floor(currentProgress * 100)
+                loadingText.Text = config.loadingText .. displayProgress .. "%"
+                
+                wait(0.05)
+            end
+            
+            -- 更新到下一个步骤
+            currentProgress = targetProgress
+            currentStep = currentStep + 1
+            
+            -- 在20%、50%、90%处添加卡顿效果
+            if currentStep <= 4 then -- 只在20%、50%、90%处卡顿
+                local pauseDuration = {2.0, 3.0, 5.0}[currentStep - 1] -- 2秒, 3秒, 5秒
+                local pauseEndTime = tick() + pauseDuration
+                
+                -- 更新为准确的进度文本
+                local displayProgress = math.floor(currentProgress * 100)
+                loadingText.Text = config.loadingText .. displayProgress .. "%"
+                
+                -- 等待卡顿结束
+                while tick() < pauseEndTime and not isCancelled do
+                    wait(0.1)
                 end
             end
-
-            -- 计算目标进度
-            local targetProgress = (currentTime - startTime) / duration
-            targetProgress = math.min(targetProgress, 1)
-
-            -- 检查是否到达下一个卡顿点
-            if not isPaused and pauseIndex <= #pausePoints and targetProgress >= pausePoints[pauseIndex] then
-                isPaused = true
-                pauseEndTime = currentTime + pauseDurations[pauseIndex]
-                pauseIndex = pauseIndex + 1
-                return
-            end
-
-            -- 进度条缓动效果 - 使用平滑插值
-            local easingFactor = 0.1 -- 缓动系数，越小越平滑
-            currentProgress = currentProgress + (targetProgress - currentProgress) * easingFactor
-
-            -- 更新UI
-            local displayProgress = math.floor(currentProgress * 100)
-            loadingText.Text = config.loadingText .. displayProgress .. "%"
-            
-            -- 应用缓动后的进度到进度条
-            progressBar.Size = UDim2.new(0, currentProgress * uiWidth * 0.8, 0, 8)
-            
-            -- 当进度达到100%时断开连接
-            if currentProgress >= 0.999 then
-                connection:Disconnect()
-            end
-        end)
-
-        -- 等待加载完成
-        while (tick() - startTime) < (duration + 10) and not isCancelled do -- 增加额外等待时间
-            wait(0.1)
         end
 
         if not isCancelled then
             -- 确保进度条显示100%
-            currentProgress = 1
             loadingText.Text = "加载完毕!"
-            progressBar.Size = UDim2.new(0, uiWidth * 0.8, 0, 8)
+            progressBar.Size = UDim2.new(0, uiWidth * 0.8, 0, 6)
             
             if config.showCancelButton then cancelButton.Parent = nil end
             
-            -- 恢复：当进度条跑满之后音乐跳到某个阶段 (128秒处)
+            -- 当进度条跑满之后音乐跳到某个阶段 (128秒处)
             if loadingSound then
                 loadingSound.TimePosition = 128
             end
