@@ -1,4 +1,4 @@
--- 最终完美版加载动画模块
+-- 最终完美嵌入式圆形版加载动画模块
 local LoadAnimationModule = {}
 
 function LoadAnimationModule:LoadAnimation(duration, config)
@@ -46,8 +46,8 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     screenGui.Name = "LoadAnimationGui"
     screenGui.Parent = game.Players.LocalPlayer.PlayerGui
 
-    -- 使用固定的1030*605像素大小，总共缩小20%
-    local uiScale = 0.8
+    -- 使用固定的1030*605像素大小，总共缩小25%（之前20% + 再缩小5%）
+    local uiScale = 0.75
     local uiWidth = 1030 * uiScale
     local uiHeight = 605 * uiScale
 
@@ -57,19 +57,20 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     frame.Position = UDim2.new(0.5, -uiWidth/2, 0.5, -uiHeight/2)
     frame.BackgroundColor3 = config.backgroundColor
     frame.BackgroundTransparency = 0
+    frame.ClipsDescendants = true -- 只显示圆形在UI内部的部分
     frame.Parent = screenGui
 
-    -- 添加圆角 - 确保圆角效果明显
+    -- 添加圆角
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0.05, 0) -- 稍微增大圆角
+    corner.CornerRadius = UDim.new(0.05, 0)
     corner.Parent = frame
 
-    -- 创建左上角圆形装饰 - 调整位置避免影响圆角
-    local circleSize = uiHeight / 4 -- 减小圆形大小
+    -- 创建左上角嵌入式圆形装饰 - 恢复之前的嵌入式设计
+    local circleSize = uiHeight / 3
     local topLeftCircle = Instance.new("Frame")
     topLeftCircle.Name = "TopLeftCircle"
     topLeftCircle.Size = UDim2.new(0, circleSize, 0, circleSize)
-    topLeftCircle.Position = UDim2.new(0, 0, 0, 0) -- 放在角落内部
+    topLeftCircle.Position = UDim2.new(0, -circleSize/2, 0, -circleSize/2) -- 一半在UI外，一半在UI内
     topLeftCircle.BackgroundColor3 = Color3.new(0.078, 0.078, 0.078) -- #141414
     topLeftCircle.BackgroundTransparency = 0
     topLeftCircle.Parent = frame
@@ -79,11 +80,11 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     topLeftCircleCorner.CornerRadius = UDim.new(0.5, 0)
     topLeftCircleCorner.Parent = topLeftCircle
 
-    -- 创建右下角圆形装饰 - 调整位置避免影响圆角
+    -- 创建右下角嵌入式圆形装饰 - 恢复之前的嵌入式设计
     local bottomRightCircle = Instance.new("Frame")
     bottomRightCircle.Name = "BottomRightCircle"
     bottomRightCircle.Size = UDim2.new(0, circleSize, 0, circleSize)
-    bottomRightCircle.Position = UDim2.new(0, uiWidth - circleSize, 0, uiHeight - circleSize) -- 放在角落内部
+    bottomRightCircle.Position = UDim2.new(0, uiWidth - circleSize/2, 0, uiHeight - circleSize/2) -- 一半在UI外，一半在UI内
     bottomRightCircle.BackgroundColor3 = Color3.new(0.078, 0.078, 0.078) -- #141414
     bottomRightCircle.BackgroundTransparency = 0
     bottomRightCircle.Parent = frame
@@ -95,47 +96,47 @@ function LoadAnimationModule:LoadAnimation(duration, config)
 
     -- 创建标题文本
     local titleFrame = Instance.new("Frame")
-    titleFrame.Size = UDim2.new(0, 350, 0, 50)
-    titleFrame.Position = UDim2.new(0, uiWidth/2 - 175, 0, uiHeight*0.2)
+    titleFrame.Size = UDim2.new(0, 320, 0, 45) -- 按比例缩小
+    titleFrame.Position = UDim2.new(0, uiWidth/2 - 160, 0, uiHeight*0.2)
     titleFrame.BackgroundTransparency = 1
     titleFrame.Parent = frame
 
     -- ChronixHub 文本
     local chronixText = Instance.new("TextLabel")
     chronixText.Text = "ChronixHub"
-    chronixText.Size = UDim2.new(0, 240, 0, 50)
+    chronixText.Size = UDim2.new(0, 220, 0, 45) -- 按比例缩小
     chronixText.Position = UDim2.new(0, 0, 0, 0)
     chronixText.TextColor3 = Color3.new(1, 1, 1)
     chronixText.BackgroundTransparency = 1
     chronixText.Font = Enum.Font.SourceSansBold
-    chronixText.TextSize = 32
+    chronixText.TextSize = 28 -- 按比例缩小
     chronixText.Parent = titleFrame
 
     -- V3 文本
     local v3Text = Instance.new("TextLabel")
     v3Text.Text = "V3"
-    v3Text.Size = UDim2.new(0, 70, 0, 50)
-    v3Text.Position = UDim2.new(0, 230, 0, 0)
+    v3Text.Size = UDim2.new(0, 65, 0, 45) -- 按比例缩小
+    v3Text.Position = UDim2.new(0, 210, 0, 0) -- 贴近ChronixHub
     v3Text.TextColor3 = Color3.new(0.8, 1, 0.5)
     v3Text.BackgroundTransparency = 1
     v3Text.Font = Enum.Font.SourceSansBold
-    v3Text.TextSize = 32
+    v3Text.TextSize = 28 -- 按比例缩小
     v3Text.Parent = titleFrame
 
     -- 加载文本
     local loadingText = Instance.new("TextLabel")
     loadingText.Text = config.loadingText .. "0%"
-    loadingText.Size = UDim2.new(0, 250, 0, 35)
-    loadingText.Position = UDim2.new(0, uiWidth/2 - 125, 0, uiHeight*0.6)
+    loadingText.Size = UDim2.new(0, 230, 0, 32) -- 按比例缩小
+    loadingText.Position = UDim2.new(0, uiWidth/2 - 115, 0, uiHeight*0.6)
     loadingText.TextColor3 = config.textColor
     loadingText.BackgroundTransparency = 1
     loadingText.Font = Enum.Font.SourceSans
-    loadingText.TextSize = 18
+    loadingText.TextSize = 16 -- 按比例缩小
     loadingText.Parent = frame
 
     -- 创建进度条背景
     local progressBarBackground = Instance.new("Frame")
-    progressBarBackground.Size = UDim2.new(0, uiWidth*0.8, 0, 6)
+    progressBarBackground.Size = UDim2.new(0, uiWidth*0.8, 0, 5) -- 按比例缩小
     progressBarBackground.Position = UDim2.new(0, uiWidth*0.1, 0, uiHeight*0.75)
     progressBarBackground.BackgroundTransparency = 1
     progressBarBackground.ClipsDescendants = true
@@ -154,7 +155,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
 
     -- 创建进度条
     local progressBar = Instance.new("Frame")
-    progressBar.Size = UDim2.new(0, 0, 0, 6)
+    progressBar.Size = UDim2.new(0, 0, 0, 5) -- 按比例缩小
     progressBar.Position = UDim2.new(0, 0, 0, 0)
     progressBar.BackgroundColor3 = Color3.new(0.8, 1, 0.5)
     progressBar.Parent = progressBarBackground
@@ -167,13 +168,13 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     -- 创建取消按钮
     local cancelButton = Instance.new("TextButton")
     cancelButton.Text = "✕"
-    cancelButton.Size = UDim2.new(0, 30, 0, 30)
-    cancelButton.Position = UDim2.new(0, uiWidth - 40, 0, 10)
+    cancelButton.Size = UDim2.new(0, 28, 0, 28) -- 按比例缩小
+    cancelButton.Position = UDim2.new(0, uiWidth - 38, 0, 8) -- 按比例调整位置
     cancelButton.TextColor3 = Color3.new(1, 1, 1)
     cancelButton.BackgroundTransparency = 0.8
     cancelButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
     cancelButton.Font = Enum.Font.SourceSans
-    cancelButton.TextSize = 16
+    cancelButton.TextSize = 15 -- 按比例缩小
     cancelButton.Parent = frame
 
     -- 取消按钮圆角
@@ -206,7 +207,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
         -- 模拟加载进度 - 跳跃式更新
         local isCancelled = false
         local progressSteps = {0, 0.2, 0.5, 0.9, 1}
-        local stepDurations = {1.0, 1.0, 1.0, 1.0} -- 每个步骤的持续时间缩短
+        local stepDurations = {1.0, 1.0, 1.0, 1.0}
         local pauseDurations = {2.0, 1.0, 1.0} -- 卡顿时间：20%处2秒，50%和90%处1秒
         local currentStep = 1
 
@@ -236,7 +237,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
             local progressTween = game:GetService("TweenService"):Create(
                 progressBar,
                 TweenInfo.new(stepDurations[currentStep], Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                {Size = UDim2.new(0, targetProgress * uiWidth * 0.8, 0, 6)}
+                {Size = UDim2.new(0, targetProgress * uiWidth * 0.8, 0, 5)}
             )
             progressTween:Play()
             
@@ -265,7 +266,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
         if not isCancelled then
             -- 完成动画
             loadingText.Text = "加载完毕!"
-            progressBar.Size = UDim2.new(0, uiWidth * 0.8, 0, 6)
+            progressBar.Size = UDim2.new(0, uiWidth * 0.8, 0, 5)
             cancelButton.Parent = nil
             
             -- 音乐跳转到指定位置
