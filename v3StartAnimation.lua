@@ -26,8 +26,8 @@ function LoadAnimationModule:LoadAnimation(duration, config)
 
     -- 多语言支持
     local translations = {
-        en = { title = "ChronixHub V2", loading = "Loading... ", cancel = "Cancel" },
-        zh = { title = "ChronixHub V2", loading = "加载中... ", cancel = "取消" }
+        en = { title = "ChronixHub V3", loading = "Loading... ", cancel = "Cancel" },
+        zh = { title = "ChronixHub V3", loading = "加载中... ", cancel = "取消" }
     }
     config.titleText = translations[config.language].title
     config.loadingText = translations[config.language].loading
@@ -67,7 +67,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     loadingText.TextColor3 = config.textColor
     loadingText.BackgroundTransparency = 1
     loadingText.Font = Enum.Font.SourceSans
-    loadingText.TextSize = 20
+    loadingText.TextSize = 23
     loadingText.Parent = frame
 
     -- 创建进度条背景
@@ -106,8 +106,8 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     local gradient = Instance.new("UIGradient")
     gradient.Rotation = 0 -- 横向渐变
     gradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.new(1, 1, 0)), -- 黄绿
-        ColorSequenceKeypoint.new(1, Color3.new(0, 1, 1))  -- 天蓝
+        ColorSequenceKeypoint.new(0, Color3.new(0, 0.2, 0.07)), -- 墨绿
+        ColorSequenceKeypoint.new(1, Color3.new(0, 0.1, 0.2))  -- 墨蓝
     })
     gradient.Parent = progressBar
 
