@@ -97,14 +97,14 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     -- 创建标题文本
     local titleFrame = Instance.new("Frame")
     titleFrame.Size = UDim2.new(0, 350, 0, 50)
-    titleFrame.Position = UDim2.new(0, uiWidth/2 - 175, 0, uiHeight*0.1)
+    titleFrame.Position = UDim2.new(0, uiWidth/2 - 175, 0, uiHeight*0.4)
     titleFrame.BackgroundTransparency = 1
     titleFrame.Parent = frame
 
     -- ChronixHub 文本
     local chronixText = Instance.new("TextLabel")
     chronixText.Text = "ChronixHub"
-    chronixText.Size = UDim2.new(0, 140, 0, 50)
+    chronixText.Size = UDim2.new(0, 240, 0, 50)
     chronixText.Position = UDim2.new(0, 0, 0, 0)
     chronixText.TextColor3 = Color3.new(1, 1, 1)
     chronixText.BackgroundTransparency = 1
@@ -116,7 +116,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     local v3Text = Instance.new("TextLabel")
     v3Text.Text = "V3"
     v3Text.Size = UDim2.new(0, 70, 0, 50)
-    v3Text.Position = UDim2.new(0, 230, 0, 0)
+    v3Text.Position = UDim2.new(0, 130, 0, 0)
     v3Text.TextColor3 = Color3.new(0.8, 1, 0.5)
     v3Text.BackgroundTransparency = 1
     v3Text.Font = Enum.Font.SourceSansBold
