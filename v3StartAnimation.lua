@@ -97,7 +97,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     -- 创建标题文本
     local titleFrame = Instance.new("Frame")
     titleFrame.Size = UDim2.new(0, 350, 0, 50)
-    titleFrame.Position = UDim2.new(0, uiWidth/2 - 175, 0, uiHeight*0.4)
+    titleFrame.Position = UDim2.new(0, uiWidth/2 - 175, 0, uiHeight*0.3)
     titleFrame.BackgroundTransparency = 1
     titleFrame.Parent = frame
 
@@ -116,7 +116,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     local v3Text = Instance.new("TextLabel")
     v3Text.Text = "V3"
     v3Text.Size = UDim2.new(0, 70, 0, 50)
-    v3Text.Position = UDim2.new(0, 130, 0, 0)
+    v3Text.Position = UDim2.new(0, 200, 0, 0)
     v3Text.TextColor3 = Color3.new(0.8, 1, 0.5)
     v3Text.BackgroundTransparency = 1
     v3Text.Font = Enum.Font.SourceSansBold
@@ -127,7 +127,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     local loadingText = Instance.new("TextLabel")
     loadingText.Text = config.loadingText .. "0%"
     loadingText.Size = UDim2.new(0, 250, 0, 35)
-    loadingText.Position = UDim2.new(0, uiWidth/2 - 125, 0, uiHeight*0.6)
+    loadingText.Position = UDim2.new(0, uiWidth/2 - 125, 0, uiHeight*0.5)
     loadingText.TextColor3 = config.textColor
     loadingText.BackgroundTransparency = 1
     loadingText.Font = Enum.Font.SourceSans
@@ -137,7 +137,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     -- 创建进度条背景
     local progressBarBackground = Instance.new("Frame")
     progressBarBackground.Size = UDim2.new(0, uiWidth*0.8, 0, 6)
-    progressBarBackground.Position = UDim2.new(0, uiWidth*0.1, 0, uiHeight*0.75)
+    progressBarBackground.Position = UDim2.new(0, uiWidth*0.1, 0, uiHeight*0.6)
     progressBarBackground.BackgroundTransparency = 1
     progressBarBackground.ClipsDescendants = true
     progressBarBackground.Parent = frame
