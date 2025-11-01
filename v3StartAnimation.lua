@@ -1,24 +1,11 @@
 local LoadAnimationModule = {}
 
 function LoadAnimationModule:LoadAnimation(duration, config)
-    -- 错误处理：检查必要的参数
-    if not duration then
-        warn("LoadAnimation: 缺少 duration 参数")
-        return
-    end
-    
     -- 创建音效
-    local success, loadingSound = pcall(function()
-        local sound = Instance.new("Sound", game:GetService("SoundService"))
-        sound.SoundId = "rbxassetid://1837581587"
-        sound.Volume = 0.3
-        sound:Play()
-        return sound
-    end)
-    
-    if not success then
-        warn("LoadAnimation: 创建音效失败")
-    end
+    local loadingSound = Instance.new("Sound", game:GetService("SoundService"))
+    loadingSound.SoundId = "rbxassetid://1837581587"
+    loadingSound.Volume = 0.3
+    loadingSound:Play()
     
     -- 默认配置
     local defaultConfig = {
