@@ -44,15 +44,15 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     screenGui.Name = "LoadAnimationGui"
     screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-    -- 计算1030*605的比例 (605/1030 ≈ 0.587)
-    local aspectRatio = 605 / 1030 -- 约0.587
-    local frameWidth = 0.4 -- 保持宽度为屏幕的40%
-    local frameHeight = frameWidth * aspectRatio -- 根据比例计算高度
+    -- 使用固定的1030*605像素大小，稍微缩小一点
+    local uiScale = 0.9 -- 缩小10%
+    local uiWidth = 1030 * uiScale
+    local uiHeight = 605 * uiScale
 
-    -- 创建主框架 - 1030*605比例，背景色#1a191a
+    -- 创建主框架 - 固定像素大小
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(frameWidth, 0, frameHeight, 0)
-    frame.Position = UDim2.new(1.5, 0, 0.5 - frameHeight/2, 0) -- 垂直居中
+    frame.Size = UDim2.new(0, uiWidth, 0, uiHeight) -- 固定像素大小
+    frame.Position = UDim2.new(0.5, -uiWidth/2, 0.5, -uiHeight/2) -- 屏幕居中
     frame.BackgroundColor3 = config.backgroundColor -- #1a191a
     frame.BackgroundTransparency = 0
     frame.Parent = screenGui
@@ -65,10 +65,10 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     -- 创建波浪形嵌入效果 - 左上角
     local topLeftWave = Instance.new("ImageLabel")
     topLeftWave.Name = "TopLeftWave"
-    topLeftWave.Size = UDim2.new(0.3, 0, 0.3, 0)
-    topLeftWave.Position = UDim2.new(-0.15, 0, -0.15, 0)
+    topLeftWave.Size = UDim2.new(0, 150, 0, 150) -- 固定大小
+    topLeftWave.Position = UDim2.new(0, -75, 0, -75)
     topLeftWave.BackgroundTransparency = 1
-    topLeftWave.Image = "rbxassetid://154967018" -- 波浪形图片（需要替换为合适的图片ID）
+    topLeftWave.Image = "rbxassetid://154967018" -- 波浪形图片
     topLeftWave.ImageColor3 = Color3.new(0.078, 0.078, 0.078) -- #141414
     topLeftWave.Rotation = 180
     topLeftWave.Parent = frame
@@ -76,59 +76,59 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     -- 创建波浪形嵌入效果 - 右下角
     local bottomRightWave = Instance.new("ImageLabel")
     bottomRightWave.Name = "BottomRightWave"
-    bottomRightWave.Size = UDim2.new(0.3, 0, 0.3, 0)
-    bottomRightWave.Position = UDim2.new(0.85, 0, 0.85, 0)
+    bottomRightWave.Size = UDim2.new(0, 150, 0, 150) -- 固定大小
+    bottomRightWave.Position = UDim2.new(0, uiWidth - 75, 0, uiHeight - 75)
     bottomRightWave.BackgroundTransparency = 1
-    bottomRightWave.Image = "rbxassetid://154967018" -- 波浪形图片（需要替换为合适的图片ID）
+    bottomRightWave.Image = "rbxassetid://154967018" -- 波浪形图片
     bottomRightWave.ImageColor3 = Color3.new(0.078, 0.078, 0.078) -- #141414
     bottomRightWave.Parent = frame
 
     -- 创建标题文本 - 更小的字体，中间偏上位置
     local titleFrame = Instance.new("Frame")
-    titleFrame.Size = UDim2.new(0.8, 0, 0.2, 0) -- 更小的高度
-    titleFrame.Position = UDim2.new(0.1, 0, 0.2, 0) -- 中间偏上位置
+    titleFrame.Size = UDim2.new(0, 400, 0, 60) -- 固定大小
+    titleFrame.Position = UDim2.new(0, uiWidth/2 - 200, 0, uiHeight*0.2) -- 中间偏上位置
     titleFrame.BackgroundTransparency = 1
     titleFrame.Parent = frame
 
-    -- ChronixHub 文本 (纯白色) - 更小的字体
+    -- ChronixHub 文本 (纯白色)
     local chronixText = Instance.new("TextLabel")
     chronixText.Text = "ChronixHub"
-    chronixText.Size = UDim2.new(0.8, 0, 1, 0)
+    chronixText.Size = UDim2.new(0, 280, 0, 60) -- 固定大小
     chronixText.Position = UDim2.new(0, 0, 0, 0)
     chronixText.TextColor3 = Color3.new(1, 1, 1) -- 纯白色
     chronixText.BackgroundTransparency = 1
     chronixText.Font = Enum.Font.SourceSansBold
-    chronixText.TextSize = 32 -- 更小的字体
+    chronixText.TextSize = 36 -- 合适的字体大小
     chronixText.TextScaled = false
     chronixText.Parent = titleFrame
 
-    -- V3 文本 (更偏绿的黄绿色) - 更小的字体
+    -- V3 文本 (更偏绿的黄绿色)
     local v3Text = Instance.new("TextLabel")
     v3Text.Text = "V3"
-    v3Text.Size = UDim2.new(0.2, 0, 1, 0)
-    v3Text.Position = UDim2.new(0.78, -5, 0, 0) -- 贴近ChronixHub
+    v3Text.Size = UDim2.new(0, 80, 0, 60) -- 固定大小
+    v3Text.Position = UDim2.new(0, 270, 0, 0) -- 贴近ChronixHub
     v3Text.TextColor3 = Color3.new(0.8, 1, 0.5) -- 更偏绿的黄绿色
     v3Text.BackgroundTransparency = 1
     v3Text.Font = Enum.Font.SourceSansBold
-    v3Text.TextSize = 32 -- 更小的字体
+    v3Text.TextSize = 36 -- 合适的字体大小
     v3Text.TextScaled = false
     v3Text.Parent = titleFrame
 
     -- 加载文本 - 更小的字体，中间偏下位置，与标题对称
     local loadingText = Instance.new("TextLabel")
     loadingText.Text = config.loadingText .. "0%"
-    loadingText.Size = UDim2.new(0.8, 0, 0.15, 0) -- 更小的高度
-    loadingText.Position = UDim2.new(0.1, 0, 0.6, 0) -- 中间偏下位置，与标题对称
+    loadingText.Size = UDim2.new(0, 300, 0, 40) -- 固定大小
+    loadingText.Position = UDim2.new(0, uiWidth/2 - 150, 0, uiHeight*0.6) -- 中间偏下位置
     loadingText.TextColor3 = config.textColor
     loadingText.BackgroundTransparency = 1
     loadingText.Font = Enum.Font.SourceSans
-    loadingText.TextSize = 18 -- 更小的字体
+    loadingText.TextSize = 20 -- 合适的字体大小
     loadingText.Parent = frame
 
     -- 创建进度条背景 - 更细，透明背景，黑色边框
     local progressBarBackground = Instance.new("Frame")
-    progressBarBackground.Size = UDim2.new(0.8, 0, 0.02, 0) -- 更细的进度条
-    progressBarBackground.Position = UDim2.new(0.1, 0, 0.75, 0) -- 位置调整
+    progressBarBackground.Size = UDim2.new(0, uiWidth*0.8, 0, 8) -- 固定大小，更细
+    progressBarBackground.Position = UDim2.new(0, uiWidth*0.1, 0, uiHeight*0.75) -- 位置调整
     progressBarBackground.BackgroundTransparency = 1 -- 透明背景
     progressBarBackground.ClipsDescendants = true
     progressBarBackground.Parent = frame
@@ -141,7 +141,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
 
     -- 创建进度条 - 与V3相同颜色，更细
     local progressBar = Instance.new("Frame")
-    progressBar.Size = UDim2.new(0, 0, 1, 0) -- 初始宽度为 0
+    progressBar.Size = UDim2.new(0, 0, 0, 8) -- 固定大小，更细
     progressBar.Position = UDim2.new(0, 0, 0, 0)
     progressBar.BackgroundColor3 = Color3.new(0.8, 1, 0.5) -- 与V3相同颜色
     progressBar.Parent = progressBarBackground
@@ -149,18 +149,18 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     -- 进度条缓动效果用的初始值
     local currentProgress = 0
 
-    -- 创建取消按钮 - 保持原样
+    -- 创建取消按钮
     local cancelButton
     if config.showCancelButton then
         cancelButton = Instance.new("TextButton")
         cancelButton.Text = "✕" -- 叉号符号
-        cancelButton.Size = UDim2.new(0.08, 0, 0.08, 0)
-        cancelButton.Position = UDim2.new(0.88, 0, 0.03, 0)
+        cancelButton.Size = UDim2.new(0, 35, 0, 35) -- 固定大小
+        cancelButton.Position = UDim2.new(0, uiWidth - 45, 0, 10) -- 右上角位置
         cancelButton.TextColor3 = Color3.new(1, 1, 1)
         cancelButton.BackgroundTransparency = 0.8
         cancelButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
         cancelButton.Font = Enum.Font.SourceSans
-        cancelButton.TextSize = 18
+        cancelButton.TextSize = 20
         cancelButton.Parent = frame
 
         -- 取消按钮圆角
@@ -186,7 +186,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
         local slideIn = game:GetService("TweenService"):Create(
             frame, 
             TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-            {Position = UDim2.new(0.5 - frameWidth/2, 0, 0.5 - frameHeight/2, 0)} -- 居中显示
+            {Position = UDim2.new(0.5, -uiWidth/2, 0.5, -uiHeight/2)} -- 屏幕居中
         )
         slideIn:Play()
         slideIn.Completed:Wait()
@@ -214,7 +214,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
                 local slideOut = game:GetService("TweenService"):Create(
                     frame, 
                     TweenInfo.new(0.4, Enum.EasingStyle.Quad),
-                    {Position = UDim2.new(1.5, 0, 0.5 - frameHeight/2, 0)}
+                    {Position = UDim2.new(1.5, 0, 0.5, -uiHeight/2)}
                 )
                 slideOut:Play()
                 slideOut.Completed:Wait()
@@ -264,7 +264,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
             loadingText.Text = config.loadingText .. displayProgress .. "%"
             
             -- 应用缓动后的进度到进度条
-            progressBar.Size = UDim2.new(currentProgress, 0, 1, 0)
+            progressBar.Size = UDim2.new(0, currentProgress * uiWidth * 0.8, 0, 8)
             
             -- 当进度达到100%时断开连接
             if currentProgress >= 0.999 then
@@ -281,14 +281,13 @@ function LoadAnimationModule:LoadAnimation(duration, config)
             -- 确保进度条显示100%
             currentProgress = 1
             loadingText.Text = "加载完毕!"
-            progressBar.Size = UDim2.new(1, 0, 1, 0)
+            progressBar.Size = UDim2.new(0, uiWidth * 0.8, 0, 8)
             
             if config.showCancelButton then cancelButton.Parent = nil end
             
-            -- 停止音乐
+            -- 恢复：当进度条跑满之后音乐跳到某个阶段 (128秒处)
             if loadingSound then
-                loadingSound:Stop()
-                loadingSound:Destroy()
+                loadingSound.TimePosition = 128
             end
             
             wait(0.5)
@@ -299,12 +298,12 @@ function LoadAnimationModule:LoadAnimation(duration, config)
             local slideOut = game:GetService("TweenService"):Create(
                 frame, 
                 TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.In),
-                {Position = UDim2.new(-0.5, 0, 0.5 - frameHeight/2, 0)}
+                {Position = UDim2.new(-0.5, 0, 0.5, -uiHeight/2)}
             )
             slideOut:Play()
             slideOut.Completed:Wait()
 
-            -- 清除所有实例
+            -- 清除所有实例，但不停止音乐
             screenGui:Destroy()
 
             -- 调用完成回调
