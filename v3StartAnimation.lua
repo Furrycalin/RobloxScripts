@@ -57,7 +57,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     title.TextColor3 = config.textColor
     title.BackgroundTransparency = 1
     title.Font = Enum.Font.SourceSansBold
-    title.TextSize = 24
+    title.TextSize = 44
     title.Parent = frame
 
     local loadingText = Instance.new("TextLabel")
