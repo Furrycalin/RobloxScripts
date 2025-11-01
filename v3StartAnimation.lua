@@ -49,21 +49,14 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     local cancelText = translations[config.language].cancel
 
     -- 错误处理：防止重复调用
-    local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
-    if not playerGui then
-        warn("LoadAnimation: PlayerGui 不存在")
-        return
-    end
-    
-    if playerGui:FindFirstChild("LoadAnimationGui") then
-        warn("LoadAnimation: 动画已在运行中")
+    if game.Players.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("LoadAnimationGui") then
         return
     end
 
     -- 创建界面
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "LoadAnimationGui"
-    screenGui.Parent = playerGui
+    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
     -- 使用固定的1030*605像素大小，总共缩小20%
     local uiScale = 0.8 -- 总共缩小20%
