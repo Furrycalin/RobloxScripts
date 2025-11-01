@@ -68,40 +68,42 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     })
     gradient.Parent = frame
 
-    -- 创建标题文本 - 分开显示 ChronixHub 和 V3，让它们更贴近
+    -- 创建标题文本 - 让ChronixHub和V3更贴近
     local titleFrame = Instance.new("Frame")
-    titleFrame.Size = UDim2.new(0.9, 0, 0.3, 0) -- 宽度增加到0.9
-    titleFrame.Position = UDim2.new(0.05, 0, 0.1, 0) -- 位置调整
+    titleFrame.Size = UDim2.new(0.9, 0, 0.3, 0)
+    titleFrame.Position = UDim2.new(0.05, 0, 0.1, 0)
     titleFrame.BackgroundTransparency = 1
     titleFrame.Parent = frame
 
-    -- ChronixHub 文本 (纯白色)
+    -- ChronixHub 文本 (纯白色) - 调整尺寸让文字更贴近
     local chronixText = Instance.new("TextLabel")
     chronixText.Text = "ChronixHub"
-    chronixText.Size = UDim2.new(0.75, 0, 1, 0) -- 宽度增加，让文字更贴近
+    chronixText.Size = UDim2.new(0.8, 0, 1, 0) -- 增加宽度
     chronixText.Position = UDim2.new(0, 0, 0, 0)
     chronixText.TextColor3 = Color3.new(1, 1, 1) -- 纯白色
     chronixText.BackgroundTransparency = 1
     chronixText.Font = Enum.Font.SourceSansBold
     chronixText.TextSize = 44
+    chronixText.TextScaled = false -- 确保文字大小固定
     chronixText.Parent = titleFrame
 
-    -- V3 文本 (更偏绿的黄绿色)
+    -- V3 文本 (更偏绿的黄绿色) - 调整位置让文字更贴近
     local v3Text = Instance.new("TextLabel")
     v3Text.Text = "V3"
-    v3Text.Size = UDim2.new(0.25, 0, 1, 0) -- 宽度减小，让文字更贴近
-    v3Text.Position = UDim2.new(0.75, -10, 0, 0) -- 向左偏移10像素，让文字贴近
-    v3Text.TextColor3 = Color3.new(0.8, 1, 0.5) -- 更偏绿的黄绿色 (原来的是1,1,0.5)
+    v3Text.Size = UDim2.new(0.2, 0, 1, 0) -- 减小宽度
+    v3Text.Position = UDim2.new(0.78, -5, 0, 0) -- 大幅向左偏移，几乎贴在一起
+    v3Text.TextColor3 = Color3.new(0.8, 1, 0.5) -- 更偏绿的黄绿色
     v3Text.BackgroundTransparency = 1
     v3Text.Font = Enum.Font.SourceSansBold
     v3Text.TextSize = 44
+    v3Text.TextScaled = false -- 确保文字大小固定
     v3Text.Parent = titleFrame
 
     -- 加载文本 - 直接显示在最终位置
     local loadingText = Instance.new("TextLabel")
     loadingText.Text = config.loadingText .. "0%"
     loadingText.Size = UDim2.new(0.9, 0, 0.2, 0)
-    loadingText.Position = UDim2.new(0.05, 0, 0.5, 0) -- 位置调整
+    loadingText.Position = UDim2.new(0.05, 0, 0.5, 0)
     loadingText.TextColor3 = config.textColor
     loadingText.BackgroundTransparency = 1
     loadingText.Font = Enum.Font.SourceSans
@@ -111,7 +113,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     -- 创建进度条背景 - 直接显示在最终位置
     local progressBarBackground = Instance.new("Frame")
     progressBarBackground.Size = UDim2.new(0.9, 0, 0.04, 0)
-    progressBarBackground.Position = UDim2.new(0.05, 0, 0.8, 0) -- 位置调整
+    progressBarBackground.Position = UDim2.new(0.05, 0, 0.8, 0)
     progressBarBackground.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
     progressBarBackground.BackgroundTransparency = 0
     progressBarBackground.ClipsDescendants = true
@@ -185,22 +187,21 @@ function LoadAnimationModule:LoadAnimation(duration, config)
         -- 主动画：整个界面从屏幕右侧划入中间，动作幅度更小
         local slideIn = game:GetService("TweenService"):Create(
             frame, 
-            TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), -- 时间从0.8减到0.6
-            {Position = UDim2.new(0.3, 0, 0.3, 0)} -- 最终位置从0.2改为0.3，因为宽度减小了
+            TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+            {Position = UDim2.new(0.3, 0, 0.3, 0)}
         )
         slideIn:Play()
         slideIn.Completed:Wait()
 
-        -- 模拟加载进度 - 改进版：速度更慢，有停顿效果
+        -- 模拟加载进度 - 改进版：定点卡顿效果
         local startTime = tick()
         local isCancelled = false
-        local lastUpdateTime = tick()
         local progress = 0
         
-        -- 停顿效果配置
-        local pauseChance = 0.1 -- 10%的概率停顿
-        local minPauseDuration = 0.3 -- 最小停顿时间
-        local maxPauseDuration = 1.0 -- 最大停顿时间
+        -- 定点卡顿配置
+        local pausePoints = {0.2, 0.5, 0.9} -- 20%, 50%, 90% 处卡顿
+        local pauseDurations = {0.8, 1.2, 1.0} -- 每个点的卡顿时间
+        local pauseIndex = 1 -- 当前该处理哪个卡顿点
         local isPaused = false
         local pauseEndTime = 0
 
@@ -215,8 +216,8 @@ function LoadAnimationModule:LoadAnimation(duration, config)
                 -- 取消时的动画：界面滑出屏幕
                 local slideOut = game:GetService("TweenService"):Create(
                     frame, 
-                    TweenInfo.new(0.4, Enum.EasingStyle.Quad), -- 时间从0.5减到0.4
-                    {Position = UDim2.new(1.5, 0, 0.3, 0)} -- 滑出距离也减小
+                    TweenInfo.new(0.4, Enum.EasingStyle.Quad),
+                    {Position = UDim2.new(1.5, 0, 0.3, 0)}
                 )
                 slideOut:Play()
                 slideOut.Completed:Wait()
@@ -225,7 +226,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
             end)
         end
 
-        -- 使用 RenderStepped 更新进度条 - 改进版
+        -- 使用 RenderStepped 更新进度条 - 定点卡顿版
         local connection
         connection = game:GetService("RunService").RenderStepped:Connect(function()
             if isCancelled then
@@ -239,41 +240,36 @@ function LoadAnimationModule:LoadAnimation(duration, config)
             if isPaused then
                 if currentTime >= pauseEndTime then
                     isPaused = false
-                    lastUpdateTime = currentTime
+                    startTime = currentTime - (progress * duration) -- 调整开始时间，补偿停顿时间
                 else
                     return -- 停顿期间不更新进度
                 end
             end
 
-            -- 计算理论进度
-            local theoreticalProgress = (currentTime - startTime) / duration
-            
-            -- 随机决定是否停顿
-            if not isPaused and math.random() < pauseChance and theoreticalProgress < 0.9 then
+            -- 计算进度
+            progress = (currentTime - startTime) / duration
+            progress = math.min(progress, 1)
+
+            -- 检查是否到达下一个卡顿点
+            if not isPaused and pauseIndex <= #pausePoints and progress >= pausePoints[pauseIndex] then
                 isPaused = true
-                local pauseDuration = math.random() * (maxPauseDuration - minPauseDuration) + minPauseDuration
-                pauseEndTime = currentTime + pauseDuration
+                pauseEndTime = currentTime + pauseDurations[pauseIndex]
+                pauseIndex = pauseIndex + 1
                 return
             end
 
-            -- 更新实际进度 - 让进度条速度更慢
-            if not isPaused then
-                -- 减缓进度条速度，让它比理论进度慢一些
-                local slowdownFactor = 1.5 -- 速度减慢1.5倍
-                progress = math.min(theoreticalProgress / slowdownFactor, 1)
-                
-                loadingText.Text = config.loadingText .. math.floor(progress * 100) .. "%"
-                progressBar.Size = UDim2.new(progress, 0, 1, 0)
-                
-                -- 当进度达到100%时断开连接
-                if progress >= 1 then
-                    connection:Disconnect()
-                end
+            -- 更新UI
+            loadingText.Text = config.loadingText .. math.floor(progress * 100) .. "%"
+            progressBar.Size = UDim2.new(progress, 0, 1, 0)
+            
+            -- 当进度达到100%时断开连接
+            if progress >= 1 then
+                connection:Disconnect()
             end
         end)
 
         -- 等待加载完成
-        while (tick() - startTime) < (duration * 1.5) and not isCancelled do -- 等待时间也相应延长
+        while (tick() - startTime) < (duration + 3) and not isCancelled do -- 增加额外等待时间
             wait(0.1)
         end
 
@@ -298,8 +294,8 @@ function LoadAnimationModule:LoadAnimation(duration, config)
             -- 完成时的动画：界面滑出屏幕
             local slideOut = game:GetService("TweenService"):Create(
                 frame, 
-                TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.In), -- 时间从0.8减到0.6
-                {Position = UDim2.new(-0.5, 0, 0.3, 0)} -- 滑出距离减小
+                TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.In),
+                {Position = UDim2.new(-0.5, 0, 0.3, 0)}
             )
             slideOut:Play()
             slideOut.Completed:Wait()
