@@ -44,18 +44,18 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     screenGui.Name = "LoadAnimationGui"
     screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-    -- 创建主框架 - 修改为纯黑不透明
+    -- 创建主框架 - 修改为纯黑不透明，宽度更窄
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0.6, 0, 0.45, 0)
-    -- 初始位置在屏幕外（右侧）
-    frame.Position = UDim2.new(2, 0, 0.3, 0)
+    frame.Size = UDim2.new(0.4, 0, 0.45, 0) -- 宽度从0.6改为0.4，更窄
+    -- 初始位置在屏幕外（右侧），动作幅度更小
+    frame.Position = UDim2.new(1.5, 0, 0.3, 0) -- 从2改为1.5，动作幅度更小
     frame.BackgroundColor3 = Color3.new(0, 0, 0) -- 纯黑色
     frame.BackgroundTransparency = 0 -- 完全不透明
     frame.Parent = screenGui
 
-    -- 添加圆角 - 小圆角
+    -- 添加圆角 - 更小的圆角
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0.05, 0) -- 小圆角
+    corner.CornerRadius = UDim.new(0.03, 0) -- 从0.05改为0.03，更小的圆角
     corner.Parent = frame
 
     -- 添加暗色渐变背景
@@ -68,17 +68,17 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     })
     gradient.Parent = frame
 
-    -- 创建标题文本 - 分开显示 ChronixHub 和 V3
+    -- 创建标题文本 - 分开显示 ChronixHub 和 V3，让它们更贴近
     local titleFrame = Instance.new("Frame")
-    titleFrame.Size = UDim2.new(0.8, 0, 0.3, 0)
-    titleFrame.Position = UDim2.new(0.1, 0, 0.1, 0) -- 直接显示在最终位置
+    titleFrame.Size = UDim2.new(0.9, 0, 0.3, 0) -- 宽度增加到0.9
+    titleFrame.Position = UDim2.new(0.05, 0, 0.1, 0) -- 位置调整
     titleFrame.BackgroundTransparency = 1
     titleFrame.Parent = frame
 
     -- ChronixHub 文本 (纯白色)
     local chronixText = Instance.new("TextLabel")
     chronixText.Text = "ChronixHub"
-    chronixText.Size = UDim2.new(0.7, 0, 1, 0)
+    chronixText.Size = UDim2.new(0.75, 0, 1, 0) -- 宽度增加，让文字更贴近
     chronixText.Position = UDim2.new(0, 0, 0, 0)
     chronixText.TextColor3 = Color3.new(1, 1, 1) -- 纯白色
     chronixText.BackgroundTransparency = 1
@@ -86,12 +86,12 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     chronixText.TextSize = 44
     chronixText.Parent = titleFrame
 
-    -- V3 文本 (黄绿色)
+    -- V3 文本 (更偏绿的黄绿色)
     local v3Text = Instance.new("TextLabel")
     v3Text.Text = "V3"
-    v3Text.Size = UDim2.new(0.3, 0, 1, 0)
-    v3Text.Position = UDim2.new(0.7, 0, 0, 0)
-    v3Text.TextColor3 = Color3.new(1, 1, 0.5) -- 黄绿色
+    v3Text.Size = UDim2.new(0.25, 0, 1, 0) -- 宽度减小，让文字更贴近
+    v3Text.Position = UDim2.new(0.75, -10, 0, 0) -- 向左偏移10像素，让文字贴近
+    v3Text.TextColor3 = Color3.new(0.8, 1, 0.5) -- 更偏绿的黄绿色 (原来的是1,1,0.5)
     v3Text.BackgroundTransparency = 1
     v3Text.Font = Enum.Font.SourceSansBold
     v3Text.TextSize = 44
@@ -100,8 +100,8 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     -- 加载文本 - 直接显示在最终位置
     local loadingText = Instance.new("TextLabel")
     loadingText.Text = config.loadingText .. "0%"
-    loadingText.Size = UDim2.new(0.8, 0, 0.2, 0)
-    loadingText.Position = UDim2.new(0.1, 0, 0.5, 0) -- 直接显示在最终位置
+    loadingText.Size = UDim2.new(0.9, 0, 0.2, 0)
+    loadingText.Position = UDim2.new(0.05, 0, 0.5, 0) -- 位置调整
     loadingText.TextColor3 = config.textColor
     loadingText.BackgroundTransparency = 1
     loadingText.Font = Enum.Font.SourceSans
@@ -110,8 +110,8 @@ function LoadAnimationModule:LoadAnimation(duration, config)
 
     -- 创建进度条背景 - 直接显示在最终位置
     local progressBarBackground = Instance.new("Frame")
-    progressBarBackground.Size = UDim2.new(0.8, 0, 0.04, 0)
-    progressBarBackground.Position = UDim2.new(0.1, 0, 0.8, 0) -- 直接显示在最终位置
+    progressBarBackground.Size = UDim2.new(0.9, 0, 0.04, 0)
+    progressBarBackground.Position = UDim2.new(0.05, 0, 0.8, 0) -- 位置调整
     progressBarBackground.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
     progressBarBackground.BackgroundTransparency = 0
     progressBarBackground.ClipsDescendants = true
@@ -149,18 +149,18 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     })
     barGradient.Parent = progressBar
 
-    -- 创建取消按钮 - 移到右上角
+    -- 创建取消按钮 - 更窄，更靠近右上角，使用叉号
     local cancelButton
     if config.showCancelButton then
         cancelButton = Instance.new("TextButton")
-        cancelButton.Text = cancelText
-        cancelButton.Size = UDim2.new(0.15, 0, 0.1, 0) -- 调整大小
-        cancelButton.Position = UDim2.new(0.8, 0, 0.05, 0) -- 右上角位置
+        cancelButton.Text = "✕" -- 叉号符号
+        cancelButton.Size = UDim2.new(0.08, 0, 0.08, 0) -- 更窄更小
+        cancelButton.Position = UDim2.new(0.88, 0, 0.03, 0) -- 更靠近右上角
         cancelButton.TextColor3 = Color3.new(1, 1, 1) -- 白色文本
         cancelButton.BackgroundTransparency = 0.8 -- 半透明背景
         cancelButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- 深色背景
         cancelButton.Font = Enum.Font.SourceSans
-        cancelButton.TextSize = 16
+        cancelButton.TextSize = 18 -- 叉号更大一些
         cancelButton.Parent = frame
 
         -- 取消按钮圆角
@@ -171,7 +171,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
         -- 取消按钮悬停效果
         cancelButton.MouseEnter:Connect(function()
             cancelButton.BackgroundTransparency = 0.6
-            cancelButton.TextColor3 = Color3.new(1, 1, 0.5) -- 悬停时变黄绿色
+            cancelButton.TextColor3 = Color3.new(0.8, 1, 0.5) -- 悬停时变黄绿色
         end)
 
         cancelButton.MouseLeave:Connect(function()
@@ -182,11 +182,11 @@ function LoadAnimationModule:LoadAnimation(duration, config)
 
     -- 使用 coroutine 管理动画
     local function playAnimationAsync()
-        -- 主动画：整个界面从屏幕右侧划入中间
+        -- 主动画：整个界面从屏幕右侧划入中间，动作幅度更小
         local slideIn = game:GetService("TweenService"):Create(
             frame, 
-            TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.Out), 
-            {Position = UDim2.new(0.2, 0, 0.3, 0)} -- 最终位置
+            TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), -- 时间从0.8减到0.6
+            {Position = UDim2.new(0.3, 0, 0.3, 0)} -- 最终位置从0.2改为0.3，因为宽度减小了
         )
         slideIn:Play()
         slideIn.Completed:Wait()
@@ -201,8 +201,8 @@ function LoadAnimationModule:LoadAnimation(duration, config)
                 -- 取消时的动画：界面滑出屏幕
                 local slideOut = game:GetService("TweenService"):Create(
                     frame, 
-                    TweenInfo.new(0.5, Enum.EasingStyle.Quad), 
-                    {Position = UDim2.new(2, 0, 0.3, 0)}
+                    TweenInfo.new(0.4, Enum.EasingStyle.Quad), -- 时间从0.5减到0.4
+                    {Position = UDim2.new(1.5, 0, 0.3, 0)} -- 滑出距离也减小
                 )
                 slideOut:Play()
                 slideOut.Completed:Wait()
@@ -246,8 +246,8 @@ function LoadAnimationModule:LoadAnimation(duration, config)
             -- 完成时的动画：界面滑出屏幕
             local slideOut = game:GetService("TweenService"):Create(
                 frame, 
-                TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.In), 
-                {Position = UDim2.new(-1, 0, 0.3, 0)} -- 向左滑出
+                TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.In), -- 时间从0.8减到0.6
+                {Position = UDim2.new(-0.5, 0, 0.3, 0)} -- 滑出距离减小
             )
             slideOut:Play()
             slideOut.Completed:Wait()
