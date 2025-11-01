@@ -1,10 +1,24 @@
 local LoadAnimationModule = {}
 
 function LoadAnimationModule:LoadAnimation(duration, config)
-    local loadingSound = Instance.new("Sound", game:GetService("SoundService"))
-    loadingSound.SoundId = "rbxassetid://1837581587"
-    loadingSound.Volume = 0.3
-    loadingSound:Play()
+    -- 错误处理：检查必要的参数
+    if not duration then
+        warn("LoadAnimation: 缺少 duration 参数")
+        return
+    end
+    
+    -- 创建音效
+    local success, loadingSound = pcall(function()
+        local sound = Instance.new("Sound", game:GetService("SoundService"))
+        sound.SoundId = "rbxassetid://1837581587"
+        sound.Volume = 0.3
+        sound:Play()
+        return sound
+    end)
+    
+    if not success then
+        warn("LoadAnimation: 创建音效失败")
+    end
     
     -- 默认配置
     local defaultConfig = {
@@ -35,16 +49,23 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     local cancelText = translations[config.language].cancel
 
     -- 错误处理：防止重复调用
-    if game.Players.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("LoadAnimationGui") then
+    local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+    if not playerGui then
+        warn("LoadAnimation: PlayerGui 不存在")
+        return
+    end
+    
+    if playerGui:FindFirstChild("LoadAnimationGui") then
+        warn("LoadAnimation: 动画已在运行中")
         return
     end
 
     -- 创建界面
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "LoadAnimationGui"
-    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    screenGui.Parent = playerGui
 
-    -- 使用固定的1030*605像素大小，总共缩小20%（先缩10%再缩10%）
+    -- 使用固定的1030*605像素大小，总共缩小20%
     local uiScale = 0.8 -- 总共缩小20%
     local uiWidth = 1030 * uiScale
     local uiHeight = 605 * uiScale
@@ -55,6 +76,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     frame.Position = UDim2.new(0.5, -uiWidth/2, 0.5, -uiHeight/2) -- 屏幕居中
     frame.BackgroundColor3 = config.backgroundColor -- #1a191a
     frame.BackgroundTransparency = 0
+    frame.ClipsDescendants = true -- 超出部分不显示
     frame.Parent = screenGui
 
     -- 添加圆角
@@ -62,26 +84,34 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     corner.CornerRadius = UDim.new(0.03, 0)
     corner.Parent = frame
 
-    -- 创建波浪形嵌入效果 - 左上角
-    local topLeftWave = Instance.new("ImageLabel")
-    topLeftWave.Name = "TopLeftWave"
-    topLeftWave.Size = UDim2.new(0, 120, 0, 120) -- 缩小波浪大小
-    topLeftWave.Position = UDim2.new(0, -60, 0, -60)
-    topLeftWave.BackgroundTransparency = 1
-    topLeftWave.Image = "rbxassetid://154967018" -- 波浪形图片
-    topLeftWave.ImageColor3 = Color3.new(0.078, 0.078, 0.078) -- #141414
-    topLeftWave.Rotation = 180
-    topLeftWave.Parent = frame
+    -- 创建左上角圆形嵌入 - 颜色#141414，大小为竖边的1/3
+    local circleSize = uiHeight / 3
+    local topLeftCircle = Instance.new("Frame")
+    topLeftCircle.Name = "TopLeftCircle"
+    topLeftCircle.Size = UDim2.new(0, circleSize, 0, circleSize)
+    topLeftCircle.Position = UDim2.new(0, -circleSize/2, 0, -circleSize/2) -- 左上角嵌入
+    topLeftCircle.BackgroundColor3 = Color3.new(0.078, 0.078, 0.078) -- #141414
+    topLeftCircle.BackgroundTransparency = 0
+    topLeftCircle.Parent = frame
 
-    -- 创建波浪形嵌入效果 - 右下角
-    local bottomRightWave = Instance.new("ImageLabel")
-    bottomRightWave.Name = "BottomRightWave"
-    bottomRightWave.Size = UDim2.new(0, 120, 0, 120) -- 缩小波浪大小
-    bottomRightWave.Position = UDim2.new(0, uiWidth - 60, 0, uiHeight - 60)
-    bottomRightWave.BackgroundTransparency = 1
-    bottomRightWave.Image = "rbxassetid://154967018" -- 波浪形图片
-    bottomRightWave.ImageColor3 = Color3.new(0.078, 0.078, 0.078) -- #141414
-    bottomRightWave.Parent = frame
+    -- 圆形圆角
+    local topLeftCircleCorner = Instance.new("UICorner")
+    topLeftCircleCorner.CornerRadius = UDim.new(0.5, 0) -- 圆形
+    topLeftCircleCorner.Parent = topLeftCircle
+
+    -- 创建右下角圆形嵌入 - 颜色#141414，大小为竖边的1/3
+    local bottomRightCircle = Instance.new("Frame")
+    bottomRightCircle.Name = "BottomRightCircle"
+    bottomRightCircle.Size = UDim2.new(0, circleSize, 0, circleSize)
+    bottomRightCircle.Position = UDim2.new(0, uiWidth - circleSize/2, 0, uiHeight - circleSize/2) -- 右下角嵌入
+    bottomRightCircle.BackgroundColor3 = Color3.new(0.078, 0.078, 0.078) -- #141414
+    bottomRightCircle.BackgroundTransparency = 0
+    bottomRightCircle.Parent = frame
+
+    -- 圆形圆角
+    local bottomRightCircleCorner = Instance.new("UICorner")
+    bottomRightCircleCorner.CornerRadius = UDim.new(0.5, 0) -- 圆形
+    bottomRightCircleCorner.Parent = bottomRightCircle
 
     -- 创建标题文本
     local titleFrame = Instance.new("Frame")
@@ -208,7 +238,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
         local isCancelled = false
         local stepDurations = {1.5, 2.0, 2.5, 2.0} -- 每个步骤的持续时间（秒）
         
-        if config.showCancelButton then
+        if config.showCancelButton and cancelButton then
             cancelButton.MouseButton1Click:Connect(function()
                 isCancelled = true
                 -- 停止音乐
@@ -224,8 +254,12 @@ function LoadAnimationModule:LoadAnimation(duration, config)
                 )
                 slideOut:Play()
                 slideOut.Completed:Wait()
-                screenGui:Destroy()
-                config.onComplete(true) -- 传入 true 表示加载被取消
+                if screenGui then
+                    screenGui:Destroy()
+                end
+                if type(config.onComplete) == "function" then
+                    config.onComplete(true) -- 传入 true 表示加载被取消
+                end
             end)
         end
 
@@ -282,7 +316,9 @@ function LoadAnimationModule:LoadAnimation(duration, config)
             loadingText.Text = "加载完毕!"
             progressBar.Size = UDim2.new(0, uiWidth * 0.8, 0, 6)
             
-            if config.showCancelButton then cancelButton.Parent = nil end
+            if config.showCancelButton and cancelButton then
+                cancelButton.Parent = nil
+            end
             
             -- 当进度条跑满之后音乐跳到某个阶段 (128秒处)
             if loadingSound then
@@ -303,10 +339,14 @@ function LoadAnimationModule:LoadAnimation(duration, config)
             slideOut.Completed:Wait()
 
             -- 清除所有实例，但不停止音乐
-            screenGui:Destroy()
+            if screenGui then
+                screenGui:Destroy()
+            end
 
             -- 调用完成回调
-            config.onComplete(false) -- 传入 false 表示加载完成
+            if type(config.onComplete) == "function" then
+                config.onComplete(false) -- 传入 false 表示加载完成
+            end
         end
     end
 
