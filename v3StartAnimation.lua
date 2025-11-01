@@ -44,8 +44,8 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0.6, 0, 0.15, 0) -- 调整高度
-    frame.Position = UDim2.new(0.4, 0, 0.4, 0) -- 调整位置
+    frame.Size = UDim2.new(0.6, 0, 0.35, 0) -- 调整高度
+    frame.Position = UDim2.new(0.2, 0, 0.4, 0) -- 调整位置
     frame.BackgroundColor3 = config.backgroundColor
     frame.BackgroundTransparency = 0
     frame.Parent = screenGui
