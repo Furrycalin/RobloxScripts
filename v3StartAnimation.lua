@@ -1,4 +1,4 @@
--- 基于早期稳定版本重新构建的加载动画模块
+-- 最终完美版加载动画模块
 local LoadAnimationModule = {}
 
 function LoadAnimationModule:LoadAnimation(duration, config)
@@ -57,20 +57,19 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     frame.Position = UDim2.new(0.5, -uiWidth/2, 0.5, -uiHeight/2)
     frame.BackgroundColor3 = config.backgroundColor
     frame.BackgroundTransparency = 0
-    frame.ClipsDescendants = true -- 超出部分不显示
     frame.Parent = screenGui
 
-    -- 添加圆角
+    -- 添加圆角 - 确保圆角效果明显
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0.03, 0)
+    corner.CornerRadius = UDim.new(0.05, 0) -- 稍微增大圆角
     corner.Parent = frame
 
-    -- 创建左上角圆形嵌入 - 颜色#141414
-    local circleSize = uiHeight / 3
+    -- 创建左上角圆形装饰 - 调整位置避免影响圆角
+    local circleSize = uiHeight / 4 -- 减小圆形大小
     local topLeftCircle = Instance.new("Frame")
     topLeftCircle.Name = "TopLeftCircle"
     topLeftCircle.Size = UDim2.new(0, circleSize, 0, circleSize)
-    topLeftCircle.Position = UDim2.new(0, -circleSize/2, 0, -circleSize/2)
+    topLeftCircle.Position = UDim2.new(0, 0, 0, 0) -- 放在角落内部
     topLeftCircle.BackgroundColor3 = Color3.new(0.078, 0.078, 0.078) -- #141414
     topLeftCircle.BackgroundTransparency = 0
     topLeftCircle.Parent = frame
@@ -80,11 +79,11 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     topLeftCircleCorner.CornerRadius = UDim.new(0.5, 0)
     topLeftCircleCorner.Parent = topLeftCircle
 
-    -- 创建右下角圆形嵌入 - 颜色#141414
+    -- 创建右下角圆形装饰 - 调整位置避免影响圆角
     local bottomRightCircle = Instance.new("Frame")
     bottomRightCircle.Name = "BottomRightCircle"
     bottomRightCircle.Size = UDim2.new(0, circleSize, 0, circleSize)
-    bottomRightCircle.Position = UDim2.new(0, uiWidth - circleSize/2, 0, uiHeight - circleSize/2)
+    bottomRightCircle.Position = UDim2.new(0, uiWidth - circleSize, 0, uiHeight - circleSize) -- 放在角落内部
     bottomRightCircle.BackgroundColor3 = Color3.new(0.078, 0.078, 0.078) -- #141414
     bottomRightCircle.BackgroundTransparency = 0
     bottomRightCircle.Parent = frame
@@ -207,8 +206,8 @@ function LoadAnimationModule:LoadAnimation(duration, config)
         -- 模拟加载进度 - 跳跃式更新
         local isCancelled = false
         local progressSteps = {0, 0.2, 0.5, 0.9, 1}
-        local stepDurations = {1.5, 2.0, 2.5, 2.0}
-        local pauseDurations = {2.0, 3.0, 5.0}
+        local stepDurations = {1.0, 1.0, 1.0, 1.0} -- 每个步骤的持续时间缩短
+        local pauseDurations = {2.0, 1.0, 1.0} -- 卡顿时间：20%处2秒，50%和90%处1秒
         local currentStep = 1
 
         -- 取消按钮事件
