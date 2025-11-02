@@ -97,7 +97,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
     -- 创建标题文本
     local titleFrame = Instance.new("Frame")
     titleFrame.Size = UDim2.new(0, 350, 0, 50)
-    titleFrame.Position = UDim2.new(0, uiWidth/2 - 155, 0, uiHeight*0.3)
+    titleFrame.Position = UDim2.new(0, uiWidth/2 - 145, 0, uiHeight*0.3)
     titleFrame.BackgroundTransparency = 1
     titleFrame.Parent = frame
 
