@@ -1,19 +1,19 @@
 --[[
-    Roblox DropDownMenu Component
+    Modular Roblox Dropdown Menu
     Version: 1.0.0
-    Author: Roblox Developer
-    Description: A reusable dropdown menu component for Roblox games that supports dynamic item addition and custom functions.
+    Description: A modular dropdown menu component for Roblox with draggable title bar,
+                 dynamic item addition, and custom function support.
 ]]
 
-local DropDownMenu = {}
-DropDownMenu.__index = DropDownMenu
+local ModularDropdown = {}
+ModularDropdown.__index = ModularDropdown
 
 -- Constants for UI styling
 local UI_STYLES = {
     Menu = {
         BackgroundColor3 = Color3.fromRGB(30, 30, 30),
-        BorderColor3 = Color3.fromRGB(60, 60, 60),
-        BorderSizePixel = 1,
+        BorderColor3 = Color3.fromRGB(0, 0, 0), -- Black border
+        BorderSizePixel = 2,
         CornerRadius = UDim.new(0, 4),
         ShadowTransparency = 0.7,
         ShadowSize = 10
@@ -29,35 +29,29 @@ local UI_STYLES = {
         BackgroundColor3 = Color3.fromRGB(35, 35, 35),
         HoverColor = Color3.fromRGB(50, 50, 50),
         TextColor3 = Color3.fromRGB(255, 255, 255),
-        DisabledColor = Color3.fromRGB(100, 100, 100),
         TextSize = 14,
         Font = Enum.Font.SourceSans,
-        Height = 28,
-        IconSize = 20
-    },
-    Separator = {
-        BackgroundColor3 = Color3.fromRGB(60, 60, 60),
-        Height = 1
+        Height = 28
     }
 }
 
 --[[
-    Creates a new DropDownMenu instance.
+    Creates a new ModularDropdown instance.
     
     Parameters:
         title (string) - The title to display at the top of the menu
-        position (Vector2) - The position of the menu on the screen
+        position (Vector2) - The initial position of the menu on the screen
         parent (Instance) - The parent instance to attach the menu to (usually PlayerGui)
         
     Returns:
-        DropDownMenu - A new DropDownMenu instance
+        ModularDropdown - A new ModularDropdown instance
 ]]
-function DropDownMenu.new(title, position, parent)
-    local self = setmetatable({}, DropDownMenu)
+function ModularDropdown.new(title, position, parent)
+    local self = setmetatable({}, ModularDropdown)
     
     -- Create main UI components
     self.screenGui = Instance.new("ScreenGui")
-    self.screenGui.Name = "DropDownMenu_" .. title
+    self.screenGui.Name = "ModularDropdown_" .. title
     self.screenGui.Parent = parent
     
     -- Main menu container
@@ -83,8 +77,8 @@ function DropDownMenu.new(title, position, parent)
     shadow.Thickness = UI_STYLES.Menu.ShadowSize
     shadow.Parent = self.menuContainer
     
-    -- Title bar
-    self.titleBar = Instance.new("TextLabel")
+    -- Title bar (draggable)
+    self.titleBar = Instance.new("TextButton")
     self.titleBar.Name = "TitleBar"
     self.titleBar.Text = title
     self.titleBar.BackgroundColor3 = UI_STYLES.Title.BackgroundColor3
@@ -93,6 +87,7 @@ function DropDownMenu.new(title, position, parent)
     self.titleBar.Font = UI_STYLES.Title.Font
     self.titleBar.Size = UDim2.new(1, 0, 0, UI_STYLES.Title.Height)
     self.titleBar.Position = UDim2.new(0, 0, 0, 0)
+    self.titleBar.AutoButtonColor = false
     self.titleBar.Parent = self.menuContainer
     
     -- Content container for menu items
@@ -116,10 +111,62 @@ function DropDownMenu.new(title, position, parent)
     self.menuItems = {}
     self.itemCount = 0
     
+    -- Initialize drag functionality
+    self:InitializeDragBehavior()
+    
     -- Update menu size initially
     self:UpdateMenuSize()
     
     return self
+end
+
+--[[
+    Initializes the drag behavior for the title bar.
+]]
+function ModularDropdown:InitializeDragBehavior()
+    local UserInputService = game:GetService("UserInputService")
+    local isDragging = false
+    local dragStartPosition = nil
+    local menuStartPosition = nil
+    
+    -- Start dragging when mouse is pressed down on title bar
+    self.titleBar.MouseButton1Down:Connect(function(input)
+        isDragging = true
+        dragStartPosition = Vector2.new(input.Position.X, input.Position.Y)
+        menuStartPosition = Vector2.new(
+            self.menuContainer.Position.X.Offset,
+            self.menuContainer.Position.Y.Offset
+        )
+        self.titleBar.BackgroundColor3 = Color3.fromRGB(50, 50, 50) -- Darker when dragging
+    end)
+    
+    -- Stop dragging when mouse is released
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            if isDragging then
+                isDragging = false
+                self.titleBar.BackgroundColor3 = UI_STYLES.Title.BackgroundColor3 -- Revert color
+            end
+        end
+    end)
+    
+    -- Update menu position while dragging
+    UserInputService.InputChanged:Connect(function(input)
+        if isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local currentPosition = Vector2.new(input.Position.X, input.Position.Y)
+            local delta = currentPosition - dragStartPosition
+            
+            self.menuContainer.Position = UDim2.new(
+                0, menuStartPosition.X + delta.X,
+                0, menuStartPosition.Y + delta.Y
+            )
+        end
+    end)
+    
+    -- Title bar click handler (does nothing by default)
+    self.titleBar.MouseButton1Click:Connect(function()
+        -- Can be overridden if needed
+    end)
 end
 
 --[[
@@ -128,16 +175,11 @@ end
     Parameters:
         text (string) - The text to display for the item
         callback (function) - The function to execute when the item is clicked
-        iconId (string, optional) - The asset ID of the icon to display (default: nil)
-        isEnabled (boolean, optional) - Whether the item is enabled (default: true)
         
     Returns:
         Instance - The created menu item button
 ]]
-function DropDownMenu:AddMenuItem(text, callback, iconId, isEnabled)
-    -- Default values
-    isEnabled = isEnabled ~= nil and isEnabled or true
-    
+function ModularDropdown:AddMenuItem(text, callback)
     self.itemCount = self.itemCount + 1
     
     -- Create item button
@@ -145,58 +187,35 @@ function DropDownMenu:AddMenuItem(text, callback, iconId, isEnabled)
     itemButton.Name = "MenuItem_" .. self.itemCount
     itemButton.Text = text
     itemButton.BackgroundColor3 = UI_STYLES.Item.BackgroundColor3
-    itemButton.TextColor3 = isEnabled and UI_STYLES.Item.TextColor3 or UI_STYLES.Item.DisabledColor
+    itemButton.TextColor3 = UI_STYLES.Item.TextColor3
     itemButton.TextSize = UI_STYLES.Item.TextSize
     itemButton.Font = UI_STYLES.Item.Font
     itemButton.Size = UDim2.new(1, 0, 0, UI_STYLES.Item.Height)
     itemButton.LayoutOrder = self.itemCount
     itemButton.AutoButtonColor = false
-    itemButton.Enabled = isEnabled
     itemButton.Parent = self.contentContainer
     
     -- Add hover effect
     itemButton.MouseEnter:Connect(function()
-        if isEnabled then
-            itemButton.BackgroundColor3 = UI_STYLES.Item.HoverColor
-        end
+        itemButton.BackgroundColor3 = UI_STYLES.Item.HoverColor
     end)
     
     itemButton.MouseLeave:Connect(function()
-        if isEnabled then
-            itemButton.BackgroundColor3 = UI_STYLES.Item.BackgroundColor3
-        end
+        itemButton.BackgroundColor3 = UI_STYLES.Item.BackgroundColor3
     end)
     
     -- Add click event
     itemButton.MouseButton1Click:Connect(function()
-        if isEnabled and type(callback) == "function" then
+        if type(callback) == "function" then
             callback()
         end
     end)
-    
-    -- Add icon if provided
-    if iconId then
-        local icon = Instance.new("ImageLabel")
-        icon.Name = "ItemIcon"
-        icon.Image = iconId
-        icon.BackgroundTransparency = 1
-        icon.Size = UDim2.new(0, UI_STYLES.Item.IconSize, 0, UI_STYLES.Item.IconSize)
-        icon.Position = UDim2.new(0, 5, 0.5, -UI_STYLES.Item.IconSize/2)
-        icon.Parent = itemButton
-        
-        -- Adjust text position to make room for icon
-        itemButton.TextXAlignment = Enum.TextXAlignment.Left
-        itemButton.TextTruncate = Enum.TextTruncate.AtEnd
-        itemButton.TextBoundsOffset = Vector2.new(UI_STYLES.Item.IconSize + 10, 0)
-    end
     
     -- Store the menu item
     table.insert(self.menuItems, {
         Button = itemButton,
         Text = text,
-        Callback = callback,
-        IconId = iconId,
-        IsEnabled = isEnabled
+        Callback = callback
     })
     
     -- Update menu size
@@ -206,67 +225,33 @@ function DropDownMenu:AddMenuItem(text, callback, iconId, isEnabled)
 end
 
 --[[
-    Adds a separator line between menu items.
-]]
-function DropDownMenu:AddSeparator()
-    self.itemCount = self.itemCount + 1
-    
-    local separator = Instance.new("Frame")
-    separator.Name = "Separator_" .. self.itemCount
-    separator.BackgroundColor3 = UI_STYLES.Separator.BackgroundColor3
-    separator.Size = UDim2.new(1, 0, 0, UI_STYLES.Separator.Height)
-    separator.LayoutOrder = self.itemCount
-    separator.Parent = self.contentContainer
-    
-    -- Store the separator
-    table.insert(self.menuItems, {
-        Button = separator,
-        IsSeparator = true
-    })
-    
-    -- Update menu size
-    self:UpdateMenuSize()
-    
-    return separator
-end
-
---[[
     Updates the menu size based on the number of items.
 ]]
-function DropDownMenu:UpdateMenuSize()
+function ModularDropdown:UpdateMenuSize()
     -- Calculate total content height
-    local contentHeight = 0
-    
-    for _, item in ipairs(self.menuItems) do
-        if item.IsSeparator then
-            contentHeight = contentHeight + UI_STYLES.Separator.Height
-        else
-            contentHeight = contentHeight + UI_STYLES.Item.Height
-        end
-    end
+    local contentHeight = self.itemCount * UI_STYLES.Item.Height
     
     -- Update content container size
     self.contentContainer.Size = UDim2.new(1, 0, 0, contentHeight)
     
-    -- Update menu container size
-    local menuWidth = self.titleBar.TextBounds.X + 40 -- Add padding
-    self.menuContainer.Size = UDim2.new(0, menuWidth, 0, UI_STYLES.Title.Height + contentHeight)
-end
-
---[[
-    Sets the enabled state of a specific menu item.
-    
-    Parameters:
-        index (number) - The index of the menu item
-        isEnabled (boolean) - Whether the item should be enabled
-]]
-function DropDownMenu:SetItemEnabled(index, isEnabled)
-    if self.menuItems[index] and not self.menuItems[index].IsSeparator then
-        local item = self.menuItems[index]
-        item.IsEnabled = isEnabled
-        item.Button.Enabled = isEnabled
-        item.Button.TextColor3 = isEnabled and UI_STYLES.Item.TextColor3 or UI_STYLES.Item.DisabledColor
+    -- Calculate menu width based on longest text
+    local maxTextWidth = 0
+    for _, item in ipairs(self.menuItems) do
+        local textWidth = item.Button.TextBounds.X
+        if textWidth > maxTextWidth then
+            maxTextWidth = textWidth
+        end
     end
+    
+    -- Also consider title width
+    local titleWidth = self.titleBar.TextBounds.X
+    local menuWidth = math.max(maxTextWidth, titleWidth) + 40 -- Add padding
+    
+    -- Update menu container size
+    self.menuContainer.Size = UDim2.new(
+        0, menuWidth,
+        0, UI_STYLES.Title.Height + contentHeight
+    )
 end
 
 --[[
@@ -276,8 +261,8 @@ end
         index (number) - The index of the menu item
         text (string) - The new text for the item
 ]]
-function DropDownMenu:SetItemText(index, text)
-    if self.menuItems[index] and not self.menuItems[index].IsSeparator then
+function ModularDropdown:SetItemText(index, text)
+    if self.menuItems[index] then
         local item = self.menuItems[index]
         item.Text = text
         item.Button.Text = text
@@ -290,28 +275,21 @@ end
 --[[
     Shows the menu.
 ]]
-function DropDownMenu:Show()
+function ModularDropdown:Show()
     self.screenGui.Enabled = true
 end
 
 --[[
     Hides the menu.
 ]]
-function DropDownMenu:Hide()
+function ModularDropdown:Hide()
     self.screenGui.Enabled = false
 end
 
 --[[
     Destroys the menu and cleans up resources.
 ]]
-function DropDownMenu:Destroy()
-    -- Disconnect all connections
-    for _, item in ipairs(self.menuItems) do
-        if item.Button and item.Button:IsDescendantOf(game) then
-            item.Button:Destroy()
-        end
-    end
-    
+function ModularDropdown:Destroy()
     -- Destroy the main UI components
     self.screenGui:Destroy()
     
@@ -319,4 +297,4 @@ function DropDownMenu:Destroy()
     self.menuItems = nil
 end
 
-return DropDownMenu
+return ModularDropdown
