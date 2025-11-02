@@ -208,7 +208,7 @@ function LoadAnimationModule:LoadAnimation(duration, config)
         local isCancelled = false
         local progressSteps = {0, 0.2, 0.5, 0.9, 1}
         local stepDurations = {1.5, 2.0, 2.5, 2.0}
-        local pauseDurations = {2.0, 3.0, 5.0}
+        local pauseDurations = {2.0, 1.0, 1.0}
         local currentStep = 1
 
         -- 取消按钮事件
