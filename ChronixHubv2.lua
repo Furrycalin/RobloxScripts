@@ -453,7 +453,7 @@ infotitleText.Parent = infoBar
 local gameInfo = getGameName(game.GameId)
 
 local infotitleText2 = Instance.new("TextLabel")
-infotitleText2.Text = getGameNameNotSuccess and "未找到游戏信息, 未找到游戏ID 调试: " .. game.GameId or "在玩: " .. gameInfo.name .. " | ID: " .. game.GameId
+infotitleText2.Text = getGameNameNotSuccess and "未找到游戏信息, 未找到游戏ID" or "在玩: " .. gameInfo.name .. " | ID: " .. game.GameId
 infotitleText2.Size = UDim2.new(0, 100, 0.5, 0)
 infotitleText2.Position = UDim2.new(0, 60, 0.42, 0)
 infotitleText2.TextColor3 = Color3.new(1, 1, 1) -- 白色
