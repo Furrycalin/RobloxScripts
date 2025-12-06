@@ -112,12 +112,11 @@ local function getUniverseId(placeId)
     end
 end
 
+local getGameNameNotSuccess = false
+
 -- 获取游戏名
 local function getGameName(universeId)
     local url = "https://games.roblox.com/v1/games?universeIds=" .. universeId
-    local gI
-    gI.name = "无法获取游戏信息"
-    gI.GameId = "无法获取游戏ID"
     local success, response = pcall(function()
         return game:HttpGet(url)
     end)
@@ -128,11 +127,13 @@ local function getGameName(universeId)
             return data.data[1]
         else
             warn("未找到游戏信息")
-            return gI
+            getGameNameNotSuccess = true
+            return nil
         end
     else
         warn("获取游戏名失败:", response)
-        return gI
+        getGameNameNotSuccess = true
+        return nil
     end
 end
 
@@ -452,7 +453,7 @@ infotitleText.Parent = infoBar
 local gameInfo = getGameName(game.GameId)
 
 local infotitleText2 = Instance.new("TextLabel")
-infotitleText2.Text = "在玩: " .. gameInfo.name .. " | ID: " .. game.GameId
+infotitleText2.Text = getGameNameNotSuccess and "未找到游戏信息, 未找到游戏ID 调试: " .. game.GameId or "在玩: " .. gameInfo.name .. " | ID: " .. game.GameId
 infotitleText2.Size = UDim2.new(0, 100, 0.5, 0)
 infotitleText2.Position = UDim2.new(0, 60, 0.42, 0)
 infotitleText2.TextColor3 = Color3.new(1, 1, 1) -- 白色
