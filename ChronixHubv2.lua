@@ -115,6 +115,7 @@ end
 -- 获取游戏名
 local function getGameName(universeId)
     local url = "https://games.roblox.com/v1/games?universeIds=" .. universeId
+    local gI
     gI.name = "无法获取游戏信息"
     gI.GameId = "无法获取游戏ID"
     local success, response = pcall(function()
