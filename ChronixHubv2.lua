@@ -127,6 +127,7 @@ local function getGameName(universeId)
             return data.data[1]
         else
             warn("未找到游戏信息")
+            print(data)
             getGameNameNotSuccess = true
             return nil
         end
