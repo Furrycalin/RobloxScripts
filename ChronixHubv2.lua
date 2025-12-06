@@ -447,7 +447,7 @@ infotitleText.TextXAlignment = Enum.TextXAlignment.Left
 infotitleText.Parent = infoBar
 
 local gameInfo = getGameName(game.GameId)
-if gameInfo.name == nil then
+if gameInfo.name then
 else
     gameInfo.name = "无法获取游戏信息"
     gameInfo.GameId = "无法获取游戏ID"
