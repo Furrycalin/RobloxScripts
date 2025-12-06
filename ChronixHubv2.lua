@@ -115,6 +115,8 @@ end
 -- 获取游戏名
 local function getGameName(universeId)
     local url = "https://games.roblox.com/v1/games?universeIds=" .. universeId
+    gI.name = "无法获取游戏信息"
+    gI.GameId = "无法获取游戏ID"
     local success, response = pcall(function()
         return game:HttpGet(url)
     end)
@@ -125,11 +127,11 @@ local function getGameName(universeId)
             return data.data[1]
         else
             warn("未找到游戏信息")
-            return nil
+            return gI
         end
     else
         warn("获取游戏名失败:", response)
-        return nil
+        return gI
     end
 end
 
@@ -447,11 +449,6 @@ infotitleText.TextXAlignment = Enum.TextXAlignment.Left
 infotitleText.Parent = infoBar
 
 local gameInfo = getGameName(game.GameId)
-if gameInfo.name then
-else
-    gameInfo.name = "无法获取游戏信息"
-    gameInfo.GameId = "无法获取游戏ID"
-end
 
 local infotitleText2 = Instance.new("TextLabel")
 infotitleText2.Text = "在玩: " .. gameInfo.name .. " | ID: " .. game.GameId
