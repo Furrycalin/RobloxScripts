@@ -449,7 +449,8 @@ infotitleText.Parent = infoBar
 local gameInfo = getGameName(game.GameId)
 if gameInfo then
 else
-    gameInfo = "无法获取游戏信息"
+    gameInfo.name = "无法获取游戏信息"
+    gameInfo.GameId = "无法获取游戏ID"
 end
 
 local infotitleText2 = Instance.new("TextLabel")
