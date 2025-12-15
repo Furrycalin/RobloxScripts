@@ -20,6 +20,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 - ✅ **ProjectTransfur**（项目Transfur）  
 - ✅ **CabinRolePlay**（小屋角色扮演）  
 - ✅ **DelusionalOffice**（妄想办公室）  
+- ✅ **ExpeditionAntarctica**（南极探险队）  
 
 ---
 
