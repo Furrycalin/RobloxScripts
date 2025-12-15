@@ -2048,6 +2048,79 @@ ds = workspace.DescendantAdded:Connect(function(descendant)
     end
 end)
 
+local function TeleportTo(x, y, z)
+	-- 验证输入是否为数字
+	if type(x) ~= "number" or type(y) ~= "number" or type(z) ~= "number" then
+		warn("[Teleport] 请传入三个数字：TeleportTo(x, y, z)")
+		return false
+	end
+
+	local character = player.Character
+	if not character then
+		character = player.CharacterAdded:Wait()
+	end
+
+	local rootPart = character:FindFirstChild("HumanoidRootPart")
+	if not rootPart then
+		warn("[Teleport] 未找到 HumanoidRootPart")
+		return false
+	end
+
+	-- 执行传送
+	rootPart.CFrame = CFrame.new(Vector3.new(x, y, z))
+
+	CreateNotification("提示误", string.format("✅ 已传送到 (%.1f, %.1f, %.1f)", x, y, z), 5, true)
+	return true
+end
+
+local function TeleportToPresent(presentNumber)
+	if type(presentNumber) ~= "number" then
+		CreateNotification("错误", "请输入数字", 5, true)
+		return false
+	end
+
+	-- 查找主模型（兼容带 % 和不带 %）
+	local mainModel = Workspace:FindFirstChild("XMas_PresentHunt%") 
+		or Workspace:FindFirstChild("XMas_PresentHunt")
+	if not mainModel then
+		CreateNotification("错误", "未找到XMas_PresentHunt%模型", 5, true)
+		return false
+	end
+
+	local presents = mainModel:FindFirstChild("Presents")
+	if not presents then
+		CreateNotification("错误", "未找到Presents文件夹", 5, true)
+		return false
+	end
+
+	local gift = presents:FindFirstChild(tostring(presentNumber))
+	if not gift or not gift:IsA("Model") then
+		CreateNotification("错误", string.format("[Teleport] 编号 %d 的礼物不存在", presentNumber), 5, true)
+		return false
+	end
+
+	-- 获取礼物位置（使用 GetPivot 获取整体中心）
+	local giftCFrame = gift:GetPivot()
+	local character = player.Character
+	if not character then
+		CreateNotification("错误", "角色未加载", 5, true)
+		return false
+	end
+
+	local rootPart = character:FindFirstChild("HumanoidRootPart")
+	if not rootPart then
+		CreateNotification("错误", "未找到HumanoidRootPart", 5, true)
+		return false
+	end
+
+	-- 传送到礼物正上方一点（避免卡进模型）
+	local targetCFrame = CFrame.new(giftCFrame.Position + Vector3.new(0, 3, 0))
+	rootPart.CFrame = targetCFrame
+
+	CreateNotification("提示", string.format("✅ 已传送到礼物 #%d！", presentNumber), 5, true)
+	return true
+end
+
 Stepped6 = game:GetService("RunService").Stepped:Connect(function()
     if data.grace.deleteentite then 
     local RS = game:GetService("ReplicatedStorage")
@@ -2779,6 +2852,35 @@ local function AddMenuContent(category)
         CRPList.add("修猫服装", function(button)
             chatMessage("/cat")
         end)
+    elseif category == "南极探险队" then
+        CreateLabel("基础操作", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.03, 0))
+        local SEList = CreateList(UDim2.new(0.23, 0, 0.8, 0), UDim2.new(0.01, 0, 0.1, 0))
+        SEList.add("大本营", function(button)
+            TeleportTo(-6015, -158, -35)
+        end)
+        SEList.add("营地1", function(button)
+            TeleportTo(-3719, 226, 235)
+        end)
+        SEList.add("营地2", function(button)
+            TeleportTo(1790, 106, -138)
+        end)
+        SEList.add("营地3", function(button)
+            TeleportTo(5892, 321, -18)
+        end)
+        SEList.add("营地4", function(button)
+            TeleportTo(8992, 596, 102)
+        end)
+        SEList.add("终点", function(button)
+            TeleportTo(10990, 550, 104)
+        end)
+        CreateLabel("圣诞活动", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.27, 0, 0.03, 0))
+        CreateButton("获取所有礼物", UDim2.new(0.26, 0, 0.09, 0), UDim2.new(0.25, 0, 0.1, 0), function(button)
+            loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/SouthExpedition_Christmas_getallgifts.lua"))()
+        end)
+        local giftnumber = CreateTextBox(1, 18, UDim2.new(0.10, 0, 0.08, 0), UDim2.new(0.33, 0, 0.33, 0))
+        CreateButton("传送到礼物", UDim2.new(0.26, 0, 0.09, 0), UDim2.new(0.25, 0, 0.21, 0), function(button)
+            TeleportToPresent(tonumber(giftnumber.Text))
+        end)
     end
 end
 
@@ -2818,6 +2920,7 @@ if game.GameId == 6508759464 then addMenu("Grace") end
 if game.GameId == 5166944221 then addMenu("Deathball") end
 if game.GameId == 3185346597 then addMenu("CabinRolePlay") end
 if game.GameId == 6352299542 then addMenu("妄想办公室") end
+if game.GameId == 972475338 then addMenu("南极探险队") end
 
 -- 更新功能栏的滚动区域
 functionList.CanvasSize = UDim2.new(0, 0, 0, #functionList:GetChildren() * 30)
