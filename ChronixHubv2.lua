@@ -30,7 +30,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TextChatService = game:GetService("TextChatService")
 local HttpService = game:GetService("HttpService")
 
-local LoadAnimationModule = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/NewLoadAnimation.lua"))()
+-- local LoadAnimationModule = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/NewLoadAnimation.lua"))()
+local LoadAnimationModule = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/ChronixHub/raw/main/modules/start_animation.lua"))()
 local tpWalk = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/tpWalk.lua"))()
 
 local iscancel = false
