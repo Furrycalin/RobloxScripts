@@ -50,7 +50,7 @@ LoadAnimationModule:LoadAnimation(2, {
     showCancelButton = true
 })
 
-wait(5)
+wait(15.1)
 if iscancel then
     _G.ChronixHubisLoaded = false
     return
