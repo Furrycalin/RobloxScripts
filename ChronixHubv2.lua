@@ -1689,7 +1689,7 @@ end)
 -- 监听状态变化
 humanoid.StateChanged:Connect(function(oldState, newState)
     if data.tools.antifall then
-        if newState == Enum.HumanoidStateType.FallingDown or newState == Enum.HumanoidStateType.Ragdoll then
+        if newState == Enum.HumanoidStateType.FallingDown or newState == Enum.HumanoidStateType.Ragdoll or newState == Enum.HumanoidStateType.Freefall then
             humanoid:ChangeState(Enum.HumanoidStateType.GettingUp) -- 强制恢复站立状态
             CreateNotification("提示", "检测到被击倒，已恢复站立状态", 5, true)
         end
