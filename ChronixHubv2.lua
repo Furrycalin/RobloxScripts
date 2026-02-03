@@ -50,7 +50,7 @@ LoadAnimationModule:LoadAnimation(2, {
     showCancelButton = true
 })
 
-wait(15.1)
+if (_G.SA_FASTLOADING or false) == true then wait(2.1) else wait(15.1) end
 if iscancel then
     _G.ChronixHubisLoaded = false
     return
