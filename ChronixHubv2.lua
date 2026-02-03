@@ -2576,10 +2576,10 @@ function disableDetection()
 end
 
 -- 11. 初始化角色绑定
-if localPlayer.Character then
-    bindCharacterAndComponents(localPlayer.Character)
+if AFlocalPlayer.Character then
+    bindCharacterAndComponents(AFlocalPlayer.Character)
 end
-localPlayer.CharacterAdded:Connect(bindCharacterAndComponents)
+AFlocalPlayer.CharacterAdded:Connect(bindCharacterAndComponents)
 while task.wait(CHECK_INTERVAL) do
     -- 开关关闭，直接跳过后续逻辑
     if not isDetectionEnabled then
