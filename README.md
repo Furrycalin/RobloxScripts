@@ -21,6 +21,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 - ✅ **CabinRolePlay**（小屋角色扮演）  
 - ✅ **DelusionalOffice**（妄想办公室）  
 - ✅ **ExpeditionAntarctica**（南极探险队）  
+- ✅ **Nightmare Run**（噩梦之行）
 
 ---
 
