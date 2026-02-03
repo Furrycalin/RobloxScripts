@@ -2742,6 +2742,7 @@ local function AddMenuContent(category)
         toolList.add(data.tools.antifallplus and "防击倒Plus(开)" or "防击倒Plus(关)", function(button)
             data.tools.antifallplus = not data.tools.antifallplus
             if data.tools.antifallplus then StandRecovery:enableDetection() else StandRecovery:disableDetection() end
+            button.Text = data.tools.antifallplus and "防击倒Plus(开)" or "防击倒Plus(关)"
         end)
         toolList.add(data.tools.antidead and "防死亡(开)" or "防死亡(关)", function(button)
             data.tools.antidead = not data.tools.antidead
@@ -3163,6 +3164,7 @@ local function unloadchronixhub()
     data.musictest.enable = false
     data.tools.noclip = false
     data.tools.infjump = false
+    StandRecovery:unload()
     musicbox:Stop()
     musicbox:Destroy()
     chatcheck:Disconnect()
