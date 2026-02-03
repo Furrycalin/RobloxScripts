@@ -1444,6 +1444,7 @@ local data = {
         airwalk = false,
         playeresp = false,
         antifall = false,
+        antifallplus = false,
         antidead = false,
         floorY = nil
     },
@@ -2396,6 +2397,217 @@ local function processExistingObjectsOnce()
     end
 end
 
+-- 1. 获取Players服务（必选，用于获取本地玩家）
+local AFPlayers = game:GetService("Players")
+-- 2. 获取本地玩家（仅LocalScript可调用，客户端专属）
+local AFlocalPlayer = AFPlayers.LocalPlayer
+if not AFlocalPlayer then
+    warn("[站立恢复脚本] 无法获取本地玩家，脚本终止")
+    return
+end
+
+-- 3. 核心配置（保留之前的强化参数）
+local DEFAULT_WALK_SPEED = 16
+local DEFAULT_JUMP_POWER = 50
+local CHECK_INTERVAL = 0.05
+local SPEED_THRESHOLD = 50
+local RESTORE_REPEAT_TIMES = 3
+local RESTORE_REPEAT_INTERVAL = 0.05
+
+-- 4. 核心变量（角色、组件 + 开关状态）
+local AFcharacter = nil
+local AFhumanoid = nil
+local AFhumanoidRootPart = nil
+local isDetectionEnabled = false -- 检测开关，默认关闭 ❗核心新增
+
+-- 5. 核心函数：绑定角色及核心组件（处理角色加载/重置）
+local function bindCharacterAndComponents(newCharacter)
+    if not newCharacter then
+        warn("[站立恢复脚本] 角色对象为空，绑定失败")
+        AFcharacter = nil
+        AFhumanoid = nil
+        AFhumanoidRootPart = nil
+        return
+    end
+
+    -- 更新角色引用
+    AFcharacter = newCharacter
+
+    -- 等待并获取Humanoid
+    local success1, tempHumanoid = pcall(function()
+        return AFcharacter:WaitForChild("Humanoid")
+    end)
+    -- 等待并获取HumanoidRootPart
+    local success2, tempRootPart = pcall(function()
+        return AFcharacter:WaitForChild("HumanoidRootPart")
+    end)
+
+    -- 验证组件获取结果
+    if not success1 or not tempHumanoid then
+        AFhumanoid = nil
+    else
+        AFhumanoid = tempHumanoid
+        AFhumanoid.AutoRotate = true
+    end
+
+    if not success2 or not tempRootPart then
+        AFhumanoidRootPart = nil
+    else
+        AFhumanoidRootPart = tempRootPart
+    end
+end
+
+-- 6. 判定是否失控（经典巴掌专属，保留有效检测）
+local function isUncontrollable()
+    -- 开关关闭/组件不全，直接返回false
+    if not isDetectionEnabled or not AFcharacter or not AFhumanoid or not AFhumanoidRootPart or AFhumanoid.Health <= 0 then
+        return false
+    end
+
+    local abnormalStates = {
+        Enum.HumanoidStateType.FallingDown,
+        Enum.HumanoidStateType.Ragdoll,
+        Enum.HumanoidStateType.Flying,
+        Enum.HumanoidStateType.Freefall,
+        Enum.HumanoidStateType.Seated
+    }
+    local inAbnormalState = table.find(abnormalStates, AFhumanoid:GetState()) ~= nil
+    local inHighSpeed = AFhumanoidRootPart.Velocity.Magnitude > SPEED_THRESHOLD
+    local inLockedState = AFhumanoid.PlatformStand or AFhumanoid.WalkSpeed <= 0
+
+    local isUncontrol = inAbnormalState or inHighSpeed or inLockedState
+    if isUncontrol then
+        CreateNotification("防击倒Plus", "检测到失控！状态：" .. tostring(AFhumanoid:GetState()) .. "，速度：" .. tostring(AFhumanoidRootPart.Velocity.Magnitude), 10, true)
+    end
+    return isUncontrol
+end
+
+-- 7. 单次恢复逻辑（提取为子函数，方便重复执行）
+local function singleRestore()
+    if not AFcharacter or not AFhumanoid or not AFhumanoidRootPart then
+        return false
+    end
+
+    -- 步骤1：强制锁定Humanoid状态，优先切换为站立
+    pcall(function()
+        AFhumanoid:ChangeState(Enum.HumanoidStateType.None)
+        task.wait(0.001)
+        AFhumanoid:ChangeState(Enum.HumanoidStateType.Standing)
+        AFhumanoid:ChangeState(Enum.HumanoidStateType.Standing)
+    end)
+
+    -- 步骤2：恢复移动参数，锁定可操控性
+    AFhumanoid.WalkSpeed = DEFAULT_WALK_SPEED
+    AFhumanoid.JumpPower = DEFAULT_JUMP_POWER
+    AFhumanoid.PlatformStand = false
+    AFhumanoid.AutoRotate = true
+    AFhumanoid.Health = math.min(AFhumanoid.Health + 1, AFhumanoid.MaxHealth)
+
+    -- 步骤3：彻底清空惯性，强制固定位置
+    AFhumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+    AFhumanoidRootPart.RotVelocity = Vector3.new(0, 0, 0)
+    local bodyPos = Instance.new("BodyPosition")
+    bodyPos.Parent = AFhumanoidRootPart
+    bodyPos.Position = AFhumanoidRootPart.Position
+    bodyPos.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+    bodyPos.D = 100
+    bodyPos.P = 5000
+    task.delay(0.1, function()
+        if bodyPos then bodyPos:Destroy() end
+    end)
+
+    -- 步骤4：深度清理物理对象
+    local removedCount = 0
+    local function clearPhysicsObjects(obj)
+        for _, child in pairs(obj:GetChildren()) do
+            if child:IsA("BodyVelocity") or child:IsA("BodyForce") or child:IsA("BodyGyro") or child:IsA("BodyPosition") then
+                pcall(function() child:Destroy() end)
+                removedCount = removedCount + 1
+            end
+            clearPhysicsObjects(child)
+        end
+    end
+    clearPhysicsObjects(AFcharacter)
+
+    -- 步骤5：重置姿势
+    local rootCF = AFhumanoidRootPart.CFrame
+    pcall(function()
+        AFhumanoidRootPart.CFrame = CFrame.new(rootCF.Position) * CFrame.Angles(0, rootCF:ToEulerAnglesYXZ().y, 0)
+    end)
+
+    if removedCount > 0 then
+        CreateNotification("防击倒Plus", "已恢复，清除 " .. removedCount .. " 个物理对象", 10, true)
+    end
+    return true
+end
+
+-- 8. 批量恢复逻辑（重复执行，对抗巴掌持续效果）
+local function batchRestore()
+    if not isDetectionEnabled then -- 开关关闭，不执行恢复
+        return false
+    end
+    local successCount = 0
+
+    for i = 1, RESTORE_REPEAT_TIMES do
+        if singleRestore() then
+            successCount = successCount + 1
+        end
+        task.wait(RESTORE_REPEAT_INTERVAL)
+    end
+    return successCount > 0
+end
+
+-- 9. 【核心新增】开启检测函数（外部可调用）
+function enableDetection()
+    if isDetectionEnabled then
+        return
+    end
+    isDetectionEnabled = true
+    CreateNotification("防击倒Plus", "已启动", 10, true)
+end
+
+-- 10. 【核心新增】关闭检测函数（外部可调用）
+function disableDetection()
+    if not isDetectionEnabled then
+        return
+    end
+    isDetectionEnabled = false
+    CreateNotification("防击倒Plus", "已关闭", 10, true)
+end
+
+-- 11. 初始化角色绑定
+if localPlayer.Character then
+    bindCharacterAndComponents(localPlayer.Character)
+end
+localPlayer.CharacterAdded:Connect(bindCharacterAndComponents)
+while task.wait(CHECK_INTERVAL) do
+    -- 开关关闭，直接跳过后续逻辑
+    if not isDetectionEnabled then
+        task.wait(0.1)
+        continue
+    end
+
+    if not AFcharacter or not AFhumanoid or not AFhumanoidRootPart then
+        task.wait(0.1)
+        continue
+    end
+
+    -- 检测到失控，立即执行批量恢复，且延迟后再检测一次（防止复燃）
+    if isUncontrollable() then
+        pcall(batchRestore)
+        -- 恢复后持续监控0.5秒，防止巴掌效果复燃
+        local guardTime = 0.5
+        local guardStart = tick()
+        while tick() - guardStart < guardTime and isDetectionEnabled do -- 监控期间也受开关控制
+            if isUncontrollable() then
+                pcall(singleRestore)
+            end
+            task.wait(0.01)
+        end
+        task.wait(0.2)
+    end
+end
+
 local offce = Workspace.DescendantAdded:Connect(detectEntity)
 
 local isProcessing = false
@@ -2736,6 +2948,10 @@ local function AddMenuContent(category)
         toolList.add(data.tools.antifall and "防击倒(开)" or "防击倒(关)", function(button)
             data.tools.antifall = not data.tools.antifall
             button.Text = data.tools.antifall and "防击倒(开)" or "防击倒(关)"
+        end)
+        toolList.add(data.tools.antifallplus and "防击倒Plus(开)" or "防击倒Plus(关)", function(button)
+            data.tools.antifallplus = not data.tools.antifallplus
+            if data.tools.antifallplus then enableDetection() else disableDetection() end
         end)
         toolList.add(data.tools.antidead and "防死亡(开)" or "防死亡(关)", function(button)
             data.tools.antidead = not data.tools.antidead
