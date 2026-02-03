@@ -2739,10 +2739,10 @@ local function AddMenuContent(category)
             data.tools.antifall = not data.tools.antifall
             button.Text = data.tools.antifall and "防击倒(开)" or "防击倒(关)"
         end)
-        toolList.add(data.tools.antifallplus and "防击倒Plus(开)" or "防击倒Plus(关)", function(button)
+        toolList.add(data.tools.antifallplus and "晕厥康复(开)" or "晕厥康复(关)", function(button)
             data.tools.antifallplus = not data.tools.antifallplus
             if data.tools.antifallplus then StandRecovery:enableDetection() else StandRecovery:disableDetection() end
-            button.Text = data.tools.antifallplus and "防击倒Plus(开)" or "防击倒Plus(关)"
+            button.Text = data.tools.antifallplus and "晕厥康复(开)" or "晕厥康复(关)"
         end)
         toolList.add(data.tools.antidead and "防死亡(开)" or "防死亡(关)", function(button)
             data.tools.antidead = not data.tools.antidead
