@@ -29,6 +29,7 @@ local StarterGui = game:GetService("StarterGui")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TextChatService = game:GetService("TextChatService")
 local HttpService = game:GetService("HttpService")
+local ScriptContext = game:GetService("ScriptContext")
 
 -- local LoadAnimationModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/RobloxScripts/raw/main/NewLoadAnimation.lua"))()
 local LoadAnimationModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/start_animation.lua"))()
@@ -256,16 +257,17 @@ local function CreateNotification(title, text, duration, isAchievement)
     end)()
 end
 
-local function onScriptError(errorMessage, stackTrace)
+local function onScriptError(errorMessage, stackTrace, erroredScript)
     CreateNotification("警告", "脚本在加载后续进程时出现错误\n按F9查看详细信息", 20, true)
     warn("[ChronixHub] 警告！脚本在加载后续进程时出现错误，可能会导致脚本加载失败、无法卸载等问题，请重新加入游戏并等待开发者修复。")
     print("==================== 脚本错误详情 ====================")
     print("错误原因：", errorMessage)
     print("错误位置：", stackTrace)
+    print("错误脚本：", erroredScript and erroredScript.Name or "未知脚本")
     print("======================================================")
 end
 
-script.Error:Connect(onScriptError)
+ScriptContext.Error:Connect(onScriptError)
 
 -- Dealthball窗口创建
 local DBT1 = Instance.new("TextLabel")
