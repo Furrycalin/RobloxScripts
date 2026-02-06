@@ -35,6 +35,7 @@ local LoadAnimationModule = loadstring(game:HttpGet("https://raw.atomgit.com/Fur
 local tpWalk = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/RobloxScripts/raw/main/tpWalk.lua"))()
 local StandRecovery = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/StandRecovery.lua"))()
 local HighlightModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/HighlightModule.lua"))()
+local PlayerLightModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/PlayerLightModule.lua"))()
 
 local iscancel = false
 
@@ -1419,7 +1420,11 @@ end)
 
 local data = {
     nightmare_run = {
-        HLCheese = HighlightModule.new("Cheese", "other", "item")
+        HLCheese = HighlightModule.new("Cheese", "other", "item"),
+        Lantern = PlayerLightModule.new({ Brightness = 5, Range = 20, Color = Color3.fromRGB(255, 165, 0) }),
+        SuperLighter = PlayerLightModule.new({ Brightness = 2, Range = 1000 }),
+        LanternOffin = false,
+        SuperLighterOffin = false
     },
     office = {
         entitywarning = false,
@@ -2670,10 +2675,20 @@ local function AddMenuContent(category)
         toolList.add("获得点击传送工具", function(button)
             mouse = game.Players.LocalPlayer:GetMouse() tool = Instance.new("Tool") tool.RequiresHandle = false tool.Name = "手持点击传送" tool.Activated:connect(function() local pos = mouse.Hit+Vector3.new(0,2.5,0) pos = CFrame.new(pos.X,pos.Y,pos.Z) game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos end) tool.Parent = game.Players.LocalPlayer.Backpack
         end)
+        toolList.add(data.nightmare_run.LanternOffin and "随身灯笼(开)" or "随身灯笼(关)", function(button)
+            data.nightmare_run.LanternOffin = not data.nightmare_run.LanternOffin
+            if data.nightmare_run.LanternOffin then data.nightmare_run.Lantern.enable() else data.nightmare_run.Lantern.disable() end
+            button.Text = data.nightmare_run.LanternOffin and "随身灯笼(开)" or "随身灯笼(关)"
+        end)
         toolList.add(data.tools.nightvision and "夜视(开)" or "夜视(关)", function(button)
             data.tools.nightvision = not data.tools.nightvision
             game.Lighting.Ambient = data.tools.nightvision and Color3.new(1, 1, 1) or Color3.new(0, 0, 0)
             button.Text = data.tools.nightvision and "夜视(开)" or "夜视(关)"
+        end)
+        toolList.add(data.nightmare_run.SuperLighterOffin and "超级光明(开)" or "超级光明(关)", function(button)
+            data.nightmare_run.SuperLighterOffin = not data.nightmare_run.SuperLighterOffin
+            if data.nightmare_run.SuperLighterOffin then data.nightmare_run.SuperLighter.enable() else data.nightmare_run.SuperLighter.disable() end
+            button.Text = data.nightmare_run.SuperLighterOffin and "超级光明(开)" or "超级光明(关)"
         end)
         toolList.add(data.tools.noclip and "穿墙(开)" or "穿墙(关)", function(button)
             data.tools.noclip = not data.tools.noclip
@@ -3172,6 +3187,8 @@ local function unloadchronixhub()
     data.musictest.enable = false
     data.tools.noclip = false
     data.tools.infjump = false
+    PlayerLightModule.unload()
+    HighlightModule.unload()
     StandRecovery:unload()
     musicbox:Stop()
     musicbox:Destroy()
