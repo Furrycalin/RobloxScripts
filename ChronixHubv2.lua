@@ -1435,7 +1435,7 @@ local data = {
     nightmare_run = {
         HLCheese = HighlightModule.new("Cheese", "other", "item"),
         Lantern = PlayerLightModule.new({ Brightness = 5, Range = 20, Color = Color3.fromRGB(255, 165, 0) }),
-        SuperLighter = PlayerLightModule.new({ Brightness = 2, Range = 1000 }),
+        SuperLighter = PlayerLightModule.new({ Brightness = 2, Range = 300 }),
         LanternOffin = false,
         SuperLighterOffin = false
     },
