@@ -256,6 +256,17 @@ local function CreateNotification(title, text, duration, isAchievement)
     end)()
 end
 
+local function onScriptError(errorMessage, stackTrace)
+    CreateNotification("警告", "脚本在加载后续进程时出现错误\n按F9查看详细信息", 20, true)
+    warn("[ChronixHub] 警告！脚本在加载后续进程时出现错误，可能会导致脚本加载失败、无法卸载等问题，请重新加入游戏并等待开发者修复。")
+    print("==================== 脚本错误详情 ====================")
+    print("错误原因：", errorMessage)
+    print("错误位置：", stackTrace)
+    print("======================================================")
+end
+
+script.Error:Connect(onScriptError)
+
 -- Dealthball窗口创建
 local DBT1 = Instance.new("TextLabel")
 DBT1.Text = "游戏未开始"
