@@ -2700,7 +2700,7 @@ local function AddMenuContent(category)
         end)
         toolList.add(data.nightmare_run.SuperLighterOffin and "超级光明(开)" or "超级光明(关)", function(button)
             data.nightmare_run.SuperLighterOffin = not data.nightmare_run.SuperLighterOffin
-            data.nightmare_run.SuperLighterOffin.enable = data.nightmare_run.SuperLighterOffin
+            data.nightmare_run.SuperLighter.enable = data.nightmare_run.SuperLighterOffin
             button.Text = data.nightmare_run.SuperLighterOffin and "超级光明(开)" or "超级光明(关)"
         end)
         toolList.add(data.tools.noclip and "穿墙(开)" or "穿墙(关)", function(button)
