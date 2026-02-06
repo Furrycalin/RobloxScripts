@@ -2549,7 +2549,7 @@ local function AddMenuContent(category)
             ap = UserInputService.InputBegan:Connect(function(input, gameProcessed)
                 local keyName = tostring(input.KeyCode):gsub("Enum.KeyCode.", "")
                 button.Text = keyName -- 将按键名称设置为文本框内容
-                FreecamModule.setKeybind(keyName)
+                FreecamModule.setKeybind(input.KeyCode)
                 achievementSound:Stop()
                 ap:Disconnect()
             end)
