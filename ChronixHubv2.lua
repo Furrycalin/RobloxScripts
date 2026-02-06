@@ -37,6 +37,7 @@ local tpWalk = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/Roblo
 local StandRecovery = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/StandRecovery.lua"))()
 local HighlightModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/HighlightModule.lua"))()
 local PlayerLightModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/PlayerLightModule.lua"))()
+local SpectatorModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/SpectatorModule.lua"))()
 
 local iscancel = false
 
@@ -1469,7 +1470,8 @@ local data = {
         antifall = false,
         antifallplus = false,
         antidead = false,
-        floorY = nil
+        floorY = nil,
+        Spectator = false
     },
     playercontrol = {
         lockspeed = false,
@@ -2763,6 +2765,10 @@ local function AddMenuContent(category)
                 playeraddfunction()
             end
         end)
+        toolList.add(data.tools.Spectator and "旁观模式(开)" or "旁观模式(关)", function(button)
+            if data.tools.Spectator then SpectatorModule.start() else SpectatorModule.close() end
+            button.Text = data.tools.Spectator and "旁观模式(开)" or "旁观模式(关)"
+        end)
         toolList.add(data.tools.airwalk and "空中移动(开)" or "空中移动(关)", function(button)
             toggleAirWalk()
             button.Text = data.tools.airwalk and "空中移动(开)" or "空中移动(关)"
@@ -3200,6 +3206,7 @@ local function unloadchronixhub()
     data.musictest.enable = false
     data.tools.noclip = false
     data.tools.infjump = false
+    SpectatorModule.unload()
     PlayerLightModule:unload()
     HighlightModule.unload()
     StandRecovery:unload()
