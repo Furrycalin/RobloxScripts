@@ -2542,7 +2542,7 @@ local function AddMenuContent(category)
             end)
         end)
         CreateLabel("灵魂出窍", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.3, 0))
-        CreateButton(FreecamModule.getKeybind(), UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.3, 0), function(button)
+        CreateButton(tostring(FreecamModule.getKeybind()), UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.3, 0), function(button)
             isProcessing2 = true
             button.Text = "按下任意键..."
             -- 监听按键按下事件
