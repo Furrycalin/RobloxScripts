@@ -3200,7 +3200,7 @@ local function unloadchronixhub()
     data.musictest.enable = false
     data.tools.noclip = false
     data.tools.infjump = false
-    PlayerLightModule.unload()
+    PlayerLightModule:unload()
     HighlightModule.unload()
     StandRecovery:unload()
     musicbox:Stop()
