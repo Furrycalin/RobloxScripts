@@ -38,6 +38,7 @@ local StandRecovery = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycali
 local HighlightModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/HighlightModule.lua"))()
 local PlayerLightModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/PlayerLightModule.lua"))()
 local SpectatorModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/SpectatorModule.lua"))()
+local FreecamModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/FreecamModule.lua"))()
 
 local iscancel = false
 
@@ -2425,6 +2426,7 @@ end
 local offce = Workspace.DescendantAdded:Connect(detectEntity)
 
 local isProcessing = false
+local isProcessing2 = false
 local selectcontent = "关于"
 
 -- 添加菜单内容
@@ -2526,7 +2528,7 @@ local function AddMenuContent(category)
         CreateLabel("作者: Chronix", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.2, 0))
         CreateLabel("所有代码均由Chronix编写，允许参考学习，严禁照搬盗用", 16, UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.9, 0))
     elseif category == "设置" then
-        CreateLabel("绑定按键", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.1, 0))
+        CreateLabel("主界面", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.1, 0))
         CreateButton(data.setting.BindKey, UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.1, 0), function(button)
             isProcessing = true
             button.Text = "按下任意键..."
@@ -2537,6 +2539,19 @@ local function AddMenuContent(category)
                 data.setting.BindKey = keyName
                 achievementSound:Stop()
                 aa:Disconnect()
+            end)
+        end)
+        CreateLabel("灵魂出窍", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.3, 0))
+        CreateButton(FreecamModule.getKeybind(), UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.3, 0), function(button)
+            isProcessing2 = true
+            button.Text = "按下任意键..."
+            -- 监听按键按下事件
+            ap = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                local keyName = tostring(input.KeyCode):gsub("Enum.KeyCode.", "")
+                button.Text = keyName -- 将按键名称设置为文本框内容
+                FreecamModule.setKeybind(keyName)
+                achievementSound:Stop()
+                ap:Disconnect()
             end)
         end)
     elseif category == "传送器" then
@@ -2705,6 +2720,11 @@ local function AddMenuContent(category)
             data.nightmare_run.SuperLighterOffin = not data.nightmare_run.SuperLighterOffin
             data.nightmare_run.SuperLighter.enable = data.nightmare_run.SuperLighterOffin
             button.Text = data.nightmare_run.SuperLighterOffin and "超级光明(开)" or "超级光明(关)"
+        end)
+        toolList.add(FreecamModule.freecamenable and "灵魂出窍(开)" or "灵魂出窍(关)", function(button)
+            FreecamModule.freecamenable = not FreecamModule.freecamenable
+            FreecamModule.enable = FreecamModule.freecamenable
+            button.Text = FreecamModule.freecamenable and "灵魂出窍(开)" or "灵魂出窍(关)"
         end)
         toolList.add(data.tools.noclip and "穿墙(开)" or "穿墙(关)", function(button)
             data.tools.noclip = not data.tools.noclip
@@ -3208,6 +3228,7 @@ local function unloadchronixhub()
     data.musictest.enable = false
     data.tools.noclip = false
     data.tools.infjump = false
+    FreecamModule.unload()
     SpectatorModule.unload()
     PlayerLightModule:unload()
     HighlightModule.unload()
