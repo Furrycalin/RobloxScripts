@@ -3224,6 +3224,7 @@ elseif GetDeviceType() == "Mobile" then
 end
 
 local function unloadchronixhub()
+    print("ChronixHubv2 已卸载。")
     _G.ChronixHubisLoaded = false
     data.musictest.enable = false
     data.tools.noclip = false
