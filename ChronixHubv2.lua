@@ -2690,7 +2690,7 @@ local function AddMenuContent(category)
         end)
         toolList.add(data.nightmare_run.LanternOffin and "随身灯笼(开)" or "随身灯笼(关)", function(button)
             data.nightmare_run.LanternOffin = not data.nightmare_run.LanternOffin
-            if data.nightmare_run.LanternOffin then data.nightmare_run.Lantern.enable() else data.nightmare_run.Lantern.disable() end
+            data.nightmare_run.Lantern.enable = data.nightmare_run.LanternOffin
             button.Text = data.nightmare_run.LanternOffin and "随身灯笼(开)" or "随身灯笼(关)"
         end)
         toolList.add(data.tools.nightvision and "夜视(开)" or "夜视(关)", function(button)
@@ -2700,7 +2700,7 @@ local function AddMenuContent(category)
         end)
         toolList.add(data.nightmare_run.SuperLighterOffin and "超级光明(开)" or "超级光明(关)", function(button)
             data.nightmare_run.SuperLighterOffin = not data.nightmare_run.SuperLighterOffin
-            if data.nightmare_run.SuperLighterOffin then data.nightmare_run.SuperLighter.enable() else data.nightmare_run.SuperLighter.disable() end
+            data.nightmare_run.SuperLighterOffin.enable = data.nightmare_run.SuperLighterOffin
             button.Text = data.nightmare_run.SuperLighterOffin and "超级光明(开)" or "超级光明(关)"
         end)
         toolList.add(data.tools.noclip and "穿墙(开)" or "穿墙(关)", function(button)
