@@ -2766,6 +2766,7 @@ local function AddMenuContent(category)
             end
         end)
         toolList.add(data.tools.Spectator and "旁观模式(开)" or "旁观模式(关)", function(button)
+            data.tools.Spectator = not data.tools.Spectator
             if data.tools.Spectator then SpectatorModule.start() else SpectatorModule.close() end
             button.Text = data.tools.Spectator and "旁观模式(开)" or "旁观模式(关)"
         end)
