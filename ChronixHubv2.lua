@@ -34,6 +34,7 @@ local HttpService = game:GetService("HttpService")
 local LoadAnimationModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/start_animation.lua"))()
 local tpWalk = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/RobloxScripts/raw/main/tpWalk.lua"))()
 local StandRecovery = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/StandRecovery.lua"))()
+local HighlightModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/HighlightModule.lua"))()
 
 local iscancel = false
 
@@ -1417,6 +1418,9 @@ chatcheck = TextChatService.MessageReceived:Connect(function(message)
 end)
 
 local data = {
+    nightmare_run = {
+        HLCheese = HighlightModule.new("Cheese", "other", "item")
+    },
     office = {
         entitywarning = false,
         tipotherplayer = false,
@@ -3049,6 +3053,10 @@ local function AddMenuContent(category)
         CreateButton("高亮所有怪物", UDim2.new(0.26, 0, 0.09, 0), UDim2.new(0.01, 0, 0.1, 0), function(button)
             processExistingObjectsOnce()
             CreateNotification("Nightmare Run", "已高亮当前所有怪物\n仅高亮一次", 10, true)
+        end)
+        CreateButton("高亮芝士", UDim2.new(0.26, 0, 0.09, 0), UDim2.new(0.01, 0, 0.17, 0), function(button)
+            data.nightmare_run.HLCheese.apply()
+            CreateNotification("Nightmare Run", "已高亮所有芝士\n仅高亮一次", 10, true)
         end)
     end
 end
