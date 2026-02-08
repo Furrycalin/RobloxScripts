@@ -2676,6 +2676,7 @@ local function AddMenuContent(category)
         addscripts("通用自瞄", "https://raw.atomgit.com/Furrycalin/ScriptStorage/raw/main/Zimiao.lua")
         addscripts("IY5.5.9(指令挂)", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source")
         addscripts("Dex", "https://cdn.wearedevs.net/scripts/Dex%20Explorer.txt")
+        addscripts("DexDark", "https://raw.atomgit.com/Furrycalin/ScriptStorage/raw/main/DexDark.lua")
         addscripts("OldMSPaint", "https://raw.githubusercontent.com/notpoiu/mspaint/main/main.lua")
         addscripts("Doors变身脚本", "https://raw.githubusercontent.com/ChronoAccelerator/Public-Scripts/main/Morphing/MorphScript.lua")
         addscripts("Doors扫描器", "https://raw.atomgit.com/Furrycalin/ScriptStorage/raw/main/DoorsNVC3000.lua")
@@ -3113,6 +3114,19 @@ local function AddMenuContent(category)
         CreateButton("高亮芝士", UDim2.new(0.26, 0, 0.09, 0), UDim2.new(0.01, 0, 0.2, 0), function(button)
             data.nightmare_run.HLCheese.apply()
             CreateNotification("Nightmare Run", "已高亮所有芝士\n仅高亮一次", 10, true)
+        end)
+        CreateButton("无敌(怪物不追不杀)", UDim2.new(0.26, 0, 0.09, 0), UDim2.new(0.01, 0, 0.3, 0), function(button)
+            -- 无敌实现
+            local ClientScripts = game.Players.LocalPlayer.PlayerGui.ClientScripts
+            if ClientScripts:FindFirstChild("SafeSpaceHandler") then
+                ClientScripts.SafeSpaceHandler:Destroy() -- 删除安全区处理脚本、防止被持续监测到（注意：死亡后会重新生成）
+            end
+            local ReplicatedStorage_upvr = game:GetService("ReplicatedStorage")
+            local LocalPlayer_upvr = game.Players.LocalPlayer
+            local Events_upvr = ReplicatedStorage_upvr.Events
+            LocalPlayer_upvr:SetAttribute("Safe", true) -- 设置安全状态
+            Events_upvr.SetAttributeEvent:FireServer("Safe", true) -- 向服务端发送安全状态
+            CreateNotification("Nightmare Run", "已设置玩家安全状态\n死亡前生效", 10, true)
         end)
     end
 end
