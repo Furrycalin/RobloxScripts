@@ -2317,8 +2317,6 @@ local function printTargetLog(target)
     -- 避免重复输出同一个模型/物体的日志
     if not loggedTargetNames[targetName] then
         loggedTargetNames[targetName] = true
-        -- 控制台输出成功日志，标注名称和类型（方便后续筛选）
-        print(string.format("[高亮成功] 目标名称：%s | 目标类型：%s", targetName, targetType))
     end
 end
 
