@@ -39,6 +39,7 @@ local HighlightModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furryca
 local PlayerLightModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/PlayerLightModule.lua"))()
 local SpectatorModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/SpectatorModule.lua"))()
 local FreecamModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/FreecamModule.lua"))()
+local LandingEffect = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/LandingEffect.lua"))()
 
 local iscancel = false
 
@@ -1473,6 +1474,7 @@ local data = {
         antidead = false,
         floorY = nil,
         Spectator = false
+        landingeffect = false
     },
     playercontrol = {
         lockspeed = false,
@@ -2707,6 +2709,11 @@ local function AddMenuContent(category)
         toolList.add("获得点击传送工具", function(button)
             mouse = game.Players.LocalPlayer:GetMouse() tool = Instance.new("Tool") tool.RequiresHandle = false tool.Name = "手持点击传送" tool.Activated:connect(function() local pos = mouse.Hit+Vector3.new(0,2.5,0) pos = CFrame.new(pos.X,pos.Y,pos.Z) game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos end) tool.Parent = game.Players.LocalPlayer.Backpack
         end)
+        toolList.add(data.tools.landingeffect and "落地特效(开)" or "落地特效(关)", function(button)
+            data.tools.landingeffect = not data.tools.landingeffect
+            if data.tools.landingeffect then LandingEffect.enable() else LandingEffect.disable() end
+            button.Text = data.tools.landingeffect and "落地特效(开)" or "落地特效(关)"
+        end)
         toolList.add(data.nightmare_run.LanternOffin and "随身灯笼(开)" or "随身灯笼(关)", function(button)
             data.nightmare_run.LanternOffin = not data.nightmare_run.LanternOffin
             data.nightmare_run.Lantern.enable = data.nightmare_run.LanternOffin
@@ -3243,6 +3250,7 @@ local function unloadchronixhub()
     data.musictest.enable = false
     data.tools.noclip = false
     data.tools.infjump = false
+    LandingEffect.unload()
     FreecamModule.unload()
     SpectatorModule.unload()
     PlayerLightModule:unload()
