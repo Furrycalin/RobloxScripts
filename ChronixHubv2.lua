@@ -1473,7 +1473,7 @@ local data = {
         antifallplus = false,
         antidead = false,
         floorY = nil,
-        Spectator = false
+        Spectator = false,
         landingeffect = false
     },
     playercontrol = {
