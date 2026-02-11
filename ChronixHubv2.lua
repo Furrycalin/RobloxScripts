@@ -40,6 +40,7 @@ local PlayerLightModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furry
 local SpectatorModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/SpectatorModule.lua"))()
 local FreecamModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/FreecamModule.lua"))()
 local LandingEffect = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/LandingEffect.lua"))()
+local NameTagModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/NameTagModule.lua"))()
 
 local iscancel = false
 
@@ -1435,6 +1436,10 @@ chatcheck = TextChatService.MessageReceived:Connect(function(message)
 end)
 
 local data = {
+    west_wood = {
+        monster_xray = false,
+        monster = NameTagModule.new("WendigoAI", "模糊", 20, true, "怪物")
+    },
     nightmare_run = {
         HLCheese = HighlightModule.new("Cheese", "other", "item"),
         Lantern = PlayerLightModule.new({ Brightness = 3, Range = 20, Color = Color3.fromRGB(255, 165, 0), Shadows = true }),
@@ -3111,16 +3116,16 @@ local function AddMenuContent(category)
             TeleportToPresent(tonumber(giftnumber.Text))
         end)
     elseif category == "Nightmare Run" then
-        CreateLabel("基础操作", 18, UDim2.new(0.26, 0, 0.05, 0), UDim2.new(0.01, 0, 0.03, 0))
-        CreateButton("高亮所有怪物", UDim2.new(0.26, 0, 0.09, 0), UDim2.new(0.01, 0, 0.1, 0), function(button)
+        local NRList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
+        NRList.add("高亮所有怪物", function(button)
             processExistingObjectsOnce()
             CreateNotification("Nightmare Run", "已高亮当前所有怪物\n仅高亮一次", 10, true)
         end)
-        CreateButton("高亮芝士", UDim2.new(0.26, 0, 0.09, 0), UDim2.new(0.01, 0, 0.2, 0), function(button)
-            data.nightmare_run.HLCheese.apply()
-            CreateNotification("Nightmare Run", "已高亮所有芝士\n仅高亮一次", 10, true)
+        NRList.add("高亮芝士", function(button)
+            processExistingObjectsOnce()
+            CreateNotification("Nightmare Run", "已高亮当前所有怪物\n仅高亮一次", 10, true)
         end)
-        CreateButton("无敌(怪物不追不杀)", UDim2.new(0.26, 0, 0.09, 0), UDim2.new(0.01, 0, 0.3, 0), function(button)
+        NRList.add("无敌(怪物不追不杀)", function(button)
             -- 无敌实现
             local ClientScripts = game.Players.LocalPlayer.PlayerGui.ClientScripts
             if ClientScripts:FindFirstChild("SafeSpaceHandler") then
@@ -3132,6 +3137,13 @@ local function AddMenuContent(category)
             LocalPlayer_upvr:SetAttribute("Safe", true) -- 设置安全状态
             Events_upvr.SetAttributeEvent:FireServer("Safe", true) -- 向服务端发送安全状态
             CreateNotification("Nightmare Run", "已设置玩家安全状态\n死亡前生效", 10, true)
+        end)
+    elseif category == "西部森林" then
+        local WWList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
+        WWList.add(data.west_wood.monster_xray and "怪物标签(开)" or "怪物标签(关)", function(button)
+            data.west_wood.monster_xray = not data.west_wood.monster_xray
+            if data.west_wood.monster_xray then monster:enable() else monster:disable() end
+            button.Text = data.west_wood.monster_xray and "怪物标签(开)" or "怪物标签(关)"
         end)
     end
 end
@@ -3174,6 +3186,7 @@ if game.GameId == 3185346597 then addMenu("CabinRolePlay") end
 if game.GameId == 6352299542 then addMenu("妄想办公室") end
 if game.GameId == 972475338 then addMenu("南极探险队") end
 if game.GameId == 6996099240 then addMenu("Nightmare Run") end
+if game.GameId == 5265348926 then addMenu("西部森林") end
 
 -- 更新功能栏的滚动区域
 functionList.CanvasSize = UDim2.new(0, 0, 0, #functionList:GetChildren() * 30)
@@ -3248,6 +3261,7 @@ local function unloadchronixhub()
     data.musictest.enable = false
     data.tools.noclip = false
     data.tools.infjump = false
+    NameTagModule.unload()
     LandingEffect.unload()
     FreecamModule.unload()
     SpectatorModule.unload()
