@@ -3142,7 +3142,7 @@ local function AddMenuContent(category)
         local WWList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
         WWList.add(data.west_wood.monster_xray and "怪物标签(开)" or "怪物标签(关)", function(button)
             data.west_wood.monster_xray = not data.west_wood.monster_xray
-            if data.west_wood.monster_xray then monster:enable() else monster:disable() end
+            if data.west_wood.monster_xray then data.west_wood.monster:enable() else data.west_wood.monster:disable() end
             button.Text = data.west_wood.monster_xray and "怪物标签(开)" or "怪物标签(关)"
         end)
     end
