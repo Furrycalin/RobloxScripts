@@ -42,6 +42,7 @@ local FreecamModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycali
 local LandingEffect = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/LandingEffect.lua"))()
 local NameTagModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/NameTagModule.lua"))()
 local PlayerVisibleModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/PlayerVisibleModule.lua"))()
+local movementModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/MovementModule.lua"))()
 
 local iscancel = false
 
@@ -1481,7 +1482,8 @@ local data = {
         floorY = nil,
         Spectator = false,
         landingeffect = false,
-        visible = false
+        visible = false,
+        translation = false
     },
     playercontrol = {
         lockspeed = false,
@@ -2746,6 +2748,16 @@ local function AddMenuContent(category)
             FreecamModule.freecamenable = not FreecamModule.freecamenable
             FreecamModule.enable = FreecamModule.freecamenable
             button.Text = FreecamModule.freecamenable and "灵魂出窍(开)" or "灵魂出窍(关)"
+        end)
+        toolList.add(data.tools.translation and "平移(开)" or "平移(关)", function(button)
+            data.tools.translation = not data.tools.translation
+            if data.tools.translation then
+                movementModule.Enable()
+                CreateNotification("提示", "按下↑↓←→键进行平移", 5, true)
+            else
+                movementModule.Disable()
+            end
+            button.Text = data.tools.translation and "平移(开)" or "平移(关)"
         end)
         toolList.add(data.tools.noclip and "穿墙(开)" or "穿墙(关)", function(button)
             data.tools.noclip = not data.tools.noclip
