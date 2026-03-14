@@ -43,6 +43,7 @@ local LandingEffect = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycali
 local NameTagModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/NameTagModule.lua"))()
 local PlayerVisibleModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/PlayerVisibleModule.lua"))()
 local movementModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/MovementModule.lua"))()
+local MouseUnlockModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/MouseUnlockModule.lua"))()
 
 local iscancel = false
 
@@ -1483,7 +1484,8 @@ local data = {
         Spectator = false,
         landingeffect = false,
         visible = false,
-        translation = false
+        translation = false,
+        mouseisunlock = false
     },
     playercontrol = {
         lockspeed = false,
@@ -2718,6 +2720,16 @@ local function AddMenuContent(category)
         end)
         toolList.add("获得点击传送工具", function(button)
             mouse = game.Players.LocalPlayer:GetMouse() tool = Instance.new("Tool") tool.RequiresHandle = false tool.Name = "手持点击传送" tool.Activated:connect(function() local pos = mouse.Hit+Vector3.new(0,2.5,0) pos = CFrame.new(pos.X,pos.Y,pos.Z) game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos end) tool.Parent = game.Players.LocalPlayer.Backpack
+        end)
+        toolList.add(data.tools.mouseisunlock and "鼠标解锁(开)" or "鼠标解锁(关)", function(button)
+            data.tools.mouseisunlock = not data.tools.mouseisunlock
+            if data.tools.mouseisunlock then
+                MouseUnlockModule.Enable()
+                CreateNotification("提示", "按下K+L组合键开关鼠标解锁", 5, true)
+            else
+                MouseUnlockModule.Disable()
+            end
+            button.Text = data.tools.mouseisunlock and "鼠标解锁(开)" or "鼠标解锁(关)"
         end)
         toolList.add(data.tools.visible and "隐身(开)" or "隐身(关)", function(button)
             data.tools.visible = not data.tools.visible
