@@ -2184,6 +2184,9 @@ Stepped6 = game:GetService("RunService").Stepped:Connect(function()
         SmileGui:Destroy()
     end
     end
+    if data.tools.nightvision then
+        game.Lighting.Ambient = Color3.new(1, 1, 1)
+    end
 end)
 
 local gsr = game:GetService("RunService").Stepped:Connect(function()
