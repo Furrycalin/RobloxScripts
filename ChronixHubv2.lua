@@ -2866,7 +2866,7 @@ local function AddMenuContent(category)
             UDim2.new(0.43, 0, 0.08, 0),
             UDim2.new(0.29, 0, 0.04, 0),
             0, -- minValue
-            100, -- maxValue
+            1000, -- maxValue
             LocalPlayer.Character.Humanoid.WalkSpeed, -- defaultValue
             function(value) -- callback
                 speedtb.Text = string.format("%.2f", value)
