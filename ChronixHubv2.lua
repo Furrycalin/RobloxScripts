@@ -2996,8 +2996,8 @@ local function AddMenuContent(category)
             data.grace.deleteentite = true
         end)
     elseif category == "死亡球" then
-        CreateLabel("基础操作", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.03, 0))
-        CreateButton(data.deathball.enable and "功能(开)" or "功能(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.1, 0), function(button)
+        local DBList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
+        DBList.add(data.deathball.enable and "功能(开)" or "功能(关)", function(button)
             data.deathball.enable = not data.deathball.enable
             button.Text = data.deathball.enable and "功能(开)" or "功能(关)"
             if data.deathball.enable then
