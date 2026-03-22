@@ -2468,7 +2468,7 @@ local function AddMenuContent(category)
             button.Text = "按下任意键..."
             -- 监听按键按下事件
             aa = UserInputService.InputBegan:Connect(function(input, gameProcessed)
-                local keyName = tostring(input.KeyCode):gsub("Enum.KeyCode.", "")
+                local keyName = tostring(input.KeyCode):gsub("^Enum%.%w+%.", "")
                 button.Text = keyName -- 将按键名称设置为文本框内容
                 data.setting.BindKey = keyName
                 achievementSound:Stop()
@@ -2476,12 +2476,12 @@ local function AddMenuContent(category)
             end)
         end)
         CreateLabel("灵魂出窍", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.3, 0))
-        CreateButton(string.gsub(tostring(FreecamModule.getKeybind()), "Enum.KeyCode.", ""), UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.3, 0), function(button)
+        CreateButton(tostring(FreecamModule.getKeybind()):gsub("^Enum%.%w+%.", ""), UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.3, 0), function(button)
             isProcessing2 = true
             button.Text = "按下任意键..."
             -- 监听按键按下事件
             ap = UserInputService.InputBegan:Connect(function(input, gameProcessed)
-                local keyName = tostring(input.KeyCode):gsub("Enum.KeyCode.", "")
+                local keyName = tostring(input.KeyCode):gsub("^Enum%.%w+%.", "")
                 button.Text = keyName -- 将按键名称设置为文本框内容
                 FreecamModule.setKeybind(input.KeyCode)
                 achievementSound:Stop()
@@ -2494,7 +2494,7 @@ local function AddMenuContent(category)
             button.Text = "按下任意键..."
             -- 监听按键按下事件
             az = UserInputService.InputBegan:Connect(function(input, gameProcessed)
-                local keyName = tostring(input.KeyCode):gsub("Enum.KeyCode.", "")
+                local keyName = tostring(input.KeyCode):gsub("^Enum%.%w+%.", "")
                 button.Text = keyName -- 将按键名称设置为文本框内容
                 data.tools.zoom:SetBindKey(input.KeyCode)
                 achievementSound:Stop()
