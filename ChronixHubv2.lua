@@ -44,6 +44,7 @@ local NameTagModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycali
 local PlayerVisibleModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/PlayerVisibleModule.lua"))()
 local movementModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/MovementModule.lua"))()
 local MouseUnlockModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/MouseUnlockModule.lua"))()
+local DeathballScripts = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/DeathBallScripts.lua"))()
 
 local iscancel = false
 
@@ -173,8 +174,6 @@ local Gui = Instance.new("ScreenGui")
 Gui.Parent = game.CoreGui
 Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Gui.ResetOnSpawn = false
-local DeathballGui = Instance.new("ScreenGui", LocalPlayer.PlayerGui)
-DeathballGui.ResetOnSpawn = false
 
 local function UpdatePositions()
     for index, frame in ipairs(notifications) do
@@ -275,20 +274,6 @@ end
 -- end
 
 -- ScriptContext.Error:Connect(onScriptError)
-
--- Dealthball窗口创建
-local DBT1 = Instance.new("TextLabel")
-DBT1.Text = "游戏未开始"
-DBT1.TextColor3 = Color3.fromRGB(230, 230, 250)
-DBT1.Position = UDim2.new(0.529, -40, 0.1, 0)
-DBT1.TextSize = 25
-DBT1.BackgroundTransparency = 1
-local DBT2 = Instance.new("TextLabel")
-DBT2.Text = ""
-DBT2.TextColor3 = Color3.fromRGB(166, 166, 166)
-DBT2.Position = UDim2.new(0.529, -40, 0.14, 0)
-DBT2.TextSize = 15
-DBT2.BackgroundTransparency = 1
 
 -- 粒子效果函数
 local function applyParticleEffect(button)
@@ -1555,78 +1540,9 @@ local data = {
         labels = {}
     },
     deathball = {
-        enable = false,
-        diyline = false,
-        diyfill = false,
-        RB = Color3.new(1, 0, 0),
-        diylinecolor = {
-            r = 0,
-            g = 255,
-            b = 0
-        },
-        diyfillcolor = {
-            r = 255,
-            g = 255,
-            b = 0
-        },
-        AutoValue = false
+        enable = false
     }
 }
-
--- 查找球的函数
-function FindBall()
-    for _, child in pairs(Workspace:GetChildren()) do
-        if child.Name == "Part" and child:IsA("BasePart") then -- 假设球是一个BasePart
-            return child
-        end
-    end
-    return nil
-end
-
--- 更新 UI 的函数
-local function UpdateUI()
-    if data.deathball.AutoValue and isLocked and distance < 15 then
-        VirtualInputManager:SendKeyEvent(true, "F", false, game)
-    end
-
-    local playerPos = (LocalPlayer.Character and LocalPlayer.Character.HumanoidRootPart.CFrame) or CFrame.new()
-    local ball = FindBall()
-
-    if not ball then
-        DBT1.TextColor3 = Color3.fromRGB(230, 230, 250)
-        DBT1.Text = "游戏未开始"
-        DBT2.Text = ""
-        return
-    end
-
-    local isSpectating = playerPos.Z < -767.55 and playerPos.Y > 279.17
-    if isSpectating then
-        DBT1.TextColor3 = Color3.fromRGB(230, 230, 250)
-        DBT1.Text = "观战中"
-        DBT2.Text = ""
-    else
-        local secolor = data.deathball.RB
-        if ball.Highlight and ball.Highlight.FillColor == data.deathball.RB then
-            if data.deathball.diyline then ball.Highlight.OutlineColor = Color3.fromRGB(data.deathball.diylinecolor.r, data.deathball.diylinecolor.g, data.deathball.diylinecolor.b) end
-            if data.deathball.diyfill then ball.Highlight.FillColor = Color3.fromRGB(data.deathball.diyfillcolor.r, data.deathball.diyfillcolor.g, data.deathball.diyfillcolor.b) secolor = Color3.fromRGB(data.deathball.diyfillcolor.r, data.deathball.diyfillcolor.g, data.deathball.diyfillcolor.b) end
-        end
-        local isLocked = ball.Highlight and ball.Highlight.FillColor == secolor
-        DBT1.Text = isLocked and "已被球锁定" or "未被球锁定"
-        DBT1.TextColor3 = isLocked and Color3.fromRGB(238, 17, 17) or Color3.fromRGB(17, 238, 17)
-
-        local dx, dy, dz = ball.CFrame.X - playerPos.X, ball.CFrame.Y - playerPos.Y, ball.CFrame.Z - playerPos.Z
-        local distance = math.sqrt(dx^2 + dy^2 + dz^2)
-        DBT2.Text = string.format("%.0f", distance)
-    end
-end
-
--- 死亡球主循环
-dbl = RunService.Heartbeat:Connect(function()
-    if data.deathball.enable then
-        wait(0.05)
-        UpdateUI()
-    end
-end)
 
 -- 定义白天和黑夜的光照属性
 local daySettings = {
@@ -3057,52 +2973,18 @@ local function AddMenuContent(category)
         graceList.add("删除全部实体(无法关闭)", function(button)
             data.grace.deleteentite = true
         end)
-    elseif category == "Deathball" then
+    elseif category == "死亡球" then
         CreateLabel("基础操作", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.03, 0))
-        CreateButton(data.deathball.enable and "状态信息(开)" or "状态信息(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.1, 0), function(button)
+        CreateButton(data.deathball.enable and "功能(开)" or "功能(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.1, 0), function(button)
             data.deathball.enable = not data.deathball.enable
-            button.Text = data.deathball.enable and "状态信息(开)" or "状态信息(关)"
+            button.Text = data.deathball.enable and "功能(开)" or "功能(关)"
             if data.deathball.enable then
-                DBT1.Parent = DeathballGui
-                DBT2.Parent = DeathballGui
+                DeathBallScripts:Enable()
+                CreateNotification("功能已开启", "按下R键即可瞬间格挡", 10, true)
             else
-                DBT1.Parent = nil
-                DBT2.Parent = nil
+                DeathBallScripts:Disable()
             end
         end)
-        CreateButton(data.deathball.AutoValue and "自动格挡WIP(开)" or "自动格挡WIP(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.2, 0), function(button)
-            data.deathball.AutoValue = not data.deathball.AutoValue
-            button.Text = data.deathball.AutoValue and "自动格挡WIP(开)" or "自动格挡WIP(关)"
-        end)
-        CreateLabel("球DIY", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.31, 0, 0.03, 0))
-        CreateButton(data.deathball.diyline and "球发光(开)" or "球发光(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.31, 0, 0.1, 0), function(button)
-            data.deathball.diyline = not data.deathball.diyline
-            button.Text = data.deathball.diyline and "球发光(开)" or "球发光(关)"
-        end)
-        local lr = CreateTextBox(data.deathball.diylinecolor.r, 18, UDim2.new(0.10, 0, 0.08, 0), UDim2.new(0.57, 0, 0.1, 0))
-        local lg = CreateTextBox(data.deathball.diylinecolor.g, 18, UDim2.new(0.10, 0, 0.08, 0), UDim2.new(0.67, 0, 0.1, 0))
-        local lb = CreateTextBox(data.deathball.diylinecolor.b, 18, UDim2.new(0.10, 0, 0.08, 0), UDim2.new(0.77, 0, 0.1, 0))
-        local ls = CreateButton("设置", UDim2.new(0.13, 0, 0.09, 0), UDim2.new(0.86, 0, 0.1, 0), function(button)
-            data.deathball.diylinecolor.r = tonumber(lr.Text)
-            data.deathball.diylinecolor.g = tonumber(lg.Text)
-            data.deathball.diylinecolor.b = tonumber(lb.Text)
-            button.BackgroundColor3 = Color3.fromRGB(data.deathball.diylinecolor.r, data.deathball.diylinecolor.g, data.deathball.diylinecolor.b)
-        end)
-        ls.BackgroundColor3 = Color3.fromRGB(data.deathball.diylinecolor.r, data.deathball.diylinecolor.g, data.deathball.diylinecolor.b)
-        CreateButton(data.deathball.diyfill and "球填充(开)" or "球填充(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.31, 0, 0.2, 0), function(button)
-            data.deathball.diyfill = not data.deathball.diyfill
-            button.Text = data.deathball.diyfill and "球填充(开)" or "球填充(关)"
-        end)
-        local fr = CreateTextBox(data.deathball.diyfillcolor.r, 18, UDim2.new(0.10, 0, 0.08, 0), UDim2.new(0.57, 0, 0.2, 0))
-        local fg = CreateTextBox(data.deathball.diyfillcolor.g, 18, UDim2.new(0.10, 0, 0.08, 0), UDim2.new(0.67, 0, 0.2, 0))
-        local fb = CreateTextBox(data.deathball.diyfillcolor.b, 18, UDim2.new(0.10, 0, 0.08, 0), UDim2.new(0.77, 0, 0.2, 0))
-        local fs = CreateButton("设置", UDim2.new(0.13, 0, 0.09, 0), UDim2.new(0.86, 0, 0.2, 0), function(button)
-            data.deathball.diyfillcolor.r = tonumber(lr.Text)
-            data.deathball.diyfillcolor.g = tonumber(lg.Text)
-            data.deathball.diyfillcolor.b = tonumber(lb.Text)
-            button.BackgroundColor3 = Color3.fromRGB(data.deathball.diyfillcolor.r, data.deathball.diyfillcolor.g, data.deathball.diyfillcolor.b)
-        end)
-        fs.BackgroundColor3 = Color3.fromRGB(data.deathball.diyfillcolor.r, data.deathball.diyfillcolor.g, data.deathball.diyfillcolor.b)
     elseif category == "CabinRolePlay" then
         local CRPList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
         CRPList.add("变正常", function(button)
@@ -3215,7 +3097,7 @@ addMenu("聊天接收器")
 addMenu("TPWalk")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
 if game.GameId == 6508759464 then addMenu("Grace") end
-if game.GameId == 5166944221 then addMenu("Deathball") end
+if game.GameId == 5166944221 then addMenu("死亡球") end
 if game.GameId == 3185346597 then addMenu("CabinRolePlay") end
 if game.GameId == 6352299542 then addMenu("妄想办公室") end
 if game.GameId == 972475338 then addMenu("南极探险队") end
@@ -3303,6 +3185,7 @@ local function unloadchronixhub()
     PlayerLightModule:unload()
     HighlightModule.unload()
     StandRecovery:unload()
+    DeathballScripts:Unload()
     musicbox:Stop()
     musicbox:Destroy()
     chatcheck:Disconnect()
@@ -3317,7 +3200,6 @@ local function unloadchronixhub()
     mainFrame:Destroy()
     fw:Destroy()
     Gui:Destroy()
-    DeathballGui:Destroy()
     script:Destroy()
 end
 
