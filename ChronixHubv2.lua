@@ -2360,6 +2360,7 @@ local offce = Workspace.DescendantAdded:Connect(detectEntity)
 
 local isProcessing = false
 local isProcessing2 = false
+local isProcessing3 = false
 local selectcontent = "关于"
 
 -- 添加菜单内容
@@ -2489,7 +2490,7 @@ local function AddMenuContent(category)
         end)
         CreateLabel("望远镜", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.5, 0))
         CreateButton(tostring(data.tools.zoom:GetBindKey()):gsub("^Enum%.%w+%.", ""), UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.5, 0), function(button)
-            isProcessing2 = true
+            isProcessing3 = true
             button.Text = "按下任意键..."
             -- 监听按键按下事件
             az = UserInputService.InputBegan:Connect(function(input, gameProcessed)
