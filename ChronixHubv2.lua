@@ -3001,10 +3001,10 @@ local function AddMenuContent(category)
             data.deathball.enable = not data.deathball.enable
             button.Text = data.deathball.enable and "功能(开)" or "功能(关)"
             if data.deathball.enable then
-                DeathBallScripts:Enable()
+                _G.DeathBallScript:Enable()
                 CreateNotification("功能已开启", "按下R键即可瞬间格挡", 10, true)
             else
-                DeathBallScripts:Disable()
+                _G.DeathBallScript:Disable()
             end
         end)
     elseif category == "CabinRolePlay" then
@@ -3207,7 +3207,7 @@ local function unloadchronixhub()
     PlayerLightModule:unload()
     HighlightModule.unload()
     StandRecovery:unload()
-    DeathballScripts:Unload()
+    _G.DeathBallScript:Unload()
     data.tools.zoom:Unload()
     musicbox:Stop()
     musicbox:Destroy()
