@@ -2,6 +2,8 @@
 
 **欢迎来到我的 Roblox 脚本仓库！这里集合了我开发的一些 Roblox 脚本，所有脚本均可直接执行。如果你有任何问题或建议，欢迎提交 Issue 或 Pull Request！**
 
+>**本仓库的部分脚本已集成到ChronixHubV2，但由于过于混乱，所以新的脚本以模块形式存储在ChronixHub/modules内**
+
 ---
 
 ## 📜 **脚本列表**
@@ -26,6 +28,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 
 ---
 
+## 🚫 **停止更新或弃用** *(以下代码可能不再更新，但基本有效)*
 ### **▶ customChatSystem.lua**  
 **执行代码：**  
 ```lua
@@ -162,8 +165,6 @@ end)
 > 模仿《Doors》游戏中的成就框效果，适合开发者参考使用。
 
 ---
-
-## 🚫 **停止更新或弃用**
 ### **▶ AdminPanel.lua**  
 **执行代码：**  
 ```lua
