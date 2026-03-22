@@ -15,8 +15,8 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 > 重新编写了我的菜单脚本，重新设计了新的 UI，并优化了代码结构。目前仍在持续完善中。  
 
 **支持的游戏：**  
-- 🛠️ **Deathball**（死亡球）  
-- ✅ **Grace**（格蕾丝）  
+- ✅ **Deathball**（死亡球）  
+- 🛠️ **Grace**（格蕾丝|*现版本可能有问题且不会维护*）  
 - ✅ **ProjectTransfur**（项目Transfur）  
 - ✅ **CabinRolePlay**（小屋角色扮演）  
 - ✅ **DelusionalOffice**（妄想办公室）  
