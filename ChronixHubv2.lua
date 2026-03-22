@@ -2492,12 +2492,12 @@ local function AddMenuContent(category)
             isProcessing2 = true
             button.Text = "按下任意键..."
             -- 监听按键按下事件
-            ap = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+            az = UserInputService.InputBegan:Connect(function(input, gameProcessed)
                 local keyName = tostring(input.KeyCode):gsub("Enum.KeyCode.", "")
                 button.Text = keyName -- 将按键名称设置为文本框内容
                 data.tools.zoom:SetBindKey(input.KeyCode)
                 achievementSound:Stop()
-                ap:Disconnect()
+                az:Disconnect()
             end)
         end)
     elseif category == "传送器" then
