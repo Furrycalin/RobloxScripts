@@ -45,6 +45,7 @@ local PlayerVisibleModule = loadstring(game:HttpGet("https://raw.atomgit.com/Fur
 local movementModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/MovementModule.lua"))()
 local MouseUnlockModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/MouseUnlockModule.lua"))()
 local DeathballScripts = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/DeathBallScripts.lua"))()
+local ZoomModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/ZoomModule.lua"))()
 
 local iscancel = false
 
@@ -1470,7 +1471,9 @@ local data = {
         landingeffect = false,
         visible = false,
         translation = false,
-        mouseisunlock = false
+        mouseisunlock = false,
+        zoomenable = false,
+        zoom = ZoomModule.new()
     },
     playercontrol = {
         lockspeed = false,
@@ -2484,6 +2487,19 @@ local function AddMenuContent(category)
                 ap:Disconnect()
             end)
         end)
+        CreateLabel("望远镜", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.5, 0))
+        CreateButton(tostring(data.tools.zoom:GetBindKey()):gsub("^Enum%.%w+%.", ""), UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.5, 0), function(button)
+            isProcessing2 = true
+            button.Text = "按下任意键..."
+            -- 监听按键按下事件
+            ap = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                local keyName = tostring(input.KeyCode):gsub("Enum.KeyCode.", "")
+                button.Text = keyName -- 将按键名称设置为文本框内容
+                data.tools.zoom:SetBindKey(input.KeyCode)
+                achievementSound:Stop()
+                ap:Disconnect()
+            end)
+        end)
     elseif category == "传送器" then
         createTeleportPointList(
             UDim2.new(0.48, 0, 0.98, 0), -- 大小
@@ -2646,6 +2662,11 @@ local function AddMenuContent(category)
                 MouseUnlockModule.Disable()
             end
             button.Text = data.tools.mouseisunlock and "鼠标解锁(开)" or "鼠标解锁(关)"
+        end)
+        toolList.add(data.tools.zoomenable and "望远镜(开)" or "望远镜(关)", function(button)
+            data.tools.zoomenable = not data.tools.zoomenable
+            if data.tools.zoomenable then data.tools.zoom:Enable() else data.tools.zoom:Disable() end
+            button.Text = data.tools.zoomenable and "望远镜(开)" or "望远镜(关)"
         end)
         toolList.add(data.tools.visible and "隐身(开)" or "隐身(关)", function(button)
             data.tools.visible = not data.tools.visible
@@ -3186,6 +3207,7 @@ local function unloadchronixhub()
     HighlightModule.unload()
     StandRecovery:unload()
     DeathballScripts:Unload()
+    data.tools.zoom:Unload()
     musicbox:Stop()
     musicbox:Destroy()
     chatcheck:Disconnect()
