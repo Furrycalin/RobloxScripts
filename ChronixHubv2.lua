@@ -47,6 +47,7 @@ local MouseUnlockModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furry
 local DeathballScripts = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/DeathBallScripts.lua"))()
 local ZoomModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/ZoomModule.lua"))()
 local FlingDetector = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/FlingDetector.lua"))()
+local SystemNotification = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/SystemNotification.lua"))()
 
 local iscancel = false
 
@@ -3200,7 +3201,10 @@ elseif GetDeviceType() == "Mobile" then
     fw.Position = UDim2.new(0.5, -40, 0.5, -40)
 end
 
+SystemNotification.Success("欢迎使用。")
+
 local function unloadchronixhub()
+    SystemNotification.Info("ChronixHubv2 已卸载。")
     print("ChronixHubv2 已卸载。")
     _G.ChronixHubisLoaded = false
     data.musictest.enable = false
