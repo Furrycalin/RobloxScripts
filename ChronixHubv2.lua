@@ -46,6 +46,7 @@ local movementModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycal
 local MouseUnlockModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/MouseUnlockModule.lua"))()
 local DeathballScripts = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/DeathBallScripts.lua"))()
 local ZoomModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/ZoomModule.lua"))()
+local FlingDetector = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/FlingDetector.lua"))()
 
 local iscancel = false
 
@@ -1473,7 +1474,8 @@ local data = {
         translation = false,
         mouseisunlock = false,
         zoomenable = false,
-        zoom = ZoomModule.new()
+        zoom = ZoomModule.new(),
+        antifling = false
     },
     playercontrol = {
         lockspeed = false,
@@ -2787,6 +2789,11 @@ local function AddMenuContent(category)
             if data.tools.antifallplus then StandRecovery:enableDetection() else StandRecovery:disableDetection() end
             button.Text = data.tools.antifallplus and "晕厥康复(开)" or "晕厥康复(关)"
         end)
+        toolList.add(data.tools.antifling and "防甩飞(开)" or "防甩飞(关)", function(button)
+            data.tools.antifling = not data.tools.antifling
+            if data.tools.antifling then FlingDetector.enable() else FlingDetector.disable() end
+            button.Text = data.tools.antifling and "防甩飞(开)" or "防甩飞(关)"
+        end)
         toolList.add(data.tools.antidead and "防死亡(开)" or "防死亡(关)", function(button)
             data.tools.antidead = not data.tools.antidead
             button.Text = data.tools.antidead and "防死亡(开)" or "防死亡(关)"
@@ -3209,6 +3216,7 @@ local function unloadchronixhub()
     StandRecovery:unload()
     _G.DeathBallScript:Unload()
     data.tools.zoom:Unload()
+    FlingDetector.unload()
     musicbox:Stop()
     musicbox:Destroy()
     chatcheck:Disconnect()
