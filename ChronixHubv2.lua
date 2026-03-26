@@ -601,6 +601,48 @@ local function CreateList(size, position)
         end
     end
 
+    -- 定义切换按钮方法
+    local function addToogleButton(text, tooglevariable, enablecallback, disablecallback, callback)
+        Invtooglevariable = tooglevariable
+        local function setbuttonzt(text, tooglevariable, button)
+            if tooglevariable then
+                button.BackgroundColor3 = Color3.fromRGB(126, 126, 140)
+                button.Text = text .. "(开)"
+            else
+                button.BackgroundColor3 = Color3.fromRGB(40, 40, 56)
+                button.Text = text .. "(关)"
+            end
+        end
+
+        -- 创建按钮
+        local button = Instance.new("TextButton")
+        button.Text = text
+        button.Size = UDim2.new(1, -10, 0, 30) -- 宽度减去 10 以留出边距
+        button.Position = UDim2.new(0, 5, 0, 0) -- 左边距 5
+        button.BackgroundColor3 = Color3.fromRGB(40, 40, 56)
+        button.BorderSizePixel = 0
+        button.TextColor3 = Color3.new(1, 1, 1) -- 白色文字
+        button.Font = Enum.Font.SourceSans
+        button.TextSize = 16
+        button.Parent = list
+        applyParticleEffect(button)
+
+        setbuttonzt(text, tooglevariable, button)
+
+        -- 绑定点击事件
+        button.MouseButton1Click:Connect(function()
+            tooglevariable = not tooglevariable
+            uiclicker:Play()
+            if callback then callback(button, tooglevariable) end
+            if tooglevariable then
+                if enablecallback then enablecallback(button, tooglevariable) end
+            else
+                if disablecallback then disablecallback(button, tooglevariable) end
+            end
+            setbuttonzt(text, tooglevariable, button)
+        end)
+    end
+
     -- 定义 removeButton 方法
     local function removeButton(text)
         for _, child in ipairs(list:GetChildren()) do
@@ -623,6 +665,7 @@ local function CreateList(size, position)
     -- 返回包含 add、removeButton 和 clearAll 方法的表
     return {
         add = addButton,
+        addToogle = addToogleButton,
         removeButton = removeButton,
         clearAll = clearAll
     }
@@ -2657,74 +2700,39 @@ local function AddMenuContent(category)
         toolList.add("获得点击传送工具", function(button)
             mouse = game.Players.LocalPlayer:GetMouse() tool = Instance.new("Tool") tool.RequiresHandle = false tool.Name = "手持点击传送" tool.Activated:connect(function() local pos = mouse.Hit+Vector3.new(0,2.5,0) pos = CFrame.new(pos.X,pos.Y,pos.Z) game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos end) tool.Parent = game.Players.LocalPlayer.Backpack
         end)
-        toolList.add(data.tools.mouseisunlock and "鼠标解锁(开)" or "鼠标解锁(关)", function(button)
-            data.tools.mouseisunlock = not data.tools.mouseisunlock
-            if data.tools.mouseisunlock then
-                MouseUnlockModule.Enable()
-                CreateNotification("提示", "按下K+L组合键开关鼠标解锁", 5, true)
-            else
-                MouseUnlockModule.Disable()
-            end
-            button.Text = data.tools.mouseisunlock and "鼠标解锁(开)" or "鼠标解锁(关)"
-            if data.tools.mouseisunlock then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
+        toolList.addToogle("鼠标解锁", data.tools.mouseisunlock, function()
+            MouseUnlockModule.Enable()
+            CreateNotification("提示", "按下K+L组合键开关鼠标解锁", 5, true)
+        end, function()
+            MouseUnlockModule.Disable()
+        end, function(_, newState)
+            data.tools.mouseisunlock = newState
         end)
-        toolList.add(data.tools.zoomenable and "望远镜(开)" or "望远镜(关)", function(button)
-            data.tools.zoomenable = not data.tools.zoomenable
-            if data.tools.zoomenable then data.tools.zoom:Enable() else data.tools.zoom:Disable() end
-            button.Text = data.tools.zoomenable and "望远镜(开)" or "望远镜(关)"
-            if data.tools.zoomenable then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
+        toolList.addToogle("望远镜", data.tools.zoomenable, function() data.tools.zoom:Enable() end, function() data.tools.zoom:Disable() end, function(_, newState) data.tools.zoomenable = newState end)
+        toolList.addToogle("隐身", data.tools.visible, function() PlayerVisibleModule.enable() end, function() PlayerVisibleModule.disable() end, function(_, newState) data.tools.visible = newState end)
+        toolList.addToogle("落地特效", data.tools.landingeffect, function() LandingEffect.enable() end, function() LandingEffect.disable() end, function(_, newState) data.tools.landingeffect = newState end)
+        toolList.addToogle("随身灯笼", data.nightmare_run.LanternOffin, _, _, function(_, newState)
+            data.nightmare_run.Lantern.enable = newState
+            data.nightmare_run.LanternOffin = newState
         end)
-        toolList.add(data.tools.visible and "隐身(开)" or "隐身(关)", function(button)
-            data.tools.visible = not data.tools.visible
-            if data.tools.visible then PlayerVisibleModule.enable() else PlayerVisibleModule.disable() end
-            button.Text = data.tools.visible and "隐身(开)" or "隐身(关)"
-            if data.tools.visible then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
+        toolList.addToogle("夜视", data.tools.nightvision, function() game.Lighting.Ambient = Color3.new(1, 1, 1) end, function() game.Lighting.Ambient = Color3.new(0, 0, 0) end, function(_, newState) data.tools.nightvision = newState end)
+        toolList.addToogle("超级光明", data.nightmare_run.SuperLighterOffin, _, _, function(_, newState)
+            data.nightmare_run.SuperLighter.enable = newState
+            data.nightmare_run.SuperLighterOffin = newState
         end)
-        toolList.add(data.tools.landingeffect and "落地特效(开)" or "落地特效(关)", function(button)
-            data.tools.landingeffect = not data.tools.landingeffect
-            if data.tools.landingeffect then LandingEffect.enable() else LandingEffect.disable() end
-            button.Text = data.tools.landingeffect and "落地特效(开)" or "落地特效(关)"
-            if data.tools.landingeffect then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
+        toolList.addToogle("灵魂出窍", FreecamModule.freecamenable, _, _, function(_, newState)
+            FreecamModule.freecamenable = newState
+            FreecamModule.enable = newState and FreecamModule.enable or false
         end)
-        toolList.add(data.nightmare_run.LanternOffin and "随身灯笼(开)" or "随身灯笼(关)", function(button)
-            data.nightmare_run.LanternOffin = not data.nightmare_run.LanternOffin
-            data.nightmare_run.Lantern.enable = data.nightmare_run.LanternOffin
-            button.Text = data.nightmare_run.LanternOffin and "随身灯笼(开)" or "随身灯笼(关)"
-            if data.nightmare_run.LanternOffin then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
+        toolList.addToogle("平移", data.tools.translation, function()
+            movementModule.Enable()
+            CreateNotification("提示", "按下↑↓←→键进行平移", 5, true)
+        end, function()
+            movementModule.Disable()
+        end, function(_, newState)
+            data.tools.translation = newState
         end)
-        toolList.add(data.tools.nightvision and "夜视(开)" or "夜视(关)", function(button)
-            data.tools.nightvision = not data.tools.nightvision
-            game.Lighting.Ambient = data.tools.nightvision and Color3.new(1, 1, 1) or Color3.new(0, 0, 0)
-            button.Text = data.tools.nightvision and "夜视(开)" or "夜视(关)"
-            if data.tools.nightvision then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
-        end)
-        toolList.add(data.nightmare_run.SuperLighterOffin and "超级光明(开)" or "超级光明(关)", function(button)
-            data.nightmare_run.SuperLighterOffin = not data.nightmare_run.SuperLighterOffin
-            data.nightmare_run.SuperLighter.enable = data.nightmare_run.SuperLighterOffin
-            button.Text = data.nightmare_run.SuperLighterOffin and "超级光明(开)" or "超级光明(关)"
-            if data.nightmare_run.SuperLighterOffin then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
-        end)
-        toolList.add(FreecamModule.freecamenable and "灵魂出窍(开)" or "灵魂出窍(关)", function(button)
-            FreecamModule.freecamenable = not FreecamModule.freecamenable
-            FreecamModule.enable = FreecamModule.freecamenable
-            button.Text = FreecamModule.freecamenable and "灵魂出窍(开)" or "灵魂出窍(关)"
-            if FreecamModule.freecamenable then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
-        end)
-        toolList.add(data.tools.translation and "平移(开)" or "平移(关)", function(button)
-            data.tools.translation = not data.tools.translation
-            if data.tools.translation then
-                movementModule.Enable()
-                CreateNotification("提示", "按下↑↓←→键进行平移", 5, true)
-            else
-                movementModule.Disable()
-            end
-            button.Text = data.tools.translation and "平移(开)" or "平移(关)"
-            if data.tools.translation then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
-        end)
-        toolList.add(data.tools.noclip and "穿墙(开)" or "穿墙(关)", function(button)
-            data.tools.noclip = not data.tools.noclip
-            button.Text = data.tools.noclip and "穿墙(开)" or "穿墙(关)"
-            if data.tools.noclip then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
+        toolList.addToogle("穿墙", data.tools.noclip, function()
             Stepped = game:GetService("RunService").Stepped:Connect(function()
 	            if not data.tools.noclip == false then
 		            for a, b in pairs(Workspace:GetChildren()) do
@@ -2743,11 +2751,10 @@ local function AddMenuContent(category)
 		        Stepped:Disconnect()
 	            end
             end)
+        end, _, function(_, newState)
+            data.tools.noclip = newState
         end)
-        toolList.add(data.tools.infjump and "连跳(开)" or "连跳(关)", function(button)
-            data.tools.infjump = not data.tools.infjump
-            button.Text = data.tools.infjump and "连跳(开)" or "连跳(关)"
-            if data.tools.infjump then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
+        toolList.addToogle("连跳", data.tools.infjump, function()
             JR = game:GetService("UserInputService").JumpRequest:Connect(function()
                 if not data.tools.infjump then
                     JR:Disconnect()
@@ -2762,61 +2769,36 @@ local function AddMenuContent(category)
                     end
                 end
             end)
+        end, _, function(_, newState)
+            data.tools.infjump = newState
         end)
-        toolList.add(data.tools.playeresp and "玩家透视(开)" or "玩家透视(关)", function(button)
-            data.tools.playeresp = not data.tools.playeresp
-            button.Text = data.tools.playeresp and "玩家透视(开)" or "玩家透视(关)"
-            if data.tools.playeresp then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
-            if not data.tools.playeresp then
-                -- 关闭功能时移除所有高亮和用户名标签
-                for _, player in ipairs(Players:GetPlayers()) do
-                    removePlayerEffects(player)
-                end
-                for player, highlight in pairs(highlights) do
-                    phighlight:Destroy()
-                end
-                for player, label in pairs(usernameLabels) do
-                    pbillboard:Destroy()
-                end
-                highlights = {}
-                usernameLabels = {}
-            else
-                playeraddfunction()
+        toolList.addToogle("玩家透视", data.tools.playeresp, function()
+            playeraddfunction()
+        end, function()
+            -- 关闭功能时移除所有高亮和用户名标签
+            for _, player in ipairs(Players:GetPlayers()) do
+                removePlayerEffects(player)
             end
+            for player, highlight in pairs(highlights) do
+                phighlight:Destroy()
+            end
+            for player, label in pairs(usernameLabels) do
+                pbillboard:Destroy()
+            end
+            highlights = {}
+            usernameLabels = {}
+        end, function(_, newState)
+            data.tools.playeresp = newState
         end)
-        toolList.add(data.tools.Spectator and "旁观模式(开)" or "旁观模式(关)", function(button)
-            data.tools.Spectator = not data.tools.Spectator
-            if data.tools.Spectator then SpectatorModule.start() else SpectatorModule.close() end
-            button.Text = data.tools.Spectator and "旁观模式(开)" or "旁观模式(关)"
-            if data.tools.Spectator then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
-        end)
-        toolList.add(data.tools.airwalk and "空中移动(开)" or "空中移动(关)", function(button)
+        toolList.addToogle("旁观模式", data.tools.Spectator, function() SpectatorModule.start() end, function() SpectatorModule.close() end, function(_, newState) data.tools.Spectator = newState end)
+        toolList.addToogle("空中移动", data.tools.airwalk, _, _, function(_, newState)
             toggleAirWalk()
-            button.Text = data.tools.airwalk and "空中移动(开)" or "空中移动(关)"
-            if data.tools.airwalk then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
+            data.tools.airwalk = newState
         end)
-        toolList.add(data.tools.antifall and "防击倒(开)" or "防击倒(关)", function(button)
-            data.tools.antifall = not data.tools.antifall
-            button.Text = data.tools.antifall and "防击倒(开)" or "防击倒(关)"
-            if data.tools.antifall then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
-        end)
-        toolList.add(data.tools.antifallplus and "晕厥康复(开)" or "晕厥康复(关)", function(button)
-            data.tools.antifallplus = not data.tools.antifallplus
-            if data.tools.antifallplus then StandRecovery:enableDetection() else StandRecovery:disableDetection() end
-            button.Text = data.tools.antifallplus and "晕厥康复(开)" or "晕厥康复(关)"
-            if data.tools.antifallplus then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
-        end)
-        toolList.add(data.tools.antifling and "防甩飞(开)" or "防甩飞(关)", function(button)
-            data.tools.antifling = not data.tools.antifling
-            if data.tools.antifling then FlingDetector.enable() else FlingDetector.disable() end
-            button.Text = data.tools.antifling and "防甩飞(开)" or "防甩飞(关)"
-            if data.tools.antifling then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
-        end)
-        toolList.add(data.tools.antidead and "防死亡(开)" or "防死亡(关)", function(button)
-            data.tools.antidead = not data.tools.antidead
-            button.Text = data.tools.antidead and "防死亡(开)" or "防死亡(关)"
-            if data.tools.antidead then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
-        end)
+        toolList.addToogle("防击倒", data.tools.antifall, _, _, function(_, newState) data.tools.antifall = newState end)
+        toolList.addToogle("晕厥康复", data.tools.antifallplus, function() StandRecovery:enableDetection() end, function() StandRecovery:disableDetection() end, function(_, newState) data.tools.antifallplus = newState end)
+        toolList.addToogle("防甩飞", data.tools.antifling, function() FlingDetector.enable() end, function() FlingDetector.disable() end, function(_, newState) data.tools.antifling = newState end)
+        toolList.addToogle("防死亡", data.tools.antidead, _, _, function(_, newState) data.tools.antidead = newState end)
         toolList.add("切换时间为白天", function(button)
             setDay()
         end)
@@ -3014,25 +2996,13 @@ local function AddMenuContent(category)
         end)
     elseif category == "Grace" then
         local graceList = CreateList(UDim2.new(1, 0, 1, 0), UDim2.new(0.01, 0, 0.01, 0))
-        graceList.add(data.grace.autolever and "自动拉杆(开)" or "自动拉杆(关)", function(button)
-            data.grace.autolever = not data.grace.autolever
-            button.Text = data.grace.autolever and "自动拉杆(开)" or "自动拉杆(关)"
-        end)
+        graceList.addToogle("自动拉杆", data.grace.autolever, _, _, function(_, newState) data.grace.autolever = newState end)
         graceList.add("删除全部实体(无法关闭)", function(button)
             data.grace.deleteentite = true
         end)
     elseif category == "死亡球" then
         local DBList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
-        DBList.add(data.deathball.enable and "功能(开)" or "功能(关)", function(button)
-            data.deathball.enable = not data.deathball.enable
-            button.Text = data.deathball.enable and "功能(开)" or "功能(关)"
-            if data.deathball.enable then
-                _G.DeathBallScript:Enable()
-                CreateNotification("功能已开启", "按下R键即可瞬间格挡", 10, true)
-            else
-                _G.DeathBallScript:Disable()
-            end
-        end)
+        DBList.addToogle("主功能和界面", data.deathball.enable, function() _G.DeathBallScript:Enable() end, function() _G.DeathBallScript:Disable() end, function(_, newState) data.deathball.enable = newState end)
     elseif category == "CabinRolePlay" then
         local CRPList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
         CRPList.add("变正常", function(button)
@@ -3104,11 +3074,7 @@ local function AddMenuContent(category)
         end)
     elseif category == "西部森林" then
         local WWList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
-        WWList.add(data.west_wood.monster_xray and "怪物标签(开)" or "怪物标签(关)", function(button)
-            data.west_wood.monster_xray = not data.west_wood.monster_xray
-            if data.west_wood.monster_xray then data.west_wood.monster:enable() else data.west_wood.monster:disable() end
-            button.Text = data.west_wood.monster_xray and "怪物标签(开)" or "怪物标签(关)"
-        end)
+        WWList.addToogle("怪物标签", data.west_wood.monster_xray, function() data.west_wood.monster:enable() end, function() data.west_wood.monster:disable() end, function(_, newState) data.west_wood.monster_xray = newState end)
     end
 end
 
