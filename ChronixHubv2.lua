@@ -2503,8 +2503,8 @@ local function AddMenuContent(category)
                 aa:Disconnect()
             end)
         end)
-        CreateLabel("灵魂出窍", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.3, 0))
-        CreateButton(tostring(FreecamModule.getKeybind()):gsub("^Enum%.%w+%.", ""), UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.3, 0), function(button)
+        CreateLabel("灵魂出窍", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.25, 0))
+        CreateButton(tostring(FreecamModule.getKeybind()):gsub("^Enum%.%w+%.", ""), UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.25, 0), function(button)
             isProcessing2 = true
             button.Text = "按下任意键..."
             -- 监听按键按下事件
@@ -2516,8 +2516,8 @@ local function AddMenuContent(category)
                 ap:Disconnect()
             end)
         end)
-        CreateLabel("望远镜", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.5, 0))
-        CreateButton(tostring(data.tools.zoom:GetBindKey()):gsub("^Enum%.%w+%.", ""), UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.5, 0), function(button)
+        CreateLabel("望远镜", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.4, 0))
+        CreateButton(tostring(data.tools.zoom:GetBindKey()):gsub("^Enum%.%w+%.", ""), UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.4, 0), function(button)
             isProcessing3 = true
             button.Text = "按下任意键..."
             -- 监听按键按下事件
@@ -2529,8 +2529,8 @@ local function AddMenuContent(category)
                 az:Disconnect()
             end)
         end)
-        CreateLabel("TPWalk距离", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.7, 0))
-        CreateTextBox(tpWalk:GetSpeed(), 18, UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.7, 0), function(textBox)
+        CreateLabel("TPWalk距离", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.55, 0))
+        CreateTextBox(tpWalk:GetSpeed(), 18, UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.55, 0), function(textBox)
             tpWalk:SetSpeed(tonumber(textBox.Text))
         end)
     elseif category == "传送器" then
