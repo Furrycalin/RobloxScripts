@@ -1478,6 +1478,7 @@ local data = {
     },
     nightmare_run = {
         highlightmonster = false,
+        monster = MovableHighlighter_NM.new()
         HLCheese = HighlightModule.new("Cheese", "other", "item"),
         Lantern = PlayerLightModule.new({ Brightness = 3, Range = 20, Color = Color3.fromRGB(255, 165, 0), Shadows = true }),
         SuperLighter = PlayerLightModule.new({ Brightness = 2, Range = 1000 }),
@@ -2768,7 +2769,7 @@ local function AddMenuContent(category)
         end)
     elseif category == "Nightmare Run" then
         local NRList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
-        NRList.addToogle("高亮所有怪物", data.nightmare_run.highlightmonster, function() MovableHighlighter_NM:enable() end, function() MovableHighlighter_NM:disable() end, function(_, newState) data.nightmare_run.highlightmonster = newState end)
+        NRList.addToogle("高亮所有怪物", data.nightmare_run.highlightmonster, function() data.nightmare_run.monster:enable() end, function() data.nightmare_run.monster:disable() end, function(_, newState) data.nightmare_run.highlightmonster = newState end)
         NRList.add("高亮芝士", function(button)
             data.nightmare_run.HLCheese.apply()
             CreateNotification("Nightmare Run", "已高亮芝士\n仅高亮一次", 10, true)
