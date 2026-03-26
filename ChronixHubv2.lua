@@ -49,6 +49,7 @@ local ZoomModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/C
 local FlingDetector = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/FlingDetector.lua"))()
 local SystemNotification = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/SystemNotification.lua"))()
 local PlayerESP = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/PlayerESP.lua"))()
+local MovableHighlighter_NM = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/MovableHighlighter-NM.lua"))()
 
 local iscancel = false
 
@@ -1476,6 +1477,7 @@ local data = {
         monster = NameTagModule.new("WendigoAI", "模糊", 20, true, "怪物")
     },
     nightmare_run = {
+        highlightmonster = false,
         HLCheese = HighlightModule.new("Cheese", "other", "item"),
         Lantern = PlayerLightModule.new({ Brightness = 3, Range = 20, Color = Color3.fromRGB(255, 165, 0), Shadows = true }),
         SuperLighter = PlayerLightModule.new({ Brightness = 2, Range = 1000 }),
@@ -2141,159 +2143,6 @@ local function detectEntity(instance)
     end
 end
 
--- 配置项：可自定义高亮的颜色、透明度，新增高度限制（默认100，可直接修改）
-local HIGHLIGHT_FILL_COLOR = Color3.fromRGB(255, 215, 0)    -- 填充色（金色）
-local HIGHLIGHT_OUTLINE_COLOR = Color3.fromRGB(255, 0, 0)    -- 轮廓色（红色）
-local HIGHLIGHT_FILL_TRANSPARENCY = 0.7                      -- 填充透明度（数值越大越透明，0-1）
-local HIGHLIGHT_OUTLINE_TRANSPARENCY = 0.0                   -- 轮廓透明度
-local MAX_ALLOWED_HEIGHT = 100                               -- 新增：高亮最大高度限制（Y轴坐标，低于此值才高亮，可自行修改）
-
--- 全局辅助：存储已输出日志的模型/独立物体名称，避免重复打印（关键：方便后续控制，不冗余）
-local loggedTargetNames = {}
-
--- 【辅助函数1】获取所有当前已存在的玩家角色（仅一次性获取，不监测后续）
-local function getExistingPlayerCharacters()
-    local characterList = {}
-    for _, player in pairs(Players:GetPlayers()) do
-        if player.Character then
-            table.insert(characterList, player.Character)
-        end
-    end
-    return characterList
-end
-
--- 【辅助函数2】向上查找物体所属的最顶层模型（核心：找到可控制的模型名称）
-local function getTopLevelModelOrSelf(obj)
-    local currentObj = obj
-    local topLevelObj = obj
-    
-    -- 向上遍历父级，直到找到无Model父级的对象（最顶层模型/自身）
-    while currentObj.Parent do
-        if currentObj.Parent:IsA("Model") then
-            topLevelObj = currentObj.Parent
-            currentObj = currentObj.Parent
-        else
-            break
-        end
-    end
-    
-    return topLevelObj
-end
-
--- 【辅助函数3】控制台输出日志（封装格式，清晰易读）
-local function printTargetLog(target)
-    local targetName = target.Name
-    local targetType = target.ClassName
-    
-    -- 避免重复输出同一个模型/物体的日志
-    if not loggedTargetNames[targetName] then
-        loggedTargetNames[targetName] = true
-    end
-end
-
--- 【新增辅助函数】简洁判断部件高度是否低于最大限制（不破坏原有逻辑，仅针对BasePart）
-local function isBelowMaxHeight(part)
-    -- 仅针对BasePart，直接取自身Y轴坐标判断（简洁准确，不影响原有高亮逻辑）
-    return part.Position.Y < MAX_ALLOWED_HEIGHT
-end
-
--- 【辅助函数4】判断单个部件是否是"非玩家、可移动、低于最大高度"的有效目标（仅增量添加高度判断）
-local function isValidMovablePart(part, playerCharacters)
-    -- 1. 必须是BasePart（基础部件，如Part、WedgePart、MeshPart等）
-    if not part:IsA("BasePart") then
-        return false
-    end
-    
-    -- 2. 必须未锚定（可移动的核心条件：Anchored=false）
-    if part.Anchored then
-        return false
-    end
-    
-    -- 3. 排除玩家角色及其子部件
-    local isPlayerCharacterPart = false
-    for _, character in pairs(playerCharacters) do
-        if character and part:IsDescendantOf(character) then
-            isPlayerCharacterPart = true
-            break
-        end
-    end
-    if isPlayerCharacterPart then
-        return false
-    end
-    
-    -- 4. 排除一些系统无关物体（可选，避免高亮服务类部件）
-    local excludedNames = {"Camera", "Terrain"}
-    if table.find(excludedNames, part.Name) then
-        return false
-    end
-    
-    -- 5. 新增：必须低于最大允许高度（增量添加，不改动原有任何判断逻辑）
-    if not isBelowMaxHeight(part) then
-        return false
-    end
-    
-    return true
-end
-
--- 【辅助函数5】为符合条件的部件添加高亮效果（仅一次性添加，不更新后续属性）
-local function addHighlightToPart(part)
-    -- 避免重复添加：如果部件已有该高亮，直接跳过
-    if part:FindFirstChild("MovableObjectHighlight") then
-        return
-    end
-    
-    -- 新建Highlight实例，命名为MovableObjectHighlight方便识别
-    local highlight = Instance.new("Highlight")
-    highlight.Name = "MovableObjectHighlight"
-    
-    -- 应用高亮配置
-    highlight.FillColor = HIGHLIGHT_FILL_COLOR
-    highlight.OutlineColor = HIGHLIGHT_OUTLINE_COLOR
-    highlight.FillTransparency = HIGHLIGHT_FILL_TRANSPARENCY
-    highlight.OutlineTransparency = HIGHLIGHT_OUTLINE_TRANSPARENCY
-    highlight.Adornee = part  -- 绑定高亮到当前部件
-    
-    highlight.Parent = part
-end
-
--- 【辅助函数6】递归处理对象（支持单个部件和模型Model，输出对应日志）
-local function processObject(obj, playerCharacters)
-    -- 如果是单个有效部件，添加高亮并输出对应模型/自身日志
-    if isValidMovablePart(obj, playerCharacters) then
-        addHighlightToPart(obj)
-        
-        -- 找到该部件所属的最顶层模型（或自身），输出日志
-        local targetToLog = getTopLevelModelOrSelf(obj)
-        printTargetLog(targetToLog)
-    end
-    
-    -- 如果是模型（Model），递归处理其所有子对象（原有逻辑不变，确保模型全部件高亮）
-    if obj:IsA("Model") then
-        for _, child in pairs(obj:GetDescendants()) do
-            processObject(child, playerCharacters)
-        end
-    end
-end
-
--- 【核心逻辑】一次性处理Workspace中已存在的所有物体，带完整日志反馈
-local function processExistingObjectsOnce()
-    -- 1. 控制台输出启动日志，新增高度限制提示
-    
-    -- 2. 一次性获取当前所有玩家角色（用于排除）
-    local currentPlayerCharacters = getExistingPlayerCharacters()
-    
-    -- 3. 遍历Workspace所有子对象并处理（原有逻辑不变）
-    for _, obj in pairs(Workspace:GetDescendants()) do
-        processObject(obj, currentPlayerCharacters)
-    end
-    
-    -- 4. 控制台输出汇总日志（统计成功高亮的目标数量，新增高度提示）
-    local loggedCount = 0
-    for _ in pairs(loggedTargetNames) do
-        loggedCount = loggedCount + 1
-    end
-end
-
 local offce = Workspace.DescendantAdded:Connect(detectEntity)
 
 local isProcessing = false
@@ -2919,10 +2768,7 @@ local function AddMenuContent(category)
         end)
     elseif category == "Nightmare Run" then
         local NRList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
-        NRList.add("高亮所有怪物", function(button)
-            processExistingObjectsOnce()
-            CreateNotification("Nightmare Run", "已高亮当前所有怪物\n仅高亮一次", 10, true)
-        end)
+        NRList.addToogle("高亮所有怪物", data.nightmare_run.highlightmonster, function() MovableHighlighter_NM:enable() end, function() MovableHighlighter_NM:disable() end, function(_, newState) data.nightmare_run.highlightmonster = newState end)
         NRList.add("高亮芝士", function(button)
             data.nightmare_run.HLCheese.apply()
             CreateNotification("Nightmare Run", "已高亮芝士\n仅高亮一次", 10, true)
@@ -3073,6 +2919,7 @@ local function unloadchronixhub()
     data.tools.zoom:Unload()
     FlingDetector.unload()
     PlayerESP.unload()
+    MovableHighlighter_NM.unloadAll()
     musicbox:Stop()
     musicbox:Destroy()
     chatcheck:Disconnect()
