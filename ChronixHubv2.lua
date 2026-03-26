@@ -2427,28 +2427,10 @@ local function AddMenuContent(category)
 
     -- 根据分类添加内容
     if category == "妄想办公室" then
-        CreateLabel("基础操作", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.03, 0))
-        CreateButton(data.office.entitywarning and "实体警告(开)" or "实体警告(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.1, 0), function(button)
-            data.office.entitywarning = not data.office.entitywarning
-            button.Text = data.office.entitywarning and "实体警告(开)" or "实体警告(关)"
-        end)
-        CreateButton(data.office.tipotherplayer and "提醒他人(开)" or "提醒他人(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.2, 0), function(button)
-            data.office.tipotherplayer = not data.office.tipotherplayer
-            button.Text = data.office.tipotherplayer and "提醒他人(开)" or "提醒他人(关)"
-        end)
-        CreateButton(data.office.auto013 and "自动EN-013(开)" or "自动EN-013(关)", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.3, 0), function(button)
-            data.office.auto013 = not data.office.auto013
-            button.Text = data.office.auto013 and "自动EN-013(开)" or "自动EN-013(关)"
-        end)
-    elseif category == "TPWalk" then
-        CreateButton(tpWalk:GetEnabled() and "TPWalk(开)" or "TPWalk(关)", UDim2.new(0.4, 0, 0.08, 0), UDim2.new(0.3, 0, 0.1, 0), function(button)
-            tpWalk:Enabled(not tpWalk:GetEnabled())
-            button.Text = tpWalk:GetEnabled() and "TPWalk(开)" or "TPWalk(关)"
-        end)
-        CreateLabel("设置移动距离", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.23, 0))
-        CreateTextBox(tpWalk:GetSpeed(), 18, UDim2.new(0.15, 0, 0.08, 0), UDim2.new(0.05, 0, 0.3, 0), function(textBox)
-            tpWalk:SetSpeed(tonumber(textBox.Text))
-        end)
+        local WXOList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
+        WXOList.addToogle("实体警告", data.office.entitywarning, _, _, function(_, newState) data.office.entitywarning = newState end)
+        WXOList.addToogle("提醒他人", data.office.tipotherplayer, _, _, function(_, newState) data.office.tipotherplayer = newState end)
+        WXOList.addToogle("自动EN-013", data.office.auto013, _, _, function(_, newState) data.office.auto013 = newState end)
     elseif category == "聊天接收器" then
         createPlayerChatReceiver(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
     elseif category == "音频检查器" then
@@ -2546,6 +2528,10 @@ local function AddMenuContent(category)
                 achievementSound:Stop()
                 az:Disconnect()
             end)
+        end)
+        CreateLabel("TPWalk距离", 18, UDim2.new(0.2, 0, 0.08, 0), UDim2.new(0.1, 0, 0.7, 0))
+        CreateTextBox(tpWalk:GetSpeed(), 18, UDim2.new(0.25, 0, 0.1, 0), UDim2.new(0.65, 0, 0.7, 0), function(textBox)
+            tpWalk:SetSpeed(tonumber(textBox.Text))
         end)
     elseif category == "传送器" then
         createTeleportPointList(
@@ -2700,6 +2686,7 @@ local function AddMenuContent(category)
         toolList.add("获得点击传送工具", function(button)
             mouse = game.Players.LocalPlayer:GetMouse() tool = Instance.new("Tool") tool.RequiresHandle = false tool.Name = "手持点击传送" tool.Activated:connect(function() local pos = mouse.Hit+Vector3.new(0,2.5,0) pos = CFrame.new(pos.X,pos.Y,pos.Z) game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos end) tool.Parent = game.Players.LocalPlayer.Backpack
         end)
+        toolList.addToogle("TPWalk", tpWalk:GetEnabled(), _, _, function(_, newState) tpWalk:Enabled(newState) end)
         toolList.addToogle("鼠标解锁", data.tools.mouseisunlock, function()
             MouseUnlockModule.Enable()
             CreateNotification("提示", "按下K+L组合键开关鼠标解锁", 5, true)
@@ -3108,7 +3095,6 @@ addMenu("执行器")
 addMenu("音乐播放器")
 addMenu("音频检查器")
 addMenu("聊天接收器")
-addMenu("TPWalk")
 if game.GameId == 2162087722 then addMenu("Project Transfur") end
 if game.GameId == 6508759464 then addMenu("Grace") end
 if game.GameId == 5166944221 then addMenu("死亡球") end
