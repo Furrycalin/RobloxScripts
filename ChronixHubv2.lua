@@ -2648,7 +2648,7 @@ local function AddMenuContent(category)
         createCheckbox(UDim2.new(0, 20, 0, 20), UDim2.new(0.93, 0, 0.431, 0), data.playercontrol.lockgravity, function(isChecked)
             data.playercontrol.lockgravity = isChecked
         end)
-    elseif category == "Project Transfur" then
+    elseif category == "兽化项目" then
         CreateLabel("基础操作", 18, UDim2.new(0.23, 0, 0.05, 0), UDim2.new(0.01, 0, 0.03, 0))
         CreateButton("删除捕兽夹", UDim2.new(0.23, 0, 0.09, 0), UDim2.new(0.01, 0, 0.1, 0), function()
             local deletedCount = 0
@@ -2712,7 +2712,7 @@ local function AddMenuContent(category)
             toggleModelHighlight("SupplyDrop")
             button.Text = getModelHighlight("SupplyDrop") and "空投(开)" or "空投(关)"
         end)
-    elseif category == "Grace" then
+    elseif category == "格蕾丝" then
         local graceList = CreateList(UDim2.new(1, 0, 1, 0), UDim2.new(0.01, 0, 0.01, 0))
         graceList.addToogle("自动拉杆", data.grace.autolever, _, _, function(_, newState) data.grace.autolever = newState end)
         graceList.add("删除全部实体(无法关闭)", function(button)
@@ -2721,7 +2721,7 @@ local function AddMenuContent(category)
     elseif category == "死亡球" then
         local DBList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
         DBList.addToogle("主功能和界面", data.deathball.enable, function() _G.DeathBallScript:Enable() end, function() _G.DeathBallScript:Disable() end, function(_, newState) data.deathball.enable = newState end)
-    elseif category == "CabinRolePlay" then
+    elseif category == "小屋角色扮演" then
         local CRPList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
         CRPList.add("变正常", function(button)
             chatMessage("/re")
@@ -2767,7 +2767,7 @@ local function AddMenuContent(category)
         CreateButton("传送到礼物", UDim2.new(0.26, 0, 0.09, 0), UDim2.new(0.25, 0, 0.21, 0), function(button)
             TeleportToPresent(tonumber(giftnumber.Text))
         end)
-    elseif category == "Nightmare Run" then
+    elseif category == "噩梦之行" then
         local NRList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
         NRList.addToogle("高亮所有怪物", data.nightmare_run.highlightmonster, function() data.nightmare_run.monster:enable() end, function() data.nightmare_run.monster:disable() end, function(_, newState) data.nightmare_run.highlightmonster = newState end)
         NRList.add("高亮芝士", function(button)
@@ -2823,13 +2823,13 @@ addMenu("执行器")
 addMenu("音乐播放器")
 addMenu("音频检查器")
 addMenu("聊天接收器")
-if game.GameId == 2162087722 then addMenu("Project Transfur") end
-if game.GameId == 6508759464 then addMenu("Grace") end
+if game.GameId == 2162087722 then addMenu("兽化项目") end
+if game.GameId == 6508759464 then addMenu("格蕾丝") end
 if game.GameId == 5166944221 then addMenu("死亡球") end
-if game.GameId == 3185346597 then addMenu("CabinRolePlay") end
+if game.GameId == 3185346597 then addMenu("小屋角色扮演") end
 if game.GameId == 6352299542 then addMenu("妄想办公室") end
 if game.GameId == 972475338 then addMenu("南极探险队") end
-if game.GameId == 6996099240 then addMenu("Nightmare Run") end
+if game.GameId == 6996099240 then addMenu("噩梦之行") end
 if game.GameId == 5265348926 then addMenu("西部森林") end
 
 -- 更新功能栏的滚动区域
