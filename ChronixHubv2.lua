@@ -48,7 +48,7 @@ local DeathballScripts = loadstring(game:HttpGet("https://raw.atomgit.com/Furryc
 local ZoomModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/ZoomModule.lua"))()
 local FlingDetector = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/FlingDetector.lua"))()
 local SystemNotification = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/SystemNotification.lua"))()
-local PlayerESP = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/PlayerESP.lua"))()
+local PlayerESP = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/PlayerESP.lua"))()
 
 local iscancel = false
 
