@@ -2666,41 +2666,49 @@ local function AddMenuContent(category)
                 MouseUnlockModule.Disable()
             end
             button.Text = data.tools.mouseisunlock and "鼠标解锁(开)" or "鼠标解锁(关)"
+            if data.tools.mouseisunlock then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add(data.tools.zoomenable and "望远镜(开)" or "望远镜(关)", function(button)
             data.tools.zoomenable = not data.tools.zoomenable
             if data.tools.zoomenable then data.tools.zoom:Enable() else data.tools.zoom:Disable() end
             button.Text = data.tools.zoomenable and "望远镜(开)" or "望远镜(关)"
+            if data.tools.zoomenable then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add(data.tools.visible and "隐身(开)" or "隐身(关)", function(button)
             data.tools.visible = not data.tools.visible
             if data.tools.visible then PlayerVisibleModule.enable() else PlayerVisibleModule.disable() end
             button.Text = data.tools.visible and "隐身(开)" or "隐身(关)"
+            if data.tools.visible then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add(data.tools.landingeffect and "落地特效(开)" or "落地特效(关)", function(button)
             data.tools.landingeffect = not data.tools.landingeffect
             if data.tools.landingeffect then LandingEffect.enable() else LandingEffect.disable() end
             button.Text = data.tools.landingeffect and "落地特效(开)" or "落地特效(关)"
+            if data.tools.landingeffect then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add(data.nightmare_run.LanternOffin and "随身灯笼(开)" or "随身灯笼(关)", function(button)
             data.nightmare_run.LanternOffin = not data.nightmare_run.LanternOffin
             data.nightmare_run.Lantern.enable = data.nightmare_run.LanternOffin
             button.Text = data.nightmare_run.LanternOffin and "随身灯笼(开)" or "随身灯笼(关)"
+            if data.nightmare_run.LanternOffin then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add(data.tools.nightvision and "夜视(开)" or "夜视(关)", function(button)
             data.tools.nightvision = not data.tools.nightvision
             game.Lighting.Ambient = data.tools.nightvision and Color3.new(1, 1, 1) or Color3.new(0, 0, 0)
             button.Text = data.tools.nightvision and "夜视(开)" or "夜视(关)"
+            if data.tools.nightvision then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add(data.nightmare_run.SuperLighterOffin and "超级光明(开)" or "超级光明(关)", function(button)
             data.nightmare_run.SuperLighterOffin = not data.nightmare_run.SuperLighterOffin
             data.nightmare_run.SuperLighter.enable = data.nightmare_run.SuperLighterOffin
             button.Text = data.nightmare_run.SuperLighterOffin and "超级光明(开)" or "超级光明(关)"
+            if data.nightmare_run.SuperLighterOffin then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add(FreecamModule.freecamenable and "灵魂出窍(开)" or "灵魂出窍(关)", function(button)
             FreecamModule.freecamenable = not FreecamModule.freecamenable
             FreecamModule.enable = FreecamModule.freecamenable
             button.Text = FreecamModule.freecamenable and "灵魂出窍(开)" or "灵魂出窍(关)"
+            if FreecamModule.freecamenable then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add(data.tools.translation and "平移(开)" or "平移(关)", function(button)
             data.tools.translation = not data.tools.translation
@@ -2711,10 +2719,12 @@ local function AddMenuContent(category)
                 movementModule.Disable()
             end
             button.Text = data.tools.translation and "平移(开)" or "平移(关)"
+            if data.tools.translation then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add(data.tools.noclip and "穿墙(开)" or "穿墙(关)", function(button)
             data.tools.noclip = not data.tools.noclip
             button.Text = data.tools.noclip and "穿墙(开)" or "穿墙(关)"
+            if data.tools.noclip then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
             Stepped = game:GetService("RunService").Stepped:Connect(function()
 	            if not data.tools.noclip == false then
 		            for a, b in pairs(Workspace:GetChildren()) do
@@ -2737,6 +2747,7 @@ local function AddMenuContent(category)
         toolList.add(data.tools.infjump and "连跳(开)" or "连跳(关)", function(button)
             data.tools.infjump = not data.tools.infjump
             button.Text = data.tools.infjump and "连跳(开)" or "连跳(关)"
+            if data.tools.infjump then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
             JR = game:GetService("UserInputService").JumpRequest:Connect(function()
                 if not data.tools.infjump then
                     JR:Disconnect()
@@ -2755,6 +2766,7 @@ local function AddMenuContent(category)
         toolList.add(data.tools.playeresp and "玩家透视(开)" or "玩家透视(关)", function(button)
             data.tools.playeresp = not data.tools.playeresp
             button.Text = data.tools.playeresp and "玩家透视(开)" or "玩家透视(关)"
+            if data.tools.playeresp then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
             if not data.tools.playeresp then
                 -- 关闭功能时移除所有高亮和用户名标签
                 for _, player in ipairs(Players:GetPlayers()) do
@@ -2776,28 +2788,34 @@ local function AddMenuContent(category)
             data.tools.Spectator = not data.tools.Spectator
             if data.tools.Spectator then SpectatorModule.start() else SpectatorModule.close() end
             button.Text = data.tools.Spectator and "旁观模式(开)" or "旁观模式(关)"
+            if data.tools.Spectator then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add(data.tools.airwalk and "空中移动(开)" or "空中移动(关)", function(button)
             toggleAirWalk()
             button.Text = data.tools.airwalk and "空中移动(开)" or "空中移动(关)"
+            if data.tools.airwalk then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add(data.tools.antifall and "防击倒(开)" or "防击倒(关)", function(button)
             data.tools.antifall = not data.tools.antifall
             button.Text = data.tools.antifall and "防击倒(开)" or "防击倒(关)"
+            if data.tools.antifall then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add(data.tools.antifallplus and "晕厥康复(开)" or "晕厥康复(关)", function(button)
             data.tools.antifallplus = not data.tools.antifallplus
             if data.tools.antifallplus then StandRecovery:enableDetection() else StandRecovery:disableDetection() end
             button.Text = data.tools.antifallplus and "晕厥康复(开)" or "晕厥康复(关)"
+            if data.tools.antifallplus then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add(data.tools.antifling and "防甩飞(开)" or "防甩飞(关)", function(button)
             data.tools.antifling = not data.tools.antifling
             if data.tools.antifling then FlingDetector.enable() else FlingDetector.disable() end
             button.Text = data.tools.antifling and "防甩飞(开)" or "防甩飞(关)"
+            if data.tools.antifling then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add(data.tools.antidead and "防死亡(开)" or "防死亡(关)", function(button)
             data.tools.antidead = not data.tools.antidead
             button.Text = data.tools.antidead and "防死亡(开)" or "防死亡(关)"
+            if data.tools.antidead then button.BackgroundColor3 = Color3.fromRGB(126, 126, 140) else button.BackgroundColor3 = Color3.fromRGB(40, 40, 56) end
         end)
         toolList.add("切换时间为白天", function(button)
             setDay()
