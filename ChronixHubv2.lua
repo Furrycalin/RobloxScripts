@@ -48,6 +48,7 @@ local DeathballScripts = loadstring(game:HttpGet("https://raw.atomgit.com/Furryc
 local ZoomModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/ZoomModule.lua"))()
 local FlingDetector = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/FlingDetector.lua"))()
 local SystemNotification = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/SystemNotification.lua"))()
+local PlayerESP = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/PlayerESP.lua"))()
 
 local iscancel = false
 
@@ -1722,115 +1723,6 @@ end)
 -- 初始绑定死亡事件
 humanoid.Died:Connect(onCharacterDied)
 
--- 存储高亮和用户名标签
-local highlights = {}
-local usernameLabels = {}
-
--- 为玩家添加高亮
-local function addHighlight(player)
-    if player == LocalPlayer then return end -- 排除自己和未启用时
-
-    local character = player.Character
-    if character then
-        -- 创建 Highlight 对象
-        local phighlight = Instance.new("Highlight")
-        phighlight.Adornee = character
-        phighlight.FillColor = Color3.new(1, 0, 0)
-        phighlight.FillTransparency = 0.8
-        phighlight.OutlineColor = Color3.new(1, 0, 0)
-        phighlight.OutlineTransparency = 0
-        phighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop -- 隔墙显示
-        phighlight.Parent = character
-
-        -- 如果只描边，则隐藏整体覆盖颜色
-        if onlyOutline then
-            phighlight.FillTransparency = 1
-        end
-
-        -- 存储高亮对象
-        highlights[player] = phighlight
-    end
-end
-
--- 为玩家添加用户名标签
-local function addUsernameLabel(player)
-    if player == LocalPlayer then return end -- 排除自己和未启用时
-
-    local character = player.Character
-    if character then
-        local head = character:FindFirstChild("Head")
-        if head then
-            -- 创建 BillboardGui
-            local pbillboard = Instance.new("BillboardGui")
-            pbillboard.Adornee = head
-            pbillboard.Size = UDim2.new(0, 200, 0, 50)
-            pbillboard.StudsOffset = Vector3.new(0, 3, 0) -- 在头顶上方显示
-            pbillboard.AlwaysOnTop = true
-            pbillboard.Parent = head
-
-            -- 创建 TextLabel
-            local label = Instance.new("TextLabel")
-            label.Size = UDim2.new(1, 0, 1, 0)
-            if player.DisplayName == player.Name then label.Text = player.DisplayName else label.Text = player.DisplayName .. " (@" .. player.Name .. ")" end -- 显示用户名
-            label.TextColor3 = Color3.new(1, 1, 1) -- 白色文字
-            label.BackgroundTransparency = 1 -- 透明背景
-            label.Font = Enum.Font.SourceSansBold
-            label.TextSize = 18
-            label.Parent = pbillboard
-
-            -- 存储用户名标签
-            usernameLabels[player] = pbillboard
-        end
-    end
-end
-
--- 移除玩家的高亮和用户名标签
-local function removePlayerEffects(player)
-    if highlights[player] then
-        highlights[player]:Destroy()
-        highlights[player] = nil
-    end
-    if usernameLabels[player] then
-        usernameLabels[player]:Destroy()
-        usernameLabels[player] = nil
-    end
-end
-
--- 监听玩家加入
-local function playeraddfunction()
-    for _, player in ipairs(Players:GetPlayers()) do
-        removePlayerEffects(player)
-        addHighlight(player)
-        addUsernameLabel(player)
-        player.CharacterAdded:Connect(function(character)
-            removePlayerEffects(player)
-            addHighlight(player)
-            addUsernameLabel(player)
-            -- 获取角色的 Humanoid 对象
-            local humanoid = character:WaitForChild("Humanoid")
-            -- 监听 Humanoid 的 Died 事件
-            humanoid.Died:Connect(function()
-                if data.tools.playeresp then
-                    removePlayerEffects(player)
-                    addHighlight(player)
-                    wait(2)
-                    addUsernameLabel(player)
-                end
-            end)
-        end)
-    end
-end
-
-Players.PlayerAdded:Connect(function(player)
-    if data.tools.playeresp then
-        playeraddfunction()
-    end
-end)
-
-Players.PlayerRemoving:Connect(function(player)
-    removePlayerEffects(player)
-end)
-
 -- 创建高亮和文字标签
 local function createHighlightAndLabel(model)
     -- 创建高亮
@@ -2760,20 +2652,9 @@ local function AddMenuContent(category)
             data.tools.infjump = newState
         end)
         toolList.addToogle("玩家透视", data.tools.playeresp, function()
-            playeraddfunction()
+            PlayerESP.enable()
         end, function()
-            -- 关闭功能时移除所有高亮和用户名标签
-            for _, player in ipairs(Players:GetPlayers()) do
-                removePlayerEffects(player)
-            end
-            for player, highlight in pairs(highlights) do
-                phighlight:Destroy()
-            end
-            for player, label in pairs(usernameLabels) do
-                pbillboard:Destroy()
-            end
-            highlights = {}
-            usernameLabels = {}
+            PlayerESP.disable()
         end, function(_, newState)
             data.tools.playeresp = newState
         end)
@@ -3191,6 +3072,7 @@ local function unloadchronixhub()
     _G.DeathBallScript:Unload()
     data.tools.zoom:Unload()
     FlingDetector.unload()
+    PlayerESP.unload()
     musicbox:Stop()
     musicbox:Destroy()
     chatcheck:Disconnect()
