@@ -25,6 +25,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 - ✅ **ExpeditionAntarctica**（南极探险队）  
 - ✅ **Nightmare Run**（噩梦之行）
 - ✅ **West Wood**（西部森林）
+- ✅ **SIREN HEAD: LEGACY**（警笛头:传奇）
 
 ---
 
