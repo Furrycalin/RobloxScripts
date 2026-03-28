@@ -2,7 +2,7 @@
 
 **欢迎来到我的 Roblox 脚本仓库！这里集合了我开发的一些 Roblox 脚本，所有脚本均可直接执行。如果你有任何问题或建议，欢迎提交 Issue 或 Pull Request！**
 
->**本仓库的部分脚本已集成到ChronixHubV2，但由于过于混乱，所以新的脚本以模块形式存储在ChronixHub/modules内**
+>**本仓库的部分脚本已集成到ChronixHubV2，但由于过于混乱，所以新的脚本以模块形式存储在[ChronixHub/modules](https://atomgit.com/Furrycalin/ChronixHub/tree/main/modules)内**
 
 ---
 
