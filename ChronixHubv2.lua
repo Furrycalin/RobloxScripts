@@ -2867,7 +2867,7 @@ local function AddMenuContent(category)
         for _, GetgameInfo in ipairs(Supported_Games) do
             if GetgameInfo.gameid then
                 ACGList.add(GetgameInfo.name .. "(点击进入)", function(button)
-                    if game.GameId == GetgameInfo.gameid then CreateNotification("提示", "你已经在这个游戏里了。", 5, true) else GameTeleport..TeleportModule.teleportByGameId(GetgameInfo.gameid) end
+                    if game.GameId == GetgameInfo.gameid then CreateNotification("提示", "你已经在这个游戏里了。", 5, true) else GameTeleport.TeleportModule.teleportByGameId(GetgameInfo.gameid) end
                 end)
             end
         end
