@@ -2173,7 +2173,7 @@ local Supported_Games = {
     { gameid = 972475338,  name = "南极探险队" },
     { gameid = 6996099240, name = "噩梦之行" },
     { gameid = 5265348926, name = "西部森林" },
-    { gameid = 5429450445, name = "警笛头:传奇" }
+    { gameid = 5429450445, name = "警笛头:遗产" }
 }
 
 -- 添加菜单内容
@@ -2843,7 +2843,7 @@ local function AddMenuContent(category)
     elseif category == "西部森林" then
         local WWList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
         WWList.addToogle("怪物标签", data.west_wood.monster_xray, function() data.west_wood.monster:enable() end, function() data.west_wood.monster:disable() end, function(_, newState) data.west_wood.monster_xray = newState end)
-    elseif category == "警笛头:传奇" then
+    elseif category == "警笛头:遗产" then
         local SHLList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
         SHLList.addToogle("透视盒子", data.sirenhead_legacy.cratexray, function()
             data.sirenhead_legacy.cratemodule.apply()
