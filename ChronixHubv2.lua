@@ -2592,6 +2592,11 @@ local function AddMenuContent(category)
                 print("面前没有检测到实例")
             end     
         end)
+        toolList.add("打印当前玩家坐标到控制台", function(button)
+            local rootPart = character:WaitForChild("HumanoidRootPart")
+            local position = rootPart.Position
+            print(string.format("玩家坐标: (%.2f, %.2f, %.2f)", position.X, position.Y, position.Z))
+        end)
     elseif category == "基础" then
         CreateLabel("移速", 18, UDim2.new(0.10, 0, 0.05, 0), UDim2.new(0.01, 0, 0.05, 0))
         local speedtb = CreateTextBox(string.format("%.2f", LocalPlayer.Character.Humanoid.WalkSpeed), 18, UDim2.new(0.15, 0, 0.08, 0), UDim2.new(0.11, 0, 0.04, 0))
