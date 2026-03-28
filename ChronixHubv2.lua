@@ -3038,4 +3038,5 @@ closeButton.MouseButton1Click:Connect(function()
 end)
 
 -- 设置默认显示内容
+AddMenuContent("基础")
 AddMenuContent("关于")
