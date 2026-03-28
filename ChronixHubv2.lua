@@ -2156,6 +2156,20 @@ end
 
 local offce = Workspace.DescendantAdded:Connect(detectEntity)
 
+local function rejoinCurrentGame()
+    local placeId1 = game.PlaceId          -- 当前游戏的地图ID
+    local jobId1 = game.JobId              -- 当前游戏服务器的唯一ID
+
+    if jobId1 and jobId1 ~= "" then
+        -- 传送到同一实例
+        TeleportService:TeleportToPlaceInstance(placeId1, jobId1, player)
+    else
+        -- 如果没有 JobId（极少情况），则退而求其次使用普通传送（可能随机分配到其他服务器）
+        warn("无法获取 JobId，将使用普通传送，可能不会回到同一个房间。")
+        TeleportService:Teleport(placeId1, player)
+    end
+end
+
 --===========================================================================================--
 --==========================================[主界面]==========================================--
 --===========================================================================================--
@@ -2542,6 +2556,9 @@ local function AddMenuContent(category)
         toolList.addToogle("晕厥康复", data.tools.antifallplus, function() StandRecovery:enableDetection() end, function() StandRecovery:disableDetection() end, function(_, newState) data.tools.antifallplus = newState end)
         toolList.addToogle("防甩飞", data.tools.antifling, function() FlingDetector.enable() end, function() FlingDetector.disable() end, function(_, newState) data.tools.antifling = newState end)
         toolList.addToogle("防死亡", data.tools.antidead, _, _, function(_, newState) data.tools.antidead = newState end)
+        toolList.add("重新加入当前房间(服务器)", function(button)
+            rejoinCurrentGame()
+        end)
         toolList.add("切换时间为白天", function(button)
             setDay()
         end)
