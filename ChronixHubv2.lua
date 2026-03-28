@@ -1980,7 +1980,7 @@ local function TeleportTo(x, y, z)
 	-- 执行传送
 	rootPart.CFrame = CFrame.new(Vector3.new(x, y, z))
 
-	CreateNotification("提示误", string.format("✅ 已传送到 (%.1f, %.1f, %.1f)", x, y, z), 5, true)
+	CreateNotification("提示", string.format("✅ 已传送到 (%.1f, %.1f, %.1f)", x, y, z), 5, true)
 	return true
 end
 
