@@ -51,6 +51,7 @@ local FlingDetector = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycali
 local SystemNotification = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/SystemNotification.lua"))()
 local PlayerESP = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/PlayerESP.lua"))()
 local MovableHighlighter_NM = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/MovableHighlighter-NM.lua"))()
+local GameTeleport = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/GameTeleport.lua"))()
 
 local iscancel = false
 
@@ -2155,29 +2156,6 @@ end
 
 local offce = Workspace.DescendantAdded:Connect(detectEntity)
 
-local function teleportToGame(placeId, showMessage)
-    local player = Players.LocalPlayer
-    local success, err = pcall(function()
-        TeleportService:Teleport(placeId, player)
-    end)
-    if not success then
-        local msg = tostring(err)
-        warn("传送失败: " .. msg)
-        if showMessage then
-            -- 假设你有 ScreenGui 可以显示提示
-            -- 这里简单用通知
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "传送失败",
-                Text = "无法传送到该游戏，请检查ID是否正确或游戏是否允许第三方传送。",
-                Duration = 3
-            })
-            CreateNotification("传送失败", "无法传送到该游戏\n游戏可能不允许第三方传送。", 5, true)
-        end
-        return false, msg
-    end
-    return true
-end
-
 --===========================================================================================--
 --==========================================[主界面]==========================================--
 --===========================================================================================--
@@ -2889,7 +2867,7 @@ local function AddMenuContent(category)
         for _, GetgameInfo in ipairs(Supported_Games) do
             if GetgameInfo.gameid then
                 ACGList.add(GetgameInfo.name .. "(点击进入)", function(button)
-                    if game.GameId == GetgameInfo.gameid then CreateNotification("提示", "你已经在这个游戏里了。", 5, true) else teleportToGame(GetgameInfo.gameid, true) end
+                    if game.GameId == GetgameInfo.gameid then CreateNotification("提示", "你已经在这个游戏里了。", 5, true) else GameTeleport..TeleportModule.teleportByGameId(GetgameInfo.gameid) end
                 end)
             end
         end
