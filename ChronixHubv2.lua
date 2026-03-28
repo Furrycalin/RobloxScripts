@@ -2978,7 +2978,7 @@ elseif GetDeviceType() == "Mobile" then
     fw.Position = UDim2.new(0.5, -40, 0.5, -40)
 end
 
-SystemNotification.Loaded("ChronixHubV2已成功加载，欢迎使用！" .. displayName)
+SystemNotification.Loaded("ChronixHubV2已成功加载。\n欢迎使用！" .. displayName)
 
 local function unloadchronixhub()
     SystemNotification.Unloaded("ChronixHubv2已成功卸载。")
