@@ -2978,10 +2978,10 @@ elseif GetDeviceType() == "Mobile" then
     fw.Position = UDim2.new(0.5, -40, 0.5, -40)
 end
 
-SystemNotification.Success("欢迎使用。")
+SystemNotification.Loaded("ChronixHubV2已成功加载，欢迎使用！" .. displayName)
 
 local function unloadchronixhub()
-    SystemNotification.Info("ChronixHubv2 已卸载。")
+    SystemNotification.Unloaded("ChronixHubv2已成功卸载。")
     print("ChronixHubv2 已卸载。")
     _G.ChronixHubisLoaded = false
     data.musictest.enable = false
