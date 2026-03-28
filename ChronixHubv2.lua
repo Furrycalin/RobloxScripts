@@ -2570,6 +2570,28 @@ local function AddMenuContent(category)
         toolList.add("切换时间为黑夜", function(button)
             setNight()
         end)
+        toolList.add("打印眼前实例名到控制台", function(button)
+            -- 使用已有的 player 和 character，从 character 获取 head
+            local head = character:WaitForChild("Head")
+
+            -- 混淆变量名
+            local _p = RaycastParams.new()
+            _p.FilterDescendantsInstances = {character}
+            _p.FilterType = Enum.RaycastFilterType.Blacklist
+
+            local _o = head.Position
+            local _d = head.CFrame.LookVector * 100
+
+            local _r = workspace:Raycast(_o, _d, _p)
+
+            if _r then
+                local _h = _r.Instance
+                print("面前实例名称：", _h.Name)
+                print("完整路径：", _h:GetFullName())
+            else
+                print("面前没有检测到实例")
+            end     
+        end)
     elseif category == "基础" then
         CreateLabel("移速", 18, UDim2.new(0.10, 0, 0.05, 0), UDim2.new(0.01, 0, 0.05, 0))
         local speedtb = CreateTextBox(string.format("%.2f", LocalPlayer.Character.Humanoid.WalkSpeed), 18, UDim2.new(0.15, 0, 0.08, 0), UDim2.new(0.11, 0, 0.04, 0))
