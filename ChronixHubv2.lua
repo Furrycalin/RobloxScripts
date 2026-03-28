@@ -2593,9 +2593,10 @@ local function AddMenuContent(category)
             end     
         end)
         toolList.add("打印当前玩家坐标到控制台", function(button)
-            local rootPart = character:WaitForChild("HumanoidRootPart")
-            local position = rootPart.Position
-            print(string.format("玩家坐标: (%.2f, %.2f, %.2f)", position.X, position.Y, position.Z))
+            -- 防止跟现有的重复导致冲突
+            local rootPart1 = character:WaitForChild("HumanoidRootPart")
+            local position1 = rootPart1.Position
+            print(string.format("玩家坐标: (%.2f, %.2f, %.2f)", position1.X, position1.Y, position1.Z))
         end)
     elseif category == "基础" then
         CreateLabel("移速", 18, UDim2.new(0.10, 0, 0.05, 0), UDim2.new(0.01, 0, 0.05, 0))
