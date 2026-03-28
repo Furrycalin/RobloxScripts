@@ -2881,6 +2881,9 @@ local function AddMenuContent(category)
             data.sirenhead_legacy.berrymodule.destroy()
             data.sirenhead_legacy.berrynametagmodule:disable()
         end, function(_, newState) data.sirenhead_legacy.berryxray = newState end)
+        SHLList.add("传送到树顶", function(button)
+            TeleportTo(69, 206, -72)
+        end)
     elseif category == "支持的游戏" then
         local ACGList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
         for _, GetgameInfo in ipairs(Supported_Games) do
