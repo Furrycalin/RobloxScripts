@@ -30,6 +30,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TextChatService = game:GetService("TextChatService")
 local HttpService = game:GetService("HttpService")
 local ScriptContext = game:GetService("ScriptContext")
+local TeleportService = game:GetService("TeleportService")
 
 -- local LoadAnimationModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/RobloxScripts/raw/main/NewLoadAnimation.lua"))()
 local LoadAnimationModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/start_animation.lua"))()
@@ -1472,6 +1473,14 @@ chatcheck = TextChatService.MessageReceived:Connect(function(message)
 end)
 
 local data = {
+    sirenhead_legacy = {
+        cratexray = false,
+        berryxray = false,
+        cratemodule = HighlightModule.new("crate", "other", "item"),
+        cratenametagmodule = NameTagModule.new("crate", "模糊", 20, true, "盒子"),
+        berrymodule = HighlightModule.new("berry", "other", "item"),
+        berrynametagmodule = NameTagModule.new("berry", "模糊", 20, true, "浆果")
+    },
     west_wood = {
         monster_xray = false,
         monster = NameTagModule.new("WendigoAI", "模糊", 20, true, "怪物")
@@ -2146,10 +2155,48 @@ end
 
 local offce = Workspace.DescendantAdded:Connect(detectEntity)
 
+local function teleportToGame(placeId, showMessage)
+    local player = Players.LocalPlayer
+    local success, err = pcall(function()
+        TeleportService:Teleport(placeId, player)
+    end)
+    if not success then
+        local msg = tostring(err)
+        warn("传送失败: " .. msg)
+        if showMessage then
+            -- 假设你有 ScreenGui 可以显示提示
+            -- 这里简单用通知
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "传送失败",
+                Text = "无法传送到该游戏，请检查ID是否正确或游戏是否允许第三方传送。",
+                Duration = 3
+            })
+            CreateNotification("传送失败", "无法传送到该游戏\n游戏可能不允许第三方传送。", 5, true)
+        end
+        return false, msg
+    end
+    return true
+end
+
+--===========================================================================================--
+--==========================================[主界面]==========================================--
+--===========================================================================================--
+
 local isProcessing = false
 local isProcessing2 = false
 local isProcessing3 = false
 local selectcontent = "关于"
+local Supported_Games = {
+    { gameid = 2162087722, name = "兽化项目" },
+    { gameid = 6508759464, name = "格蕾丝" },
+    { gameid = 5166944221, name = "死亡球" },
+    { gameid = 3185346597, name = "小屋角色扮演" },
+    { gameid = 6352299542, name = "妄想办公室" },
+    { gameid = 972475338,  name = "南极探险队" },
+    { gameid = 6996099240, name = "噩梦之行" },
+    { gameid = 5265348926, name = "西部森林" },
+    { gameid = 5429450445, name = "警笛头:传奇" }
+}
 
 -- 添加菜单内容
 local function AddMenuContent(category)
@@ -2790,6 +2837,31 @@ local function AddMenuContent(category)
     elseif category == "西部森林" then
         local WWList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
         WWList.addToogle("怪物标签", data.west_wood.monster_xray, function() data.west_wood.monster:enable() end, function() data.west_wood.monster:disable() end, function(_, newState) data.west_wood.monster_xray = newState end)
+    elseif category == "警笛头:传奇" then
+        local SHLList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
+        SHLList.addToogle("透视盒子", data.sirenhead_legacy.cratexray, function()
+            data.sirenhead_legacy.cratemodule.apply()
+            data.sirenhead_legacy.cratenametagmodule:enable()
+        end, function()
+            data.sirenhead_legacy.cratemodule.destroy()
+            data.sirenhead_legacy.cratenametagmodule:disable()
+        end, function(_, newState) data.sirenhead_legacy.cratexray = newState end)
+        SHLList.addToogle("透视浆果", data.sirenhead_legacy.berryxray, function()
+            data.sirenhead_legacy.berrymodule.apply()
+            data.sirenhead_legacy.berrynametagmodule:enable()
+        end, function()
+            data.sirenhead_legacy.berrymodule.destroy()
+            data.sirenhead_legacy.berrynametagmodule:disable()
+        end, function(_, newState) data.sirenhead_legacy.berryxray = newState end)
+    elseif category == "支持的游戏" then
+        local ACGList = CreateList(UDim2.new(0.98, 0, 0.98, 0), UDim2.new(0.01, 0, 0.01, 0))
+        for _, GetgameInfo in ipairs(Supported_Games) do
+            if GetgameInfo.gameid then
+                ACGList.add(GetgameInfo.gamename .. "(点击进入)", function(button)
+                    if game.GameId == GetgameInfo.gameid then CreateNotification("提示", "你已经在这个游戏里了。", 5, true) else teleportToGame(GetgameInfo.gameid, true) end
+                end)
+            end
+        end
     end
 end
 
@@ -2823,14 +2895,12 @@ addMenu("执行器")
 addMenu("音乐播放器")
 addMenu("音频检查器")
 addMenu("聊天接收器")
-if game.GameId == 2162087722 then addMenu("兽化项目") end
-if game.GameId == 6508759464 then addMenu("格蕾丝") end
-if game.GameId == 5166944221 then addMenu("死亡球") end
-if game.GameId == 3185346597 then addMenu("小屋角色扮演") end
-if game.GameId == 6352299542 then addMenu("妄想办公室") end
-if game.GameId == 972475338 then addMenu("南极探险队") end
-if game.GameId == 6996099240 then addMenu("噩梦之行") end
-if game.GameId == 5265348926 then addMenu("西部森林") end
+addMenu("支持的游戏")
+for _, GetgameInfo in ipairs(Supported_Games) do
+    if GetgameInfo.gameid then
+        if game.GameId == GetgameInfo.gameid then addMenu(GetgameInfo.name) end
+    end
+end
 
 -- 更新功能栏的滚动区域
 functionList.CanvasSize = UDim2.new(0, 0, 0, #functionList:GetChildren() * 30)
