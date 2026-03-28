@@ -2168,7 +2168,7 @@ local Supported_Games = {
     { gameid = 2162087722, name = "兽化项目" },
     { gameid = 6508759464, name = "格蕾丝" },
     { gameid = 5166944221, name = "死亡球" },
-    { gameid = 3185346597, name = "小屋角色扮演" },
+    { gameid = 9161109257, name = "小屋角色扮演" },
     { gameid = 6352299542, name = "妄想办公室" },
     { gameid = 972475338,  name = "南极探险队" },
     { gameid = 6996099240, name = "噩梦之行" },
@@ -2867,7 +2867,7 @@ local function AddMenuContent(category)
         for _, GetgameInfo in ipairs(Supported_Games) do
             if GetgameInfo.gameid then
                 ACGList.add(GetgameInfo.name .. "(点击进入)", function(button)
-                    if game.GameId == GetgameInfo.gameid then CreateNotification("提示", "你已经在这个游戏里了。", 5, true) else GameTeleport.TeleportModule.teleportByGameId(GetgameInfo.gameid) end
+                    if game.GameId == GetgameInfo.gameid then CreateNotification("提示", "你已经在这个游戏里了。", 5, true) else GameTeleport.teleportByGameId(GetgameInfo.gameid) end
                 end)
             end
         end
