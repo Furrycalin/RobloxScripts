@@ -93,6 +93,7 @@ end
 local playerName = LocalPlayer.Name -- 玩家名
 local displayName = LocalPlayer.DisplayName -- 显示名
 local userId = LocalPlayer.UserId -- 用户 ID
+local isPremium = (LocalPlayer.MembershipType == Enum.MembershipType.Premium)
 -- 获取玩家头像
 local thumbnailType = Enum.ThumbnailType.HeadShot -- 头像类型
 local thumbnailSize = Enum.ThumbnailSize.Size100x100 -- 头像尺寸
@@ -458,7 +459,7 @@ elseif GetDeviceType() == "Mobile" then
 end
 
 local infotitleText = Instance.new("TextLabel")
-infotitleText.Text = "欢迎使用! " .. infotitle .. playerName .. " | ID:" .. userId
+infotitleText.Text = isPremium and "欢迎使用! " .. infotitle .. playerName .. " | ID:" .. userId .. " | 已开通会员" or "欢迎使用! " .. infotitle .. playerName .. " | ID:" .. userId
 infotitleText.Size = UDim2.new(0, 100, 0.5, 0)
 infotitleText.Position = UDim2.new(0, 60, 0.08, 0)
 infotitleText.TextColor3 = Color3.new(1, 1, 1) -- 白色
