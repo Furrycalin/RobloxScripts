@@ -52,6 +52,7 @@ local SystemNotification = loadstring(game:HttpGet("https://raw.atomgit.com/Furr
 local PlayerESP = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/PlayerESP.lua"))()
 local MovableHighlighter_NM = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/MovableHighlighter-NM.lua"))()
 local GameTeleport = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/GameTeleport.lua"))()
+local AntiVoidModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/AntiVoid.lua"))()
 
 local iscancel = false
 
@@ -1534,7 +1535,8 @@ local data = {
         mouseisunlock = false,
         zoomenable = false,
         zoom = ZoomModule.new(),
-        antifling = false
+        antifling = false,
+        antivoid = false
     },
     playercontrol = {
         lockspeed = false,
@@ -2556,6 +2558,7 @@ local function AddMenuContent(category)
         toolList.addToogle("防击倒", data.tools.antifall, _, _, function(_, newState) data.tools.antifall = newState end)
         toolList.addToogle("晕厥康复", data.tools.antifallplus, function() StandRecovery:enableDetection() end, function() StandRecovery:disableDetection() end, function(_, newState) data.tools.antifallplus = newState end)
         toolList.addToogle("防甩飞", data.tools.antifling, function() FlingDetector.enable() end, function() FlingDetector.disable() end, function(_, newState) data.tools.antifling = newState end)
+        toolList.addToogle("反物理劫持", data.tools.antivoid, function() AntiVoidModule.enable() end, function() AntiVoidModule.disable() end, function(_, newState) data.tools.antivoid = newState end)
         toolList.addToogle("防死亡", data.tools.antidead, _, _, function(_, newState) data.tools.antidead = newState end)
         toolList.add("重新加入当前房间(服务器)", function(button)
             rejoinCurrentGame()
@@ -3021,6 +3024,7 @@ local function unloadchronixhub()
     FlingDetector.unload()
     PlayerESP.unload()
     MovableHighlighter_NM.unloadAll()
+    AntiVoidModule.unload()
     musicbox:Stop()
     musicbox:Destroy()
     chatcheck:Disconnect()
