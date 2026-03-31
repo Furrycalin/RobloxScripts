@@ -2,7 +2,7 @@
 
 **欢迎来到我的 Roblox 脚本仓库！这里集合了我开发的一些 Roblox 脚本，所有脚本均可直接执行。如果你有任何问题或建议，欢迎提交 Issue 或 Pull Request！**
 
->**本仓库的部分脚本已集成到ChronixHubV2，但由于过于混乱，所以新的脚本以模块形式存储在[ChronixHub/modules](https://atomgit.com/Furrycalin/ChronixHub/tree/main/modules)内**
+>**本仓库的部分脚本已集成到 ChronixHubV2，因结构较为复杂，新脚本将以模块形式存储在[ChronixHub/modules](https://atomgit.com/Furrycalin/ChronixHub/tree/main/modules)内**
 
 > **💡 温馨提示**
 > 
@@ -14,6 +14,10 @@
 > - 恶意破坏游戏环境、影响其他玩家体验
 > 
 > 违规使用可能导致账号面临 1 天至永久封禁的处罚，**作者不承担任何责任**。
+
+## 🔧 环境要求
+- 需要 Roblox 执行器（如 Xeno、Synapse X、Krnl 等）
+- 建议在 Alt 账户（小号）上使用
 
 ---
 
@@ -115,7 +119,7 @@ local chatcontrol = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/
 -- 使用示例
 chatcontrol:chat("这是一段消息")
 
-chatControl:MessageReceiver(function(messageData)
+chatcontrol:MessageReceiver(function(messageData)
     print("发送者:", messageData.sender)
     print("消息:", messageData.text)
 end)
@@ -213,7 +217,7 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/Deathball.lua"))()
 ```
 **描述**  
-> 死亡球脚本，目前无法使用自动格挡功能。开发已被暂停，欢迎有兴趣的开发者继续完善。
+> 死亡球脚本，目前无法使用自动格挡功能。开发已暂停，欢迎有兴趣的开发者提交 Pull Request 继续完善。
 
 ---
 
