@@ -53,6 +53,7 @@ local PlayerESP = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/Ch
 local MovableHighlighter_NM = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/MovableHighlighter-NM.lua"))()
 local GameTeleport = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/GameTeleport.lua"))()
 local AntiVoidModule = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/AntiVoid.lua"))()
+local ChatSpy = loadstring(game:HttpGet("https://raw.atomgit.com/Furrycalin/ChronixHub/raw/main/modules/ChatSpy.lua"))()
 
 local iscancel = false
 
@@ -1536,7 +1537,8 @@ local data = {
         zoomenable = false,
         zoom = ZoomModule.new(),
         antifling = false,
-        antivoid = false
+        antivoid = false,
+        chatspy = false
     },
     playercontrol = {
         lockspeed = false,
@@ -2560,6 +2562,7 @@ local function AddMenuContent(category)
         toolList.addToogle("防甩飞", data.tools.antifling, function() FlingDetector.enable() end, function() FlingDetector.disable() end, function(_, newState) data.tools.antifling = newState end)
         toolList.addToogle("反物理劫持", data.tools.antivoid, function() AntiVoidModule.enable() end, function() AntiVoidModule.disable() end, function(_, newState) data.tools.antivoid = newState end)
         toolList.addToogle("防死亡", data.tools.antidead, _, _, function(_, newState) data.tools.antidead = newState end)
+        toolList.addToogle("聊天偷听", data.tools.chatspy, function() ChatSpy.enable() end, function() ChatSpy.disable() end, function(_, newState) data.tools.chatspy = newState end)
         toolList.add("重新加入当前房间(服务器)", function(button)
             rejoinCurrentGame()
         end)
@@ -3025,6 +3028,7 @@ local function unloadchronixhub()
     PlayerESP.unload()
     MovableHighlighter_NM.unloadAll()
     AntiVoidModule.unload()
+    ChatSpy.unload()
     musicbox:Stop()
     musicbox:Destroy()
     chatcheck:Disconnect()
