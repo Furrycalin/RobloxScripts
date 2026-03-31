@@ -248,5 +248,20 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 
 **使用即表示您已阅读、理解并同意本免责声明的全部内容。**
 
+## 🙏 特别鸣谢
+
+感谢以下开发者对本项目的贡献与支持（排名不分先后）：
+
+| 开发者 | 贡献内容 |
+| :--- | :--- |
+| **Furrycalin/Chronix** | 脚本的所有者、主要开发者以及贡献者 |
+| **AI-DouBao** | 提供代码支持和技术提供 |
+| **AI-Qwen** | 提供代码支持和技术提供 |
+| **AI-DeepSeek** | 提供代码支持和技术提供以及README完善 |
+| **K6** | 提供隐身代码支持 |
+| **OrionLib** | UI排版灵感来源 |
+
+> 若你有为本项目贡献代码或提供帮助，欢迎通过 Pull Request 或 Issue 告知，我会将你加入鸣谢列表。
+
 ## 📄 许可证  
 本项目基于 [MIT License](https://opensource.org/licenses/MIT) 发布。
