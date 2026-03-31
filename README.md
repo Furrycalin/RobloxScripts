@@ -4,6 +4,17 @@
 
 >**本仓库的部分脚本已集成到ChronixHubV2，但由于过于混乱，所以新的脚本以模块形式存储在[ChronixHub/modules](https://atomgit.com/Furrycalin/ChronixHub/tree/main/modules)内**
 
+> **💡 温馨提示**
+> 
+> ChronixHubV2 注重兼容性与低风险设计，在大多数执行器（包括性能较低的执行器）中都能正常运行。
+> 
+> 若您出现以下行为，账号封禁风险将显著增加，包括但不限于：
+> - 过于张扬地使用脚本功能
+> - 被大量玩家举报
+> - 恶意破坏游戏环境、影响其他玩家体验
+> 
+> 违规使用可能导致账号面临 1 天至永久封禁的处罚，**作者不承担任何责任**。
+
 ---
 
 ## 📜 **脚本列表**
@@ -221,6 +232,17 @@ loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/ma
 3. 提交你的更改（git commit -m 'Add some feature'）。
 4. 推送分支（git push origin feature/YourFeatureName）。
 5. 提交 Pull Request。
+
+## ⚠️ 免责声明 (Disclaimer)
+
+**本脚本（或软件）仅供学习、研究和交流使用。请在下载后24小时内删除。**
+
+1.  **禁止用于非法用途**：严禁将本脚本用于任何违反[Roblox服务条款](https://en.help.roblox.com/hc/articles/115004647846)的行为，包括但不限于游戏作弊、破坏游戏平衡、获取不当得利等。
+2.  **风险自担**：使用本脚本可能导致的任何后果，包括但不限于游戏账号封禁、数据丢失、计算机系统损坏等，**脚本作者不承担任何责任**。
+3.  **版权声明**：本脚本的代码归作者所有。未经许可，请勿将本脚本用于商业目的或声称其为己作。
+4.  **最终解释权**：本免责声明的最终解释权归脚本作者所有。
+
+**使用即表示您已阅读、理解并同意本免责声明的全部内容。**
 
 ## 📄 许可证  
 本项目基于 [MIT License](https://opensource.org/licenses/MIT) 发布。
