@@ -23,7 +23,7 @@
 
 ## 📜 **脚本列表**
 
-### **▶ ChronixHubV2.lua**  
+### **▶ ChronixHubV2.lua**  *(已不再提供更新，请使用[ChronixHubv3](https://atomgit.com/Furrycalin/ChronixHub/tree/main))*
 **执行代码：**  
 ```lua
 loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/ChronixHubv2.lua"))()
