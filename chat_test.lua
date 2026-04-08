@@ -18,17 +18,24 @@ function chatControl:chat(str)
 end
 
 -- 获取玩家头像
-local thumbnailType = Enum.ThumbnailType.HeadShot -- 头像类型
-local thumbnailSize = Enum.ThumbnailSize.Size100x100 -- 头像尺寸
+local thumbnailType = Enum.ThumbnailType.HeadShot
+local thumbnailSize = Enum.ThumbnailSize.Size100x100
 
 -- 接收消息的函数
 function chatControl:MessageReceiver(callback)
     TextChatService.MessageReceived:Connect(function(message)
+        -- 防止 TextSource 为 nil
+        if not message.TextSource then
+            return
+        end
+        
         local player = Players:GetPlayerByUserId(message.TextSource.UserId)
         if not player then return end
+        
         local success, thumbnailUrl = pcall(function()
             return Players:GetUserThumbnailAsync(message.TextSource.UserId, thumbnailType, thumbnailSize)
         end)
+        
         local msgData = {}
         msgData["sender"] = player.Name
         msgData["nickname"] = player.DisplayName
