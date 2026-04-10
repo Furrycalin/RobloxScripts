@@ -1,5 +1,5 @@
-local translateModuel = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/translateModuel.lua"))()
-local chatControl = loadstring(game:HttpGet("https://raw.gitcode.com/Furrycalin/RobloxScripts/raw/main/chat_test.lua"))()
+local translateModuel = loadstring(game:HttpGet("https://raw.githubusercontent.com/Furrycalin/RobloxScripts/refs/heads/main/translateModuel.lua"))()
+local chatControl = loadstring(game:HttpGet("https://raw.githubusercontent.com/Furrycalin/RobloxScripts/refs/heads/main/chat_test.lua"))()
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local UserInputService = game:GetService("UserInputService")
